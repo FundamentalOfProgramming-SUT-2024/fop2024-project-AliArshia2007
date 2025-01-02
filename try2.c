@@ -100,7 +100,7 @@ int check_login(const char *filename , const char* name , const char* password){
 int check_name(const char* filename , const char * name){
     FILE *file=fopen(filename,"r");
     User user;
-    while (fscanf(file , "%s %s %s" , user.name , user.password , user.email)!= EOF )
+    while (fscanf(file ,"%s %s %s %d %d %d %ld", user.name, user.password, user.email,&user.score,&user.gold,&user.number_of_games,&user.first_Game_Time) != EOF )
     {
         if(strcmp(user.name , name)==0){
             return 0;
@@ -141,7 +141,7 @@ void find_pas(const char* filename){
     FILE *file=fopen(filename,"r");
     User user;
     int i=0;
-    while (fscanf(file, "%s %s %s",user.name,user.password,user.email) != EOF)
+    while (fscanf(file, "%s %s %s %d %d %d %ld", user.name, user.password, user.email,&user.score,&user.gold,&user.number_of_games,&user.first_Game_Time) != EOF)
     {
         if(strcmp(user.email , email)==0){
             i++;
