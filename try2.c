@@ -20,7 +20,7 @@ void new_game();
 void load_game();
 void set_difficulty();
 void set_hero_color();
-
+int color=1 , dificullty=1;
 typedef struct {
     char name[50];
     char password[50];
@@ -232,8 +232,11 @@ void table(const char* filename,const char*name){
     menu(name);
     refresh();
 }
-void new_game(){
+void new_game(int color , int dificult){
     clear();
+    attron(COLOR_PAIR(color));
+    mvprintw(10,10,"see my color");
+    attroff(COLOR_PAIR(color));
 }
 void load_game(const char*filename){
     clear();
@@ -277,7 +280,7 @@ void settings_menu(const char* name){
     }
 }
 void set_difficulty(const char* name) {
-    int difficulty;
+    int d;
     clear();
     mvprintw(5, 10, "Choose Difficulty Level:");
     attron(COLOR_PAIR(1));
@@ -287,8 +290,9 @@ void set_difficulty(const char* name) {
     attron(COLOR_PAIR(1));
     refresh();
     mvprintw(11, 10, "Enter your choice: ");
-    scanw("%d", &difficulty);
-    switch (difficulty)
+    scanw("%d", &d);
+    dificullty=d;
+    switch (d)
     {
     case 1:
         mvprintw(13, 10, "Difficulty set to Easy.");
@@ -307,45 +311,46 @@ void set_difficulty(const char* name) {
 }
 
 void set_hero_color(const char* name) {
-    int color;
+    int c;
     clear();
     mvprintw(5, 10, "Choose Hero Color:");
-    attron(COLOR_PAIR(2));
-    mvprintw(7, 10, "1. Red");
-    attroff(COLOR_PAIR(2));
     attron(COLOR_PAIR(1));
-    mvprintw(8, 10, "2. Green");
+    mvprintw(7, 10, "1. Green");
     attroff(COLOR_PAIR(1));
-    attron(COLOR_PAIR(4));
-    mvprintw(9, 10, "3. Blue");
-    attroff(COLOR_PAIR(4));
+    attron(COLOR_PAIR(2));
+    mvprintw(8, 10, "2. Red");
+    attroff(COLOR_PAIR(2));
     attron(COLOR_PAIR(3));
-    mvprintw(10, 10, "4. Yellow");
+    mvprintw(9, 10, "3. Yellow");
     attroff(COLOR_PAIR(3));
+    attron(COLOR_PAIR(4));
+    mvprintw(10, 10, "4. Blue");
+    attroff(COLOR_PAIR(4));
     refresh();
     mvprintw(13, 10, "Enter your choice: ");
-    scanw("%d", &color);
-    switch (color)
+    scanw("%d", &c);
+    color =c;
+    switch (c)
     {
     case 1:
-        attron(COLOR_PAIR(2));
-        mvprintw(15, 10, "Hero color set to Red.");
-        attroff(COLOR_PAIR(2));
-        break;
-    case 2:
         attron(COLOR_PAIR(1));
         mvprintw(15, 10, "Hero color set to Green.");
         attroff(COLOR_PAIR(1));
         break;
-    case 3:
-        attron(COLOR_PAIR(4));
-        mvprintw(15, 10, "Hero color set to Blue.");
-        attroff(COLOR_PAIR(4));
+    case 2:
+        attron(COLOR_PAIR(2));
+        mvprintw(15, 10, "Hero color set to Red.");
+        attroff(COLOR_PAIR(2));
         break;
-    case 4:
+    case 3:
         attron(COLOR_PAIR(3));
         mvprintw(15, 10, "Hero color set to Yellow.");
         attroff(COLOR_PAIR(3));
+        break;
+    case 4:
+        attron(COLOR_PAIR(4));
+        mvprintw(15, 10, "Hero color set to Blue.");
+        attroff(COLOR_PAIR(4));
         break;
     }
     refresh();
@@ -378,7 +383,7 @@ void menu(const char*name ){
         refresh();
         switch (choice) {
             case 1:
-                new_game();
+                new_game(color ,dificullty);
                 break;
             case 2:
                 load_game("users game");
