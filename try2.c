@@ -3,8 +3,7 @@
 #include<string.h>
 #include <time.h>
 #include<stdlib.h>
-#include <SDL2/SDL.h> 
-#include <SDL2/SDL_mixer.h>
+
 int check_pas();
 int check_email();
 void save_user();
@@ -21,9 +20,7 @@ void new_game();
 void load_game();
 void set_difficulty();
 void set_hero_color();
-void play_music();
-void choose_music();
-int color=1 , dificullty=1;
+
 typedef struct {
     char name[50];
     char password[50];
@@ -103,7 +100,7 @@ int check_login(const char *filename , const char* name , const char* password){
 int check_name(const char* filename , const char * name){
     FILE *file=fopen(filename,"r");
     User user;
-    while (fscanf(file ,"%s %s %s %d %d %d %ld", user.name, user.password, user.email,&user.score,&user.gold,&user.number_of_games,&user.first_Game_Time) != EOF )
+    while (fscanf(file , "%s %s %s" , user.name , user.password , user.email)!= EOF )
     {
         if(strcmp(user.name , name)==0){
             return 0;
@@ -144,7 +141,7 @@ void find_pas(const char* filename){
     FILE *file=fopen(filename,"r");
     User user;
     int i=0;
-    while (fscanf(file, "%s %s %s %d %d %d %ld", user.name, user.password, user.email,&user.score,&user.gold,&user.number_of_games,&user.first_Game_Time) != EOF)
+    while (fscanf(file, "%s %s %s",user.name,user.password,user.email) != EOF)
     {
         if(strcmp(user.email , email)==0){
             i++;
@@ -235,11 +232,8 @@ void table(const char* filename,const char*name){
     menu(name);
     refresh();
 }
-void new_game(int color , int dificult){
+void new_game(){
     clear();
-    attron(COLOR_PAIR(color));
-    mvprintw(10,10,"see my color");
-    attroff(COLOR_PAIR(color));
 }
 void load_game(const char*filename){
     clear();
@@ -251,15 +245,14 @@ void settings_menu(const char* name){
     attron(COLOR_PAIR(1));
     mvprintw(5, 10, "1. Set Difficulty");
     mvprintw(7, 10, "2. Set Hero Color");
-    mvprintw(9,10,"3. Set Background Music");
-    mvprintw(11, 10, "4. Exit");
+    mvprintw(9, 10, "3. Exit");
     attroff(COLOR_PAIR(1));
     refresh();
-    mvprintw(13, 10, "Enter your choice: ");
+    mvprintw(11, 10, "Enter your choice: ");
     while (TRUE) {
-        move(13,30);
+        move(11,30);
         clrtoeol();
-        move(13,30);
+        move(11,30);
         scanw("%d", &choice);
         switch (choice) {
             case 1:
@@ -269,14 +262,11 @@ void settings_menu(const char* name){
                 set_hero_color(name);
                 break;
             case 3:
-                choose_music(name);
-                break;
-            case 4:
                 menu(name);
                 return;
             default:
                 attron(COLOR_PAIR(2));
-                mvprintw(15, 10, "Invalid choice! Please try again.");
+                mvprintw(13, 10, "Invalid choice! Please try again.");
                 attroff(COLOR_PAIR(2));
                 refresh();
                 break;
@@ -286,48 +276,8 @@ void settings_menu(const char* name){
         }
     }
 }
-Mix_Music *bgm=NULL;
-
-void play_music(const char* filename) {
-    if (!Mix_PlayingMusic()) {
-        bgm = Mix_LoadMUS(filename);
-        Mix_PlayMusic(bgm, -1); 
-    }
-}
-void choose_music( const char* name) {
-    int music_choice;
-    initscr();
-    clear();
-    attron(COLOR_PAIR(1));
-    mvprintw(5, 10, "Choose Background Music");
-    mvprintw(7, 10, "1. Music 1");
-    mvprintw(9, 10, "2. Music 2");
-    mvprintw(11, 10, "3. Music 3");
-    mvprintw(13, 10, "4. exit");
-    attroff(COLOR_PAIR(1));
-    refresh();
-    mvprintw(15, 10, "Enter your choice: ");
-    scanw("%d", &music_choice);
-    switch (music_choice)
-    {
-    case 1:
-        play_music("music1.mp3");
-        break;
-    
-    case 2:
-        play_music("music2.mp3");
-
-        break;
-    case 3:
-        play_music("music3.mp3");
-        break;
-    }
-    refresh();
-    getch();
-    settings_menu(name);
-}
 void set_difficulty(const char* name) {
-    int d;
+    int difficulty;
     clear();
     mvprintw(5, 10, "Choose Difficulty Level:");
     attron(COLOR_PAIR(1));
@@ -337,9 +287,8 @@ void set_difficulty(const char* name) {
     attron(COLOR_PAIR(1));
     refresh();
     mvprintw(11, 10, "Enter your choice: ");
-    scanw("%d", &d);
-    dificullty=d;
-    switch (d)
+    scanw("%d", &difficulty);
+    switch (difficulty)
     {
     case 1:
         mvprintw(13, 10, "Difficulty set to Easy.");
@@ -358,46 +307,45 @@ void set_difficulty(const char* name) {
 }
 
 void set_hero_color(const char* name) {
-    int c;
+    int color;
     clear();
     mvprintw(5, 10, "Choose Hero Color:");
-    attron(COLOR_PAIR(1));
-    mvprintw(7, 10, "1. Green");
-    attroff(COLOR_PAIR(1));
     attron(COLOR_PAIR(2));
-    mvprintw(8, 10, "2. Red");
+    mvprintw(7, 10, "1. Red");
     attroff(COLOR_PAIR(2));
-    attron(COLOR_PAIR(3));
-    mvprintw(9, 10, "3. Yellow");
-    attroff(COLOR_PAIR(3));
+    attron(COLOR_PAIR(1));
+    mvprintw(8, 10, "2. Green");
+    attroff(COLOR_PAIR(1));
     attron(COLOR_PAIR(4));
-    mvprintw(10, 10, "4. Blue");
+    mvprintw(9, 10, "3. Blue");
     attroff(COLOR_PAIR(4));
+    attron(COLOR_PAIR(3));
+    mvprintw(10, 10, "4. Yellow");
+    attroff(COLOR_PAIR(3));
     refresh();
     mvprintw(13, 10, "Enter your choice: ");
-    scanw("%d", &c);
-    color =c;
-    switch (c)
+    scanw("%d", &color);
+    switch (color)
     {
     case 1:
-        attron(COLOR_PAIR(1));
-        mvprintw(15, 10, "Hero color set to Green.");
-        attroff(COLOR_PAIR(1));
-        break;
-    case 2:
         attron(COLOR_PAIR(2));
         mvprintw(15, 10, "Hero color set to Red.");
         attroff(COLOR_PAIR(2));
         break;
-    case 3:
-        attron(COLOR_PAIR(3));
-        mvprintw(15, 10, "Hero color set to Yellow.");
-        attroff(COLOR_PAIR(3));
+    case 2:
+        attron(COLOR_PAIR(1));
+        mvprintw(15, 10, "Hero color set to Green.");
+        attroff(COLOR_PAIR(1));
         break;
-    case 4:
+    case 3:
         attron(COLOR_PAIR(4));
         mvprintw(15, 10, "Hero color set to Blue.");
         attroff(COLOR_PAIR(4));
+        break;
+    case 4:
+        attron(COLOR_PAIR(3));
+        mvprintw(15, 10, "Hero color set to Yellow.");
+        attroff(COLOR_PAIR(3));
         break;
     }
     refresh();
@@ -430,7 +378,7 @@ void menu(const char*name ){
         refresh();
         switch (choice) {
             case 1:
-                new_game(color ,dificullty);
+                new_game();
                 break;
             case 2:
                 load_game("users game");
@@ -649,7 +597,5 @@ int main() {
     refresh();             
     getch();               
     endwin();              
-    Mix_CloseAudio(); 
-    SDL_Quit();
     return 0;
 }
