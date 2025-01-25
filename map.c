@@ -18,38 +18,44 @@ void create_random_rooms(Room rooms[],int num , int y, int x) {
     new_room.y = y;
     rooms[num] = new_room;
 }
-
-void dar(Room room, int dar[][2], int index , int t1) {
+int dar_positions[11][3];
+int num_dar=0;
+void dar(Room room,int t1) {
     int pos;
     switch (t1) {
         case 0:
             pos = rand() % room.width+1;
-            mvprintw(room.y, room.x + pos, "+");
-            dar[index][0] = room.x + pos;
-            dar[index][1] = room.y;
+            dar_positions[num_dar][0] = room.x + pos;
+            dar_positions[num_dar][1] = room.y;
+            dar_positions[num_dar][2]=0;
+            num_dar++;
             break;
         case 1:
             pos = rand() % room.height+1;
-            mvprintw(room.y + pos, room.x + room.width, "+");
-            dar[index][0] = room.x + room.width;
-            dar[index][1] = room.y + pos;
+            dar_positions[num_dar][0] = room.x + room.width;
+            dar_positions[num_dar][1] = room.y + pos;
+            dar_positions[num_dar][2]=0;
+            num_dar++;
             break;
         case 2:
             pos = rand() % room.width+1;
-            mvprintw(room.y + room.height, room.x + pos, "+");
-            dar[index][0] = room.x + pos;
-            dar[index][1] = room.y + room.height;
+            dar_positions[num_dar][0] = room.x + pos;
+            dar_positions[num_dar][1] = room.y + room.height;
+            dar_positions[num_dar][2]=0;
+            num_dar++;
             break;
         default:
             pos = rand() % room.height+1;
-            mvprintw(room.y + pos, room.x, "+");
-            dar[index][0] = room.x;
-            dar[index][1] = room.y + pos;
+            dar_positions[num_dar][0] = room.x;
+            dar_positions[num_dar][1] = room.y + pos;
+            dar_positions[num_dar][2]=0;
+            num_dar++;
             break;
     }
 }
-
-void soton(Room room, int soton[][2], int index) {
+int soton_position[6][3];
+int num_soton=0;
+void soton(Room room) {
     int x, y;
     x = (rand() % room.width)-1;
     y = (rand() % room.height)-1;
@@ -59,12 +65,39 @@ void soton(Room room, int soton[][2], int index) {
         y=1;
     x = room.x + x; 
     y = room.y + y;
-    mvprintw(y, x, "O");
-    soton[index][0] = x;
-    soton[index][1] = y;
+    soton_position[num_soton][0] = x;
+    soton_position[num_soton][1] = y;
+    soton_position[num_soton][2]=0;
+    num_soton++;
 }
-
-void draw(Room room, int soton_positions[][2], int *soton_index, int dar_positions[][2], int *dar_index , int num) {
+void draw_dar( Room room , int num){
+    switch(num){
+        case 0:
+            dar(room,1);
+            break;
+        case 1:
+            dar(room,3);
+            dar(room,1);
+            break;
+        case 2:
+            dar(room,3);
+            dar(room,2);
+            break;
+        case 3:
+            dar(room,0);
+            dar(room,3);
+            break;
+        case 4:
+            dar(room,1);
+            dar(room,3);
+            break;
+        case 5:
+            dar(room,1);
+            dar(room,3);
+            break;
+    }
+}
+void draw_room(Room room ,int num) {
     attron(COLOR_PAIR(2));
     for (int i = 0; i < room.width; i++) {
         mvprintw(room.y, room.x + i, "_");
@@ -83,51 +116,27 @@ void draw(Room room, int soton_positions[][2], int *soton_index, int dar_positio
     }
     attroff(COLOR_PAIR(3));
     attron(COLOR_PAIR(4));
-    switch(num){
-        case 0:
-            dar(room, dar_positions, *dar_index,1);
-            (*dar_index)++;
-            break;
-        case 1:
-            dar(room, dar_positions, *dar_index,3);
-            (*dar_index)++;
-            dar(room, dar_positions, *dar_index,1);
-            (*dar_index)++;
-            break;
-        case 2:
-            dar(room, dar_positions, *dar_index,3);
-            (*dar_index)++;
-            dar(room, dar_positions, *dar_index,2);
-            (*dar_index)++;
-            break;
-        case 3:
-            dar(room, dar_positions, *dar_index,0);
-            (*dar_index)++;
-            dar(room, dar_positions, *dar_index,3);
-            (*dar_index)++;
-            break;
-        case 4:
-            dar(room, dar_positions, *dar_index,1);
-            (*dar_index)++;
-            dar(room, dar_positions, *dar_index,3);
-            (*dar_index)++;
-            break;
-        case 5:
-            dar(room, dar_positions, *dar_index,1);
-            (*dar_index)++;
-            dar(room, dar_positions, *dar_index,3);
-            (*dar_index)++;
-            break;
+    mvprintw(soton_position[num][1],soton_position[num][0],"O");
+    refresh();
+    if(num==0){
+        mvprintw(dar_positions[num][1],dar_positions[num][0],"+");
+        refresh();
     }
-    soton(room, soton_positions, *soton_index);
-    (*soton_index)++;
-    mvprintw(dar_positions[10][1],dar_positions[10][0],">");
+    else if(num>0 && num<5){
+        mvprintw(dar_positions[2*num-1][1],dar_positions[2*num-1][0],"+");
+        mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"+");
+        refresh();
+    }
+    else{
+        mvprintw(dar_positions[2*num-1][1],dar_positions[2*num-1][0],"+");
+        mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],">");
+        refresh();
+    }
     attroff(COLOR_PAIR(4));
 }
-int path_position[3000][2];
+int path_position[3000][3];
 int num_path = 0;
-
-void path(Room room[6], int dar_positions[][2]) {
+void path(Room room[6]) {
     for (int i = 0; i < 5; i++) {
         int x = dar_positions[2*i][0];
         int y = dar_positions[2*i][1];
@@ -149,8 +158,6 @@ void path(Room room[6], int dar_positions[][2]) {
         path_position[num_path][0] = x;
         path_position[num_path][1] = y;
         num_path++;
-        mvprintw(y, x, "#");
-        refresh();
         if((i)==2){
            while (x != end_x || (y+1) != end_y) {
             int direction = rand() % 4;
@@ -189,8 +196,6 @@ void path(Room room[6], int dar_positions[][2]) {
                 path_position[num_path][0] = x;
                 path_position[num_path][1] = y;
                 num_path++;
-                mvprintw(y, x, "#");
-                refresh();
             }
         } 
         }
@@ -232,8 +237,6 @@ void path(Room room[6], int dar_positions[][2]) {
                 path_position[num_path][0] = x;
                 path_position[num_path][1] = y;
                 num_path++;
-                mvprintw(y, x, "#");
-                refresh();
             }
         }
         }
@@ -275,8 +278,6 @@ void path(Room room[6], int dar_positions[][2]) {
                 path_position[num_path][0] = x;
                 path_position[num_path][1] = y;
                 num_path++;
-                mvprintw(y, x, "#");
-                refresh();
             }
         } 
         }
@@ -284,75 +285,86 @@ void path(Room room[6], int dar_positions[][2]) {
         path_position[num_path][1] = end_y;
         num_path++;
     }
+    for(int i=0 ; i<num_path ; i++){
+        path_position[i][2]=0;   
+    }
 }
 
 void print_path(int x , int y){
     for(int i=0 ; i<num_path ; i++){
-        if(x+1 == path_position[i][0] && y+1 == path_position[i][1]){
+        if(x+1 == path_position[i][0] && y+1 == path_position[i][1] && path_position[i][2]==0){
+            path_position[i][2]=1;
             attron(COLOR_PAIR(2));
             mvprintw(y+1,x+1,"#");
             refresh();
             attroff(COLOR_PAIR(2));
         }
-        if(x-1 == path_position[i][0] && y-1 == path_position[i][1]){
+        if(x-1 == path_position[i][0] && y-1 == path_position[i][1] && path_position[i][2]==0){
+            path_position[i][2]=1;
             attron(COLOR_PAIR(2));
-            mvprintw(y+1,x+1,"#");
+            mvprintw(y-1,x-1,"#");
             refresh();
             attroff(COLOR_PAIR(2));
         }
-        if(x+1 == path_position[i][0] && y-1 == path_position[i][1]){
+        if(x+1 == path_position[i][0] && y-1 == path_position[i][1] && path_position[i][2]==0){
+            path_position[i][2]=1;
             attron(COLOR_PAIR(2));
-            mvprintw(y+1,x+1,"#");
+            mvprintw(y-1,x+1,"#");
             refresh();
             attroff(COLOR_PAIR(2));
         }
-        if(x-1 == path_position[i][0] && y+1 == path_position[i][1]){
+        if(x-1 == path_position[i][0] && y+1 == path_position[i][1] && path_position[i][2]==0){
+            path_position[i][2]=1;
             attron(COLOR_PAIR(2));
-            mvprintw(y+1,x+1,"#");
+            mvprintw(y+1,x-1,"#");
             refresh();
             attroff(COLOR_PAIR(2));
         }
-        if(x == path_position[i][0] && y+1 == path_position[i][1]){
+        if(x == path_position[i][0] && y+1 == path_position[i][1] && path_position[i][2]==0){
+            path_position[i][2]=1;
             attron(COLOR_PAIR(2));
-            mvprintw(y+1,x+1,"#");
+            mvprintw(y+1,x,"#");
             refresh();
             attroff(COLOR_PAIR(2));
         }
-        if(x == path_position[i][0] && y-1 == path_position[i][1]){
+        if(x == path_position[i][0] && y-1 == path_position[i][1] && path_position[i][2]==0){
+            path_position[i][2]=1;
             attron(COLOR_PAIR(2));
-            mvprintw(y+1,x+1,"#");
+            mvprintw(y-1,x,"#");
             refresh();
             attroff(COLOR_PAIR(2));
         }
-        if(x-1 == path_position[i][0] && y == path_position[i][1]){
+        if(x-1 == path_position[i][0] && y == path_position[i][1] && path_position[i][2]==0){
+            path_position[i][2]=1;
             attron(COLOR_PAIR(2));
-            mvprintw(y+1,x+1,"#");
+            mvprintw(y,x-1,"#");
             refresh();
             attroff(COLOR_PAIR(2));
         }
-        if(x+1 == path_position[i][0] && y == path_position[i][1]){
+        if(x+1 == path_position[i][0] && y == path_position[i][1] && path_position[i][2]==0){
+            path_position[i][2]=1;
             attron(COLOR_PAIR(2));
-            mvprintw(y+1,x+1,"#");
+            mvprintw(y,x+1,"#");
             refresh();
             attroff(COLOR_PAIR(2));
         }
     }
 }
-int check_move(int x, int y, Room room[6], int soton_positions[][2], int soton_index, int dar_positions[][2], int dar_index , int path_position[][2] , int num_path) {
-    for (int i = 0; i <dar_index; i++) {
+int check_move(int x, int y, Room room[6]) {
+    for (int i = 0; i <num_dar; i++) {
         if (x == dar_positions[i][0] && y == dar_positions[i][1]) {
             return 1;
         }
     }
     for (int i = 0; i <num_path; i++) {
-        if (x == path_position[i][0] && y == path_position[i][1]) {
+        if (x == path_position[i][0] && y == path_position[i][1] && path_position[i][2]==1) {
             return 1;
         }
     }
     for(int i=0 ; i<6 ; i++){
         if (x > room[i].x && x < (room[i].x + room[i].width) && y > room[i].y && y < (room[i].y + room[i].height)) {
-        for (int i = 0; i < soton_index; i++) {
-            if (x == soton_positions[i][0] && y == soton_positions[i][1]) {
+        for (int i = 0; i < num_soton; i++) {
+            if (x == soton_position[i][0] && y == soton_position[i][1]) {
                 return 0;
             }
         }
@@ -363,10 +375,12 @@ int check_move(int x, int y, Room room[6], int soton_positions[][2], int soton_i
     return 0;
 }
 
-int move_character(Room room[6], int *x, int *y, int soton_positions[][2], int soton_index, int dar_positions[][2], int dar_index, int path_position[][2] , int num_path) {
-    int ch = getch();
+int move_character(Room room[6], int *x, int *y) {
     int newx = *x;
     int newy = *y;
+    print_path(newx,newy);
+    int ch = getch();
+    refresh();
     switch (ch) {
         case 'j':
             newy = *y - 1;
@@ -399,11 +413,10 @@ int move_character(Room room[6], int *x, int *y, int soton_positions[][2], int s
         case 'q':
             return 0;
     }
-   // print_path(newx,newy);
-    //refresh();
-    if (check_move(newx, newy, room, soton_positions, soton_index, dar_positions, dar_index,path_position,num_path)) {
-        for(int i=0 ; i<dar_index ; i++){
+    if (check_move(newx, newy, room)) {
+        for(int i=0 ; i<num_dar ; i++){
             if(dar_positions[i][0]==*x && dar_positions[i][1]==*y){
+                draw_room(room[(i+1)/2],(i+1)/2);
                 attron(COLOR_PAIR(1));
                 mvprintw(*y, *x, "+");
                 attroff(COLOR_PAIR(1));
@@ -416,7 +429,7 @@ int move_character(Room room[6], int *x, int *y, int soton_positions[][2], int s
             }
         }
         for(int i=0 ; i<num_path ; i++){
-            if(path_position[i][0]==*x && path_position[i][1]==*y){
+            if(path_position[i][0]==*x && path_position[i][1]==*y && path_position[i][2]==1){
                 attron(COLOR_PAIR(1));
                 mvprintw(*y, *x, "#");
                 attroff(COLOR_PAIR(1));
@@ -438,7 +451,6 @@ int move_character(Room room[6], int *x, int *y, int soton_positions[][2], int s
     }
     return 1;
 }
-
 int main() {
     srand(time(NULL));
     initscr();
@@ -450,10 +462,6 @@ int main() {
     init_pair(3, COLOR_YELLOW, COLOR_BLACK);
     init_pair(4, COLOR_BLUE, COLOR_BLACK);
     int num_rooms = 6 ;
-    int soton_positions[num_rooms * 2][2]; 
-    int dar_positions[num_rooms * 2][2]; 
-    int soton_index = 0;
-    int dar_index = 0;
     Room rooms[num_rooms];
     int x1 = rand()%5;
     int y1 = rand()%5;
@@ -474,18 +482,18 @@ int main() {
     y1 = rand()%5;
     create_random_rooms(rooms,5,25+y1,10+x1);
     for(int i=0 ; i<6 ; i++){
-        draw(rooms[i], soton_positions, &soton_index, dar_positions, &dar_index , i);
-        refresh();
+        draw_dar(rooms[i],i);
+        soton(rooms[i]);
     }
+    draw_room(rooms[0],0);
     int x = rooms[0].x + 1;
     int y = rooms[0].y + 1;
-    path(rooms,dar_positions);
+    path(rooms);
     refresh();
     mvprintw(y, x, "I");
     refresh();
-
     while (1) {
-        if (move_character(rooms, &x, &y, soton_positions, soton_index, dar_positions, dar_index,path_position,num_path) == 0) {
+        if (move_character(rooms, &x, &y) == 0) {
             break;
         }
         refresh();
