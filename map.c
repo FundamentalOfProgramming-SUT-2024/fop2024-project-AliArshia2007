@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ncurses.h>
-
+#include <unistd.h>
 typedef struct {
     int x;
     int y;
@@ -59,26 +59,26 @@ int soton_position[12][3];
 int num_soton=0;
 void soton(Room room) {
     int x1,x2, y1,y2;
-    x1 = (rand() % room.width)-1;
-    y1 = (rand() % room.height)-1;
-    if (x1 <= 0)
-        x1=1;
-    if (y1 <= 0)
-        y1=1;
-    x1 = room.x + x1; 
-    y1 = room.y + y1;
+    x1 = (rand() % (room.width-1));
+    y1 = (rand() % (room.height-1));
+    if(x1==0)
+        x1++;
+    if(y1==0)
+        y1++;
+    x1 = room.x + x1 + 1; 
+    y1 = room.y + y1 + 1 ;
     soton_position[num_soton][0] = x1;
     soton_position[num_soton][1] = y1;
     num_soton++;
     soton_position[num_soton][2]=0;
-    x2 = (rand() % room.width)-1;
-    y2 = (rand() % room.height)-1;
-    if (x2 <= 0)
-        x2=1;
-    if (y2 <= 0)
-        y2=1;
-    x2 = room.x + x2; 
-    y2 = room.y + y2;
+    x2 = (rand() % (room.width-1));
+    y2 = (rand() % (room.height-1));
+    if(x2==0)
+        x2++;
+    if(y2==0)
+        y2++;
+    x2 = room.x + x2+1; 
+    y2 = room.y + y2+1;
     soton_position[num_soton][0] = x2;
     soton_position[num_soton][1] = y2;
     soton_position[num_soton][2]=0;
@@ -116,6 +116,45 @@ int num_gold=0;
 int g=0;
 void gold(Room room){
         int x1,y1,x2,y2;
+        x1 = (rand() % (room.width-1));
+        y1 = (rand() % (room.height-1));
+        if(x1==0)
+            x2++;
+        if(y1==0)
+            y2++;
+        x1 = room.x + x1 +1; 
+        y1 = room.y + y1 +1;
+        for(int i=0 ; i<num_soton ; i++){
+            if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
+                x1 ++ ;
+            }
+        }
+        gold_position[num_gold][0] = x1;
+        gold_position[num_gold][1] = y1;
+        gold_position[num_gold][2]=0;
+        num_gold++;
+        x2 = (rand() % (room.width-1));
+        y2 = (rand() % (room.height-1));
+        if(x2==0)
+            x2++;
+        if(y2==0)
+            y2++;
+        x2 = room.x + x2 +1 ; 
+        y2 = room.y + y2 +1;
+        for(int i=0 ; i<num_soton ; i++){
+            if(soton_position[i][0]==x2 && soton_position[i][1]==y2){
+                x2 ++ ;
+            }
+        }
+        gold_position[num_gold][0] = x2;
+        gold_position[num_gold][1] = y2;
+        gold_position[num_gold][2]=0;
+        num_gold++;
+}
+int tale_position[6][3];
+int num_tale=0;
+void tale(Room room){
+    int x1,y1;
         x1 = (rand() % room.width)-1;
         y1 = (rand() % room.height)-1;
         if (x1 <= 0)
@@ -129,27 +168,15 @@ void gold(Room room){
                 x1 ++ ;
             }
         }
-        gold_position[num_gold][0] = x1;
-        gold_position[num_gold][1] = y1;
-        gold_position[num_gold][2]=0;
-        num_gold++;
-        x2 = (rand() % room.width)-1;
-        y2 = (rand() % room.height)-1;
-        if (x2 <= 0)
-            x2=1;
-        if (y2 <= 0)
-            y2=1;
-        x2 = room.x + x2; 
-        y2 = room.y + y2;
-        for(int i=0 ; i<num_soton ; i++){
-            if(soton_position[i][0]==x2 && soton_position[i][1]==y2){
-                x2 ++ ;
+        for(int i=0 ; i<num_gold ; i++){
+            if(gold_position[i][0]==x1 && gold_position[i][1]==y1){
+                x1 ++ ;
             }
         }
-        gold_position[num_gold][0] = x2;
-        gold_position[num_gold][1] = y2;
-        gold_position[num_gold][2]=0;
-        num_gold++;
+        tale_position[num_tale][0] = x1;
+        tale_position[num_tale][1] = y1;
+        tale_position[num_tale][2]=0;
+        num_tale++;
 }
 void draw_room(Room room ,int num) {
     attron(COLOR_PAIR(2));
@@ -176,27 +203,49 @@ void draw_room(Room room ,int num) {
     mvprintw(soton_position[2*num+1][1],soton_position[2*num+1][0],"O");
     soton_position[2*num+1][2]=1;
     refresh();
-    if(num==0){
-        mvprintw(dar_positions[num][1],dar_positions[num][0],"+");
-        dar_positions[num][2]=1;
-        refresh();
-    }
-    else if(num>0 && num<5){
-        mvprintw(dar_positions[2*num-1][1],dar_positions[2*num-1][0],"+");
-        mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"+");
-        refresh();
-    }
-    else{
-        mvprintw(dar_positions[2*num-1][1],dar_positions[2*num-1][0],"+");
-        mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],">");
-        refresh();
-    }
-    attroff(COLOR_PAIR(4));
     attron(COLOR_PAIR(5));
     mvprintw(gold_position[2*num][1],gold_position[2*num][0],"G");
     mvprintw(gold_position[2*num+1][1],gold_position[2*num+1][0],"G");
     refresh();
     attroff(COLOR_PAIR(5));
+    if(num==0){
+        if(dar_positions[num][2]==2){
+            attron(COLOR_PAIR(2));
+            mvprintw(dar_positions[num][1],dar_positions[num][0],"|");
+            attroff(COLOR_PAIR(2));
+            refresh();
+        }
+        else{
+            attron(COLOR_PAIR(4));
+            mvprintw(dar_positions[num][1],dar_positions[num][0],"+");
+            attroff(COLOR_PAIR(4));
+            dar_positions[num][2]=1;
+            refresh();
+        }
+    }
+    else if(num>0 && num<5){
+        mvprintw(dar_positions[2*num-1][1],dar_positions[2*num-1][0],"+");
+        if(dar_positions[2*num][2]==2){
+            attron(COLOR_PAIR(2));
+            mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"|");
+            attroff(COLOR_PAIR(2));
+            refresh();
+        }
+        else{
+            attron(COLOR_PAIR(4));
+            mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"+");
+            attroff(COLOR_PAIR(4));
+            refresh();
+        }
+        
+    }
+    else{
+        attron(COLOR_PAIR(4));
+        mvprintw(dar_positions[2*num-1][1],dar_positions[2*num-1][0],"+");
+        mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],">");
+        refresh();
+        attroff(COLOR_PAIR(4));
+    }
     for(int i=0 ; i<num_gold ; i++){
         if(gold_position[i][2]==1){
             attron(COLOR_PAIR(2));
@@ -209,6 +258,13 @@ void draw_room(Room room ,int num) {
             attron(COLOR_PAIR(1));
             mvprintw(dar_positions[i][1],dar_positions[i][0],"+");
             attroff(COLOR_PAIR(1));
+        }
+    }
+    for(int i=0 ; i<num_tale ; i++){
+        if(tale_position[i][2]==1){
+            attron(COLOR_PAIR(2));
+            mvprintw(tale_position[i][1],tale_position[i][0],"^");
+            attroff(COLOR_PAIR(2));
         }
     }
 }
@@ -428,10 +484,21 @@ void print_path(int x , int y){
         }
     }
 }
+int health=20;
+time_t startTime, currentTime;
+void healthy(){
+    if(health==0){
+        return;
+    }
+    --health;
+}
 void draw_page(){
     mvprintw(45,20,"gold: %d",g);
     mvprintw(45,50,"score: %d",(g*8+15));
-    mvprintw(45,80,"health:");
+    if(health>=10)
+        mvprintw(45,80,"health: %d",health);
+    else
+       mvprintw(45,80,"health: 0%d",health); 
 }
 int check_move(int x, int y, Room room[6]) {
     for (int i = 0; i <num_gold; i++) {
@@ -446,9 +513,22 @@ int check_move(int x, int y, Room room[6]) {
             dar_positions[i][2]=1;
             return 1;
         }
+        if(x+1 == dar_positions[i][0] && y == dar_positions[i][1] && dar_positions[i][2]==2){
+            mvprintw(dar_positions[i][1],dar_positions[i][0],"+");
+            dar_positions[i][2]=1;
+        }
+        if(x+1 == dar_positions[i][0] && y+1 == dar_positions[i][1] && dar_positions[i][2]==2){
+            mvprintw(dar_positions[i][1],dar_positions[i][0],"+");
+            dar_positions[i][2]=1;
+        }
+        if(x+1 == dar_positions[i][0] && y-1 == dar_positions[i][1] && dar_positions[i][2]==2){
+            mvprintw(dar_positions[i][1],dar_positions[i][0],"+");
+            dar_positions[i][2]=1;
+        }
     }
     for (int i = 0; i <num_path; i++) {
         if (x == path_position[i][0] && y == path_position[i][1] && path_position[i][2]==1) {
+            path_position[i][2]=1;
             return 1;
         }
     }
@@ -638,6 +718,22 @@ int move_character(Room room[6], int *x, int *y) {
                 return 1;
             }
         }
+        for(int i=0 ; i<num_tale ; i++){
+            if(tale_position[i][0]==*x && tale_position[i][1]==*y){
+                if(tale_position[i][2]==0)
+                    health--;
+                    tale_position[i][2]=1;
+                attron(COLOR_PAIR(2));
+                mvprintw(*y, *x, "^");
+                attroff(COLOR_PAIR(2));
+                *x = newx;
+                *y = newy;
+                mvprintw(*y, *x, "I");
+                draw_page();
+                refresh();
+                return 1;
+            }
+        }
         for(int i=0 ; i<num_path ; i++){
             if(path_position[i][0]==*x && path_position[i][1]==*y && path_position[i][2]==1){
                 attron(COLOR_PAIR(1));
@@ -698,7 +794,10 @@ int main() {
         draw_dar(rooms[i],i);
         soton(rooms[i]);
         gold(rooms[i]);
+        tale(rooms[i]);
     }
+    int t=2*(rand()%2);
+    dar_positions[t][2]=2;
     draw_room(rooms[0],0);
     rooms[0].hide=1;
     draw_page();
@@ -708,14 +807,30 @@ int main() {
     refresh();
     mvprintw(y, x, "I");
     refresh();
-    while (1) {
+    time(&startTime);
+    while (health > 0) {
+        time(&currentTime);
+        if (difftime(currentTime, startTime) >= 8) {
+            healthy();
+            time(&startTime);
+        }
         if (move_character(rooms, &x, &y) == 0) {
             break;
         }
         refresh();
     }
-    refresh();
-    getch();
+    if(health==0){
+        attron(COLOR_PAIR(2));
+        mvprintw(20,120,"You are Lost.");
+        refresh();
+        sleep(5);
+        attroff(COLOR_PAIR(2));
+    }
+    else{
+        mvprintw(20,120,"I hope enjoy the game.");
+        refresh();
+        sleep(5);  
+    }
     endwin();
     return 0;
 }
