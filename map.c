@@ -9,6 +9,7 @@ typedef struct {
     int y;
     int width;
     int height;
+    int hide;
 } Room;
 void create_random_rooms(Room rooms[],int num , int y, int x) {
     Room new_room;
@@ -17,6 +18,7 @@ void create_random_rooms(Room rooms[],int num , int y, int x) {
     new_room.x = x;
     new_room.y = y;
     rooms[num] = new_room;
+    rooms->hide=0;
 }
 int dar_positions[11][3];
 int num_dar=0;
@@ -53,20 +55,32 @@ void dar(Room room,int t1) {
             break;
     }
 }
-int soton_position[6][3];
+int soton_position[12][3];
 int num_soton=0;
 void soton(Room room) {
-    int x, y;
-    x = (rand() % room.width)-1;
-    y = (rand() % room.height)-1;
-    if (x <= 0)
-        x=1;
-    if (y <= 0)
-        y=1;
-    x = room.x + x; 
-    y = room.y + y;
-    soton_position[num_soton][0] = x;
-    soton_position[num_soton][1] = y;
+    int x1,x2, y1,y2;
+    x1 = (rand() % room.width)-1;
+    y1 = (rand() % room.height)-1;
+    if (x1 <= 0)
+        x1=1;
+    if (y1 <= 0)
+        y1=1;
+    x1 = room.x + x1; 
+    y1 = room.y + y1;
+    soton_position[num_soton][0] = x1;
+    soton_position[num_soton][1] = y1;
+    num_soton++;
+    soton_position[num_soton][2]=0;
+    x2 = (rand() % room.width)-1;
+    y2 = (rand() % room.height)-1;
+    if (x2 <= 0)
+        x2=1;
+    if (y2 <= 0)
+        y2=1;
+    x2 = room.x + x2; 
+    y2 = room.y + y2;
+    soton_position[num_soton][0] = x2;
+    soton_position[num_soton][1] = y2;
     soton_position[num_soton][2]=0;
     num_soton++;
 }
@@ -116,10 +130,15 @@ void draw_room(Room room ,int num) {
     }
     attroff(COLOR_PAIR(3));
     attron(COLOR_PAIR(4));
-    mvprintw(soton_position[num][1],soton_position[num][0],"O");
+    mvprintw(soton_position[2*num][1],soton_position[2*num][0],"O");
+    soton_position[2*num][2]=1;
+    refresh();
+    mvprintw(soton_position[2*num+1][1],soton_position[2*num+1][0],"O");
+    soton_position[2*num+1][2]=1;
     refresh();
     if(num==0){
         mvprintw(dar_positions[num][1],dar_positions[num][0],"+");
+        dar_positions[num][2]=1;
         refresh();
     }
     else if(num>0 && num<5){
@@ -410,6 +429,32 @@ int move_character(Room room[6], int *x, int *y) {
             newx = *x + 1;
             newy = *y + 1;
             break;
+        case 'a':
+            for(int i=0 ; i<6 ; i++){
+                draw_room(room[i],i);
+            }
+            while(1){
+                int c = getch();
+                if(c=='a'){
+                    break;
+                }
+            }
+            clear();
+            for (int i=0 ; i< 6; i++)
+            {
+                if(room[i].hide==1){
+                    draw_room(room[i],i);
+                }
+            }
+            for(int i=0 ; i<num_path ; i++){
+                if(path_position[i][2]==1){
+                    attron(COLOR_PAIR(1));
+                    mvprintw(path_position[i][1],path_position[i][0],"#");
+                    attroff(COLOR_PAIR(1));
+                }
+            }
+            mvprintw(newy,newx,"I");
+            break;
         case 'q':
             return 0;
     }
@@ -417,6 +462,7 @@ int move_character(Room room[6], int *x, int *y) {
         for(int i=0 ; i<num_dar ; i++){
             if(dar_positions[i][0]==*x && dar_positions[i][1]==*y){
                 draw_room(room[(i+1)/2],(i+1)/2);
+                room[(i+1)/2].hide=1;
                 attron(COLOR_PAIR(1));
                 mvprintw(*y, *x, "+");
                 attroff(COLOR_PAIR(1));
