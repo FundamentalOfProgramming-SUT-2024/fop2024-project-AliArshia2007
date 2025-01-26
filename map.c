@@ -430,8 +430,14 @@ int move_character(Room room[6], int *x, int *y) {
             newy = *y + 1;
             break;
         case 'a':
+            clear();
             for(int i=0 ; i<6 ; i++){
                 draw_room(room[i],i);
+            }
+            refresh();
+            for(int i=0 ; i<num_path ; i++){
+                mvprintw(path_position[i][1],path_position[i][0],"#");
+                refresh();
             }
             while(1){
                 int c = getch();
@@ -445,6 +451,7 @@ int move_character(Room room[6], int *x, int *y) {
                 if(room[i].hide==1){
                     draw_room(room[i],i);
                 }
+                refresh();
             }
             for(int i=0 ; i<num_path ; i++){
                 if(path_position[i][2]==1){
@@ -454,6 +461,76 @@ int move_character(Room room[6], int *x, int *y) {
                 }
             }
             mvprintw(newy,newx,"I");
+            break;
+        case 'f':
+            int c=getch();
+            refresh();
+            switch (c){
+                case 'j':
+                    while(check_move(newx,newy,room)){
+                        newy = newy - 1;
+                    }
+                    newy++;
+                    refresh();
+                    break;
+                case 'k':
+                    while(check_move(newx,newy,room)){
+                        newy = newy + 1;
+                    }
+                    newy--;
+                    refresh();
+                    break;
+                case 'h':
+                    while(check_move(newx,newy,room)){
+                        newx = newx - 1;
+                    }
+                    newx++;
+                    refresh();
+                    break;
+                case 'l':
+                    while(check_move(newx,newy,room)){
+                        newx = newx + 1;
+                    }
+                    newx--;
+                    refresh();
+                    break;
+                case 'y':
+                    while(check_move(newx,newy,room)){
+                        newx = newx - 1;
+                        newy = newy - 1;
+                    }
+                    newy++;
+                    newx++;
+                    refresh();
+                    break;
+                case 'u':
+                    while(check_move(newx,newy,room)){
+                        newx = newx + 1;
+                        newy = newy - 1;
+                    }
+                    newy++;
+                    newx--;
+                    refresh();
+                    break;
+                case 'b':
+                    while(check_move(newx,newy,room)){
+                        newx = newx - 1;
+                        newy = newy + 1;
+                    }
+                    newy--;
+                    newx++;
+                    refresh();
+                    break;
+                case 'n':
+                    while(check_move(newx,newy,room)){
+                        newx = newx + 1;
+                        newy = newy + 1;
+                    }
+                    newy--;
+                    newx--;
+                    refresh();
+                    break;
+            }
             break;
         case 'q':
             return 0;
@@ -532,6 +609,7 @@ int main() {
         soton(rooms[i]);
     }
     draw_room(rooms[0],0);
+    rooms[0].hide=1;
     int x = rooms[0].x + 1;
     int y = rooms[0].y + 1;
     path(rooms);
