@@ -111,6 +111,46 @@ void draw_dar( Room room , int num){
             break;
     }
 }
+int gold_position[12][3];
+int num_gold=0;
+int g=0;
+void gold(Room room){
+        int x1,y1,x2,y2;
+        x1 = (rand() % room.width)-1;
+        y1 = (rand() % room.height)-1;
+        if (x1 <= 0)
+            x1=1;
+        if (y1 <= 0)
+            y1=1;
+        x1 = room.x + x1; 
+        y1 = room.y + y1;
+        for(int i=0 ; i<num_soton ; i++){
+            if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
+                x1 ++ ;
+            }
+        }
+        gold_position[num_gold][0] = x1;
+        gold_position[num_gold][1] = y1;
+        gold_position[num_gold][2]=0;
+        num_gold++;
+        x2 = (rand() % room.width)-1;
+        y2 = (rand() % room.height)-1;
+        if (x2 <= 0)
+            x2=1;
+        if (y2 <= 0)
+            y2=1;
+        x2 = room.x + x2; 
+        y2 = room.y + y2;
+        for(int i=0 ; i<num_soton ; i++){
+            if(soton_position[i][0]==x2 && soton_position[i][1]==y2){
+                x2 ++ ;
+            }
+        }
+        gold_position[num_gold][0] = x2;
+        gold_position[num_gold][1] = y2;
+        gold_position[num_gold][2]=0;
+        num_gold++;
+}
 void draw_room(Room room ,int num) {
     attron(COLOR_PAIR(2));
     for (int i = 0; i < room.width; i++) {
@@ -152,6 +192,25 @@ void draw_room(Room room ,int num) {
         refresh();
     }
     attroff(COLOR_PAIR(4));
+    attron(COLOR_PAIR(5));
+    mvprintw(gold_position[2*num][1],gold_position[2*num][0],"G");
+    mvprintw(gold_position[2*num+1][1],gold_position[2*num+1][0],"G");
+    refresh();
+    attroff(COLOR_PAIR(5));
+    for(int i=0 ; i<num_gold ; i++){
+        if(gold_position[i][2]==1){
+            attron(COLOR_PAIR(2));
+            mvprintw(gold_position[i][1],gold_position[i][0],"G");
+            attroff(COLOR_PAIR(2));
+        }
+    }
+    for(int i=0 ; i<num_dar ; i++){
+        if(dar_positions[i][2]==1){
+            attron(COLOR_PAIR(1));
+            mvprintw(dar_positions[i][1],dar_positions[i][0],"+");
+            attroff(COLOR_PAIR(1));
+        }
+    }
 }
 int path_position[3000][3];
 int num_path = 0;
@@ -369,9 +428,22 @@ void print_path(int x , int y){
         }
     }
 }
+void draw_page(){
+    mvprintw(45,20,"gold: %d",g);
+    mvprintw(45,50,"score: %d",(g*8+15));
+    mvprintw(45,80,"health:");
+}
 int check_move(int x, int y, Room room[6]) {
+    for (int i = 0; i <num_gold; i++) {
+        if (x == gold_position[i][0] && y == gold_position[i][1]) {
+            gold_position[i][2]=1;
+            g++;
+            return 1;
+        }
+    }
     for (int i = 0; i <num_dar; i++) {
         if (x == dar_positions[i][0] && y == dar_positions[i][1]) {
+            dar_positions[i][2]=1;
             return 1;
         }
     }
@@ -434,6 +506,7 @@ int move_character(Room room[6], int *x, int *y) {
             for(int i=0 ; i<6 ; i++){
                 draw_room(room[i],i);
             }
+            draw_page();
             refresh();
             for(int i=0 ; i<num_path ; i++){
                 mvprintw(path_position[i][1],path_position[i][0],"#");
@@ -546,9 +619,23 @@ int move_character(Room room[6], int *x, int *y) {
                 *x = newx;
                 *y = newy;
                 mvprintw(*y, *x, "I");
+                draw_page();
                 refresh();
                 return 1;
 
+            }
+        }
+        for(int i=0 ; i<num_gold ; i++){
+            if(gold_position[i][0]==*x && gold_position[i][1]==*y){
+                attron(COLOR_PAIR(2));
+                mvprintw(*y, *x, "G");
+                attroff(COLOR_PAIR(2));
+                *x = newx;
+                *y = newy;
+                mvprintw(*y, *x, "I");
+                draw_page();
+                refresh();
+                return 1;
             }
         }
         for(int i=0 ; i<num_path ; i++){
@@ -559,6 +646,7 @@ int move_character(Room room[6], int *x, int *y) {
                 *x = newx;
                 *y = newy;
                 mvprintw(*y, *x, "I");
+                draw_page();
                 refresh();
                 return 1;
 
@@ -570,6 +658,7 @@ int move_character(Room room[6], int *x, int *y) {
         *x = newx;
         *y = newy;
         mvprintw(*y, *x, "I");
+        draw_page();
         refresh();
     }
     return 1;
@@ -582,8 +671,9 @@ int main() {
     start_color();
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
     init_pair(2, COLOR_RED, COLOR_BLACK);
-    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
     init_pair(4, COLOR_BLUE, COLOR_BLACK);
+    init_pair(5, COLOR_BLACK, COLOR_YELLOW);
     int num_rooms = 6 ;
     Room rooms[num_rooms];
     int x1 = rand()%5;
@@ -607,9 +697,11 @@ int main() {
     for(int i=0 ; i<6 ; i++){
         draw_dar(rooms[i],i);
         soton(rooms[i]);
+        gold(rooms[i]);
     }
     draw_room(rooms[0],0);
     rooms[0].hide=1;
+    draw_page();
     int x = rooms[0].x + 1;
     int y = rooms[0].y + 1;
     path(rooms);
