@@ -187,7 +187,7 @@ void tale(Room room){
         tale_position[num_tale][2]=0;
         num_tale++;
 }
-int food_position[6][4];
+int food_position[6][3];
 int num_food=0;
 int nf=0;
 void food(Room room){
@@ -219,7 +219,6 @@ void food(Room room){
         food_position[num_food][0] = x1;
         food_position[num_food][1] = y1;
         food_position[num_food][2]=0;
-        food_position[num_food][3]=(rand()%2);
         num_food++;
 }
 void draw_room(Room room ,int num) {
@@ -931,6 +930,46 @@ int move_character(Room room[6], int *x, int *y) {
                     break;
             }
             break;
+        case 'e':
+        int x=0;
+            for(int i=0 ; i<num_food ; i++){
+                if(food_position[i][2]>0)
+                    mvprintw(39+x,130,"food %d",x+1);
+                    x++;
+            }
+            mvprintw(39+x,130,"return to the game.");
+            x++;
+            mvprintw(45,130,"enter your choise:");
+            int d;
+            scanw("%d",&d);
+            refresh();
+            srand(time(0));
+            int h=rand()%2;
+            if(h==1){
+                health += 2;
+                mvprintw(15,140,"your food is healthy.");
+                draw_page();
+                refresh();
+                sleep(2);
+                nf--;
+                food_position[d-1][2]=-1;
+            }
+            else{
+                health -= 2;
+                mvprintw(15,140,"your food is unhealthy.");
+                refresh();
+                draw_page();
+                sleep(2);
+                food_position[d-1][2]=-1;
+                nf--;
+            }
+            move(15,139);
+            clrtoeol();
+            for(int i=0 ; i<=(num_food+1) ; i++){
+                move(39+i,129);
+                clrtoeol();
+            }
+            return 1;
         case 'q':
             return 0;
     }
