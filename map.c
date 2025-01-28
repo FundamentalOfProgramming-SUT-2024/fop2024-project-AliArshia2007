@@ -163,7 +163,7 @@ void gold(Room room){
 int tale_position[6][4];
 int num_tale=0;
 void tale(Room room){
-    int x1,y1;
+        int x1,y1;
         x1 = (rand() % (room.width-1));
         y1 = (rand() % (room.height-1));
         if (x1 <= 0)
@@ -187,14 +187,13 @@ void tale(Room room){
         tale_position[num_tale][2]=0;
         num_tale++;
 }
-int food_position[6][3];
+int food_position[24][3];
 int num_food=0;
 int nf=0;
 void food(Room room){
-    srand(time(0));
     int x1,y1;
-        x1 = (rand() % (room.width-1));
-        y1 = (rand() % (room.height-1));
+        x1 = (rand() % (room.width-2));
+        y1 = (rand() % (room.height-2));
         if (x1 <= 0)
             x1=1;
         if (y1 <= 0)
@@ -607,7 +606,7 @@ void draw_page(){
     mvprintw(45,20,"gold: %d",g);
     attroff(COLOR_PAIR(6));
     attron(COLOR_PAIR(1));
-    mvprintw(45,50,"score: %d",(g*8+15));
+    mvprintw(45,50,"score: %d",(g*3));
     attroff(COLOR_PAIR(1));
     attron(COLOR_PAIR(2));
     if(health>=10)
@@ -931,44 +930,67 @@ int move_character(Room room[6], int *x, int *y) {
             }
             break;
         case 'e':
-        int x=0;
-            for(int i=0 ; i<num_food ; i++){
-                if(food_position[i][2]>0)
-                    mvprintw(39+x,130,"food %d",x+1);
-                    x++;
-            }
-            mvprintw(39+x,130,"return to the game.");
-            x++;
-            mvprintw(45,130,"enter your choise:");
-            int d;
-            scanw("%d",&d);
-            refresh();
-            srand(time(0));
-            int h=rand()%2;
-            if(h==1){
-                health += 2;
-                mvprintw(15,140,"your food is healthy.");
-                draw_page();
+            while(TRUE){
+                if(nf==0){
+                    attron(COLOR_PAIR(2));
+                    mvprintw(15,140,"you don't have any food.");
+                    refresh();
+                    attroff(COLOR_PAIR(2));
+                    sleep(2);
+                }
+                attron(COLOR_PAIR(7));
+                for(int i=0 ; i<nf ; i++){
+                    if(food_position[i][2]>0)
+                        mvprintw(43-i,130,"food %d",nf-i);
+                }
+                mvprintw(44,130,"press 10 to return the game.");
+                mvprintw(45,130,"enter your choise:");
                 refresh();
-                sleep(2);
-                nf--;
-                food_position[d-1][2]=-1;
-            }
-            else{
-                health -= 2;
-                mvprintw(15,140,"your food is unhealthy.");
+                move(45,147);
+                clrtoeol();
+                int d;
+                move(45,148);
+                scanw("%d",&d);
+                mvprintw(45,148,"%d",d);
+                if(d==10)
+                    break;
                 refresh();
-                draw_page();
-                sleep(2);
-                food_position[d-1][2]=-1;
-                nf--;
+                srand(time(0));
+                int h=rand()%2;
+                if(h==1){
+                    health += 3;
+                    mvprintw(15,140,"your food is healthy.");
+                    draw_page();
+                    refresh();
+                    sleep(2);
+                    nf--;
+                }
+                else{
+                    health -= 1;
+                    mvprintw(15,140,"your food is unhealthy.");
+                    refresh();
+                    draw_page();
+                    sleep(2);
+                    nf--;
+                }
+                move(15,139);
+                clrtoeol();
+                for(int i=0 ; i<=6 ; i++){
+                    move(39+i,129);
+                    clrtoeol();
+                }
             }
-            move(15,139);
-            clrtoeol();
-            for(int i=0 ; i<=(num_food+1) ; i++){
+            for(int i=0 ; i<=6 ; i++){
                 move(39+i,129);
                 clrtoeol();
             }
+            attroff(COLOR_PAIR(7));
+            move(15,139);
+            clrtoeol();
+            move(44,129);
+            clrtoeol();
+            move(45,129);
+            clrtoeol();
             return 1;
         case 'q':
             return 0;
@@ -1034,13 +1056,12 @@ int move_character(Room room[6], int *x, int *y) {
                 draw_page();
                 refresh();
                 return 1;
-
             }
         }for(int i=0 ; i<num_food ; i++){
             if(food_position[i][0]==*x && food_position[i][1]==*y){
                 if(nf==5){
                     attron(COLOR_PAIR(2));
-                    mvprintw(10,140,"You have th enough food.");
+                    mvprintw(10,140,"You have enough food.");
                     attron(COLOR_PAIR(2));
                     refresh();
                     sleep(1);
@@ -1182,73 +1203,102 @@ int main() {
     init_pair(5, COLOR_BLACK, COLOR_YELLOW);
     init_pair(6, COLOR_YELLOW, COLOR_BLACK);
     init_pair(7,COLOR_CYAN,COLOR_BLACK);
-    int num_rooms = 6 ;
-    Room rooms[num_rooms];
-    int x1 = rand()%5;
-    int y1 = rand()%5;
-    create_random_rooms(rooms,0,5+y1,10+x1);
-    x1 = rand()%5;
-    y1 = rand()%5;
-    create_random_rooms(rooms,1,5+y1,60+x1);
-    x1 = rand()%5;
-    y1 = rand()%5;
-    create_random_rooms(rooms,2,5+y1,110+x1);
-    x1 = rand()%5;
-    y1 = rand()%5;
-    create_random_rooms(rooms,3,25+y1,110+x1);
-    x1 = rand()%5;
-    y1 = rand()%5;
-    create_random_rooms(rooms,4,25+y1,60);
-    x1 = rand()%5;
-    y1 = rand()%5;
-    create_random_rooms(rooms,5,25+y1,10+x1);
-    for(int i=0 ; i<6 ; i++){
-        draw_dar(rooms[i],i);
-        soton(rooms[i]);
-        gold(rooms[i]);
-        tale(rooms[i]);
-        food(rooms[i]);
-    }
-    int q=rand()%3;
-    key[0]=rooms[q].x+rand()%(rooms[q].width-2)+1;
-    key[1]=rooms[q].y+rand()%(rooms[q].height-2)+1;
-    key[2]=q; key[3]=0;
-    int t=2*(rand()%2);
-    dar_positions[t][2]=2;
-    dar_positions[t+6][2]=3;
-    draw_room(rooms[0],0);
-    rooms[0].hide=1;
-    draw_page();
-    int x = rooms[0].x + 1;
-    int y = rooms[0].y + 1;
-    path(rooms);
-    refresh();
-    mvprintw(y, x, "I");
-    refresh();
-    time(&startTime);
-    while (health > 0) {
-        time(&currentTime);
-        if (difftime(currentTime, startTime) >= 8) {
-            healthy();
-            time(&startTime);
+    for(int i=0 ; i<4 ; i++){
+        clear();
+        srand(time(0));
+        int num_rooms = 6 ;
+        Room rooms[num_rooms];
+        int x1 = rand()%5;
+        int y1 = rand()%5;
+        create_random_rooms(rooms,0,5+y1,10+x1);
+        x1 = rand()%5;
+        y1 = rand()%5;
+        create_random_rooms(rooms,1,5+y1,60+x1);
+        x1 = rand()%5;
+        y1 = rand()%5;
+        create_random_rooms(rooms,2,5+y1,110+x1);
+        x1 = rand()%5;
+        y1 = rand()%5;
+        create_random_rooms(rooms,3,25+y1,110+x1);
+        x1 = rand()%5;
+        y1 = rand()%5;
+        create_random_rooms(rooms,4,25+y1,60);
+        x1 = rand()%5;
+        y1 = rand()%5;
+        create_random_rooms(rooms,5,25+y1,10+x1);
+        for(int j=0 ; j<6 ; j++){
+            draw_dar(rooms[j],j);
+            soton(rooms[j]);
+            gold(rooms[j]);
+            tale(rooms[j]);
+            food(rooms[j]);
         }
-        if (move_character(rooms, &x, &y) == 0) {
-            break;
+        int q=rand()%3;
+        key[0]=rooms[q].x+rand()%(rooms[q].width-2)+1;
+        key[1]=rooms[q].y+rand()%(rooms[q].height-2)+1;
+        key[2]=q; key[3]=0;
+        int t=2*(rand()%2);
+        dar_positions[t][2]=2;
+        dar_positions[t+6][2]=3;
+        draw_room(rooms[0],0);
+        rooms[0].hide=1;
+        draw_page();
+        int x = rooms[0].x + 1;
+        int y = rooms[0].y + 1;
+        path(rooms);
+        refresh();
+        mvprintw(y, x, "I");
+        refresh();
+        time(&startTime);
+        while (health > 0) {
+            time(&currentTime);
+            if (difftime(currentTime, startTime) >= 8) {
+                healthy();
+                time(&startTime);
+            }
+            if (move_character(rooms, &x, &y) == 0) {
+                clear();
+                mvprintw(20,140,"I hope enjoy the game.");
+                refresh();
+                getchar();
+                endwin();
+                return 0;
+            }
+            refresh();
+            if(x==dar_positions[10][0]&& y==dar_positions[10][1]){
+                break;
+            }
         }
-        refresh();
-    }
-    if(health==0){
-        attron(COLOR_PAIR(2));
-        mvprintw(20,140,"You are Lost.");
-        refresh();
-        sleep(5);
-        attroff(COLOR_PAIR(2));
-    }
-    else{
-        mvprintw(20,140,"I hope enjoy the game.");
-        refresh();
-        sleep(5);  
-    }
-    endwin();
-    return 0;
+        if(health==0){
+            attron(COLOR_PAIR(2));
+            mvprintw(20,140,"You are Lost.");
+            refresh();
+            attroff(COLOR_PAIR(2));
+            getchar();
+            endwin();
+            return 0;
+        }
+        for(int j=0 ; j<num_dar ; j++){
+            dar_positions[j][0]=dar_positions[j][1]=dar_positions[j][2]=0;
+        }
+        for(int j=0 ; j<num_path ; j++){
+            path_position[j][0]=path_position[j][1]=path_position[j][2]=0;
+        }
+        for(int j=0 ; j<num_soton ; j++){
+            soton_position[j][0]=soton_position[j][1]=soton_position[j][2]=0;
+        }
+        for(int j=0 ; j<num_gold ; j++){
+            gold_position[j][0]=gold_position[j][1]=gold_position[j][2]=gold_position[j][3]=0;
+        }
+        for(int j=0 ; j<num_tale ; j++){
+            tale_position[j][0]=tale_position[j][1]=tale_position[j][2]=tale_position[j][3]=0;
+        }
+        for(int j=0 ; j<num_food ; j++){
+            food_position[j][0]=food_position[j][1]=food_position[j][2]=0;
+        }
+        key[0]=key[1]=key[2]=key[3]=0;
+        num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=0;
+        sleep(2);
+        }
+        return 0;
 }
