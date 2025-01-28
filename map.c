@@ -4,7 +4,11 @@
 #include <time.h>
 #include <ncurses.h>
 #include <unistd.h>
+#include <locale.h>
+#include <wchar.h>
 int password[1][2];
+int key[4];
+int num_key=0;
 typedef struct {
     int x;
     int y;
@@ -222,6 +226,11 @@ void draw_room(Room room ,int num) {
             attroff(COLOR_PAIR(2));
             refresh();
         }
+        else if(dar_positions[num][2]==5){
+            attron(COLOR_PAIR(1));
+            mvprintw(dar_positions[num][1],dar_positions[num][0],"?");
+            attroff(COLOR_PAIR(1));
+        }
         else{
             attron(COLOR_PAIR(4));
             mvprintw(dar_positions[num][1],dar_positions[num][0],"+");
@@ -249,6 +258,11 @@ void draw_room(Room room ,int num) {
             mvprintw(y,x,"&");
             attroff(COLOR_PAIR(4));
             refresh();
+        }
+        else if(dar_positions[2*num][2]==5){
+            attron(COLOR_PAIR(1));
+            mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"?");
+            attroff(COLOR_PAIR(1));
         }
         else{
             attron(COLOR_PAIR(4));
@@ -283,6 +297,11 @@ void draw_room(Room room ,int num) {
             mvprintw(dar_positions[i][1],dar_positions[i][0],"@");
             attroff(COLOR_PAIR(1));
         }
+        else if(dar_positions[i][2]==5){
+            attron(COLOR_PAIR(1));
+            mvprintw(dar_positions[i][1],dar_positions[i][0],"?");
+            attroff(COLOR_PAIR(1));
+        }
     }
     for(int i=0 ; i<num_tale ; i++){
         if(tale_position[i][2]==1){
@@ -290,6 +309,23 @@ void draw_room(Room room ,int num) {
             mvprintw(tale_position[i][1],tale_position[i][0],"^");
             attroff(COLOR_PAIR(2));
         }
+    }
+    if(key[2]==num){
+        if(key[3]==0){
+            attron(COLOR_PAIR(6));
+            move(key[1], key[0]);
+            printw("\u0394");
+            attroff(COLOR_PAIR(6));
+            refresh();
+        }
+        else{
+            attron(COLOR_PAIR(1));
+            move(key[1], key[0]);
+            printw("\u0394");
+            attroff(COLOR_PAIR(1));
+            refresh(); 
+        }
+        
     }
 }
 int path_position[3000][3];
@@ -617,22 +653,32 @@ int check_move(int x, int y, Room room[6]) {
                     }
                 }
             }
+            if(dar_positions[i][2]==5){
+                return 1;
+            }
             dar_positions[i][2]=1;
+            return 1;
+        }
+        if(key[0]==x && key[1]==y){
             return 1;
         }
         if(x+1 == dar_positions[i][0] && y == dar_positions[i][1] && dar_positions[i][2]==2){
             attron(COLOR_PAIR(4));
-            mvprintw(dar_positions[i][1],dar_positions[i][0],"+");
+            mvprintw(dar_positions[i][1],dar_positions[i][0],"?");
+            dar_positions[i][2]=5;
             attroff(COLOR_PAIR(4));
-            dar_positions[i][2]=1;
         }
         if(x+1 == dar_positions[i][0] && y+1 == dar_positions[i][1] && dar_positions[i][2]==2){
-            mvprintw(dar_positions[i][1],dar_positions[i][0],"+");
-            dar_positions[i][2]=1;
+            attron(COLOR_PAIR(4));
+            mvprintw(dar_positions[i][1],dar_positions[i][0],"?");
+            dar_positions[i][2]=5;
+            attroff(COLOR_PAIR(4));
         }
         if(x+1 == dar_positions[i][0] && y-1 == dar_positions[i][1] && dar_positions[i][2]==2){
-            mvprintw(dar_positions[i][1],dar_positions[i][0],"+");
-            dar_positions[i][2]=1;
+            attron(COLOR_PAIR(4));
+            mvprintw(dar_positions[i][1],dar_positions[i][0],"?");
+            dar_positions[i][2]=5;
+            attroff(COLOR_PAIR(4));
         }
     }
     for (int i = 0; i <num_path; i++) {
@@ -808,7 +854,27 @@ int move_character(Room room[6], int *x, int *y) {
             draw_page();
             refresh();
             return 1;
-
+        }
+        if(key[0]==*x && key[1]==*y){
+            attron(COLOR_PAIR(1));
+            mvprintw(*y, *x, "\u0394");
+            attroff(COLOR_PAIR(1));
+            attron(COLOR_PAIR(6));
+            mvprintw(10,140,"You get the master key.");
+            key[3]=1;
+            attroff(COLOR_PAIR(6));
+            refresh();
+            sleep(1);
+            move(10,139);
+            clrtoeol();
+            refresh();
+            *x = newx;
+            *y = newy;
+            num_key++;
+            mvprintw(*y, *x, "I");
+            draw_page();
+            refresh();
+            return 1;
         }
         for(int i=0 ; i<num_dar ; i++){
             if(dar_positions[i][0]==*x && dar_positions[i][1]==*y){
@@ -817,6 +883,13 @@ int move_character(Room room[6], int *x, int *y) {
                     room[(i+1)/2].hide=1;
                     attron(COLOR_PAIR(1));
                     mvprintw(*y, *x, "@");
+                    attroff(COLOR_PAIR(1)); 
+                }
+                if(dar_positions[i][2]==5){
+                    draw_room(room[(i+1)/2],(i+1)/2);
+                    room[(i+1)/2].hide=1;
+                    attron(COLOR_PAIR(1));
+                    mvprintw(*y, *x, "?");
                     attroff(COLOR_PAIR(1)); 
                 }
                 else{
@@ -873,7 +946,7 @@ int move_character(Room room[6], int *x, int *y) {
         for(int i=0 ; i<num_tale ; i++){
             if(tale_position[i][0]==*x && tale_position[i][1]==*y){
                 if(tale_position[i][2]==0)
-                    health--;
+                    health -= 2;
                     tale_position[i][2]=1;
                 attron(COLOR_PAIR(2));
                 mvprintw(*y, *x, "^");
@@ -913,6 +986,7 @@ int move_character(Room room[6], int *x, int *y) {
 }
 int main() {
     srand(time(NULL));
+    setlocale(LC_ALL, "");
     initscr();
     keypad(stdscr, TRUE);
     noecho();
@@ -949,6 +1023,10 @@ int main() {
         gold(rooms[i]);
         tale(rooms[i]);
     }
+    int q=rand()%3;
+    key[0]=rooms[q].x+rand()%(rooms[q].width-2)+1;
+    key[1]=rooms[q].y+rand()%(rooms[q].height-2)+1;
+    key[2]=q; key[3]=0;
     int t=2*(rand()%2);
     dar_positions[t][2]=2;
     dar_positions[t+6][2]=3;
