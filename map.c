@@ -64,8 +64,8 @@ int soton_position[12][3];
 int num_soton=0;
 void soton(Room room) {
     int x1,x2, y1,y2;
-    x1 = (rand() % (room.width-1));
-    y1 = (rand() % (room.height-1));
+    x1 = (rand() % (room.width-2));
+    y1 = (rand() % (room.height-2));
     if(x1==0)
         x1++;
     if(y1==0)
@@ -160,7 +160,7 @@ void gold(Room room){
         gold_position[num_gold][3]=price2;
         num_gold++;
 }
-int tale_position[6][3];
+int tale_position[6][4];
 int num_tale=0;
 void tale(Room room){
     int x1,y1;
@@ -186,6 +186,41 @@ void tale(Room room){
         tale_position[num_tale][1] = y1;
         tale_position[num_tale][2]=0;
         num_tale++;
+}
+int food_position[6][4];
+int num_food=0;
+int nf=0;
+void food(Room room){
+    srand(time(0));
+    int x1,y1;
+        x1 = (rand() % (room.width-1));
+        y1 = (rand() % (room.height-1));
+        if (x1 <= 0)
+            x1=1;
+        if (y1 <= 0)
+            y1=1;
+        x1 = room.x + x1+1; 
+        y1 = room.y + y1+1;
+        for(int i=0 ; i<num_soton ; i++){
+            if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
+                x1 ++ ;
+            }
+        }
+        for(int i=0 ; i<num_gold ; i++){
+            if(gold_position[i][0]==x1 && gold_position[i][1]==y1){
+                x1 ++ ;
+            }
+        }
+        for(int i=0 ; i<num_tale ; i++){
+            if(tale_position[i][0]==x1 && tale_position[i][1]==y1){
+                x1 ++ ;
+            }
+        }
+        food_position[num_food][0] = x1;
+        food_position[num_food][1] = y1;
+        food_position[num_food][2]=0;
+        food_position[num_food][3]=(rand()%2);
+        num_food++;
 }
 void draw_room(Room room ,int num) {
     attron(COLOR_PAIR(2));
@@ -219,6 +254,10 @@ void draw_room(Room room ,int num) {
     soton_position[2*num+1][2]=0;
     refresh();
     attroff(COLOR_PAIR(5));
+    attron(COLOR_PAIR(7));
+    mvprintw(food_position[num][1],food_position[num][0],"F");
+    refresh();
+    attroff(COLOR_PAIR(7));
     if(num==0){
         if(dar_positions[num][2]==2){
             attron(COLOR_PAIR(2));
@@ -288,6 +327,13 @@ void draw_room(Room room ,int num) {
         if(gold_position[i][2]==1){
             attron(COLOR_PAIR(2));
             mvprintw(gold_position[i][1],gold_position[i][0],"G");
+            attroff(COLOR_PAIR(2));
+        }
+    }
+    for(int i=0 ; i<num_food ; i++){
+        if(food_position[i][2]==1){
+            attron(COLOR_PAIR(2));
+            mvprintw(food_position[i][1],food_position[i][0],"F");
             attroff(COLOR_PAIR(2));
         }
     }
@@ -569,7 +615,9 @@ void draw_page(){
         mvprintw(45,80,"health: %d",health);
     else
        mvprintw(45,80,"health: 0%d",health); 
-    attron(COLOR_PAIR(2));
+    attron(COLOR_PAIR(7));
+    mvprintw(45,110,"food: %d",nf);
+    attroff(COLOR_PAIR(7));
 }
 int ramz;
 int check_move(int x, int y, Room room[6]) {
@@ -727,6 +775,11 @@ int check_move(int x, int y, Room room[6]) {
             return 1;
         }
     }
+    for (int i = 0; i <num_food; i++) {
+        if (x == food_position[i][0] && y == food_position[i][1] && nf<5) {
+            return 1;
+        }
+    }
     for(int i=0 ; i<6 ; i++){
         if (x > room[i].x && x < (room[i].x + room[i].width) && y > room[i].y && y < (room[i].y + room[i].height)) {
         for (int i = 0; i < num_soton; i++) {
@@ -737,10 +790,8 @@ int check_move(int x, int y, Room room[6]) {
         return 1;
         }
     }
-    
     return 0;
 }
-
 int move_character(Room room[6], int *x, int *y) {
     int newx = *x;
     int newy = *y;
@@ -946,6 +997,61 @@ int move_character(Room room[6], int *x, int *y) {
                 return 1;
 
             }
+        }for(int i=0 ; i<num_food ; i++){
+            if(food_position[i][0]==*x && food_position[i][1]==*y){
+                if(nf==5){
+                    attron(COLOR_PAIR(2));
+                    mvprintw(10,140,"You have th enough food.");
+                    attron(COLOR_PAIR(2));
+                    refresh();
+                    sleep(1);
+                    move(10,139);
+                    clrtoeol();
+                    refresh();
+                    attron(COLOR_PAIR(7));
+                    mvprintw(*y, *x, "F");
+                    attroff(COLOR_PAIR(7));
+                    *x = newx;
+                    *y = newy;
+                    mvprintw(*y, *x, "I");
+                    draw_page();
+                    refresh();
+                    return 1;
+                }
+                if(food_position[i][2]==1){
+                    attron(COLOR_PAIR(6));
+                    mvprintw(10,140,"You take it befor.");
+                    attroff(COLOR_PAIR(6));
+                    refresh();
+                    sleep(1);
+                    move(10,139);
+                    clrtoeol();
+                    refresh();
+                }
+                else{
+                    attron(COLOR_PAIR(6));
+                    if(food_position[i][2]==0){
+                        mvprintw(10,140,"You get food.");
+                        food_position[i][2]=1;
+                        nf ++;
+                    }
+                    attroff(COLOR_PAIR(6));
+                    refresh();
+                    sleep(1);
+                    move(10,139);
+                    clrtoeol();
+                    refresh();
+                }
+                attron(COLOR_PAIR(2));
+                mvprintw(*y, *x, "F");
+                attroff(COLOR_PAIR(2));
+                *x = newx;
+                *y = newy;
+                mvprintw(*y, *x, "I");
+                draw_page();
+                refresh();
+                return 1;
+            }
         }
         for(int i=0 ; i<num_gold ; i++){
             if(gold_position[i][0]==*x && gold_position[i][1]==*y){
@@ -1036,6 +1142,7 @@ int main() {
     init_pair(4, COLOR_BLUE, COLOR_BLACK);
     init_pair(5, COLOR_BLACK, COLOR_YELLOW);
     init_pair(6, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(7,COLOR_CYAN,COLOR_BLACK);
     int num_rooms = 6 ;
     Room rooms[num_rooms];
     int x1 = rand()%5;
@@ -1061,6 +1168,7 @@ int main() {
         soton(rooms[i]);
         gold(rooms[i]);
         tale(rooms[i]);
+        food(rooms[i]);
     }
     int q=rand()%3;
     key[0]=rooms[q].x+rand()%(rooms[q].width-2)+1;
