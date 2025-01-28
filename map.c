@@ -259,6 +259,11 @@ void draw_room(Room room ,int num) {
             attroff(COLOR_PAIR(4));
             refresh();
         }
+        else if(dar_positions[2*num][2]==4){
+            attron(COLOR_PAIR(1));
+            mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"@");
+            attroff(COLOR_PAIR(1));
+        }
         else if(dar_positions[2*num][2]==5){
             attron(COLOR_PAIR(1));
             mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"?");
@@ -584,6 +589,9 @@ int check_move(int x, int y, Room room[6]) {
             move(15,139);
             clrtoeol();
     }
+    if(key[0]==x && key[1]==y){
+        return 1;
+    }
     for (int i = 0; i <num_dar; i++) {
         if (x == dar_positions[i][0] && y == dar_positions[i][1]) {
             srand(time(0));
@@ -592,32 +600,58 @@ int check_move(int x, int y, Room room[6]) {
                 mvprintw(15,140,"write password: ");
                 int mistake=0;
                 attroff(COLOR_PAIR(2));
+                if(num_key==1){
+                    attron(COLOR_PAIR(1));
+                    mvprintw(16,140,"press 1 to use master key.");
+                    attroff(COLOR_PAIR(1));
+                }
                 while(1){
-                    move(16,139);
+                    move(17,139);
                     clrtoeol();
                     move(15,155);
                     clrtoeol();
                     int d; 
                     scanw("%d",&d);
                     mvprintw(15,155,"%d",d);
+                    if(num_key==1){
+                        if(d==1){
+                            attron(COLOR_PAIR(1));
+                            move(15,139);
+                            clrtoeol();
+                            move(16,139);
+                            clrtoeol();
+                            mvprintw(15,140,"You use the master key.");
+                            dar_positions[i][2]=4;
+                            refresh();
+                            attroff(COLOR_PAIR(1));
+                            sleep(2);
+                            move(15,139);
+                            clrtoeol();
+                            refresh();
+                            num_key--;  
+                            return 1;
+                        }
+                    }
                     if(d==ramz){
                         move(15,139);
                         clrtoeol();
+                        move(16,139);
+                        clrtoeol();
                         attron(COLOR_PAIR(1));
                         mvprintw(15,140,"password is correct.");
+                        dar_positions[i][2]=4;
                         refresh();
                         attroff(COLOR_PAIR(1));
                         sleep(2);
                         refresh();
                         move(15,139);
                         clrtoeol();
-                        dar_positions[i][2]=4;
                         return 1;
                     }
                     else{
                         if(mistake==0){
                             attron(COLOR_PAIR(6));
-                            mvprintw(16,140,"password is not corect.");
+                            mvprintw(17,140,"password is not corect.");
                             attroff(COLOR_PAIR(6));
                             refresh();
                             sleep(2);
@@ -625,7 +659,7 @@ int check_move(int x, int y, Room room[6]) {
                         }
                         else if(mistake==1){
                             attron(COLOR_PAIR(2));
-                            mvprintw(16,140,"password is not corect.");
+                            mvprintw(17,140,"password is not corect.");
                             attroff(COLOR_PAIR(6));
                             refresh();
                             sleep(2);
@@ -633,7 +667,7 @@ int check_move(int x, int y, Room room[6]) {
                         }
                         else if(mistake==2){
                             attron(COLOR_PAIR(3));
-                            mvprintw(16,140,"IF write wrong answer , password is change!");
+                            mvprintw(17,140,"IF write wrong answer , password is change!");
                             attroff(COLOR_PAIR(3));
                             refresh();
                             sleep(2);
@@ -641,26 +675,32 @@ int check_move(int x, int y, Room room[6]) {
                         }
                         else{
                             attron(COLOR_PAIR(3));
-                            mvprintw(16,140,"password is change!");
+                            mvprintw(17,140,"password is change!");
                             attroff(COLOR_PAIR(3));
                             refresh();
                             sleep(2);
-                            move(16,139); clrtoeol();
-                            move(15,139); clrtoeol();
+                            move(17,139); clrtoeol();
                             ramz=0;
                             return 0;
                         }
                     }
                 }
             }
+        }
+        if(x == dar_positions[i][0] && y == dar_positions[i][1]){
+            if(dar_positions[i][2]==0){
+                dar_positions[i][2]=1;
+                return 1;
+            }
+            if(dar_positions[i][2]==4){
+                return 1;
+            }
             if(dar_positions[i][2]==5){
                 return 1;
             }
-            dar_positions[i][2]=1;
-            return 1;
-        }
-        if(key[0]==x && key[1]==y){
-            return 1;
+            if(dar_positions[i][2]==1){
+                return 1;
+            }
         }
         if(x+1 == dar_positions[i][0] && y == dar_positions[i][1] && dar_positions[i][2]==2){
             attron(COLOR_PAIR(4));
@@ -879,26 +919,25 @@ int move_character(Room room[6], int *x, int *y) {
         for(int i=0 ; i<num_dar ; i++){
             if(dar_positions[i][0]==*x && dar_positions[i][1]==*y){
                 if(dar_positions[i][2]==4){
-                   draw_room(room[(i+1)/2],(i+1)/2);
-                    room[(i+1)/2].hide=1;
                     attron(COLOR_PAIR(1));
                     mvprintw(*y, *x, "@");
+                    refresh();
                     attroff(COLOR_PAIR(1)); 
                 }
                 if(dar_positions[i][2]==5){
-                    draw_room(room[(i+1)/2],(i+1)/2);
-                    room[(i+1)/2].hide=1;
                     attron(COLOR_PAIR(1));
                     mvprintw(*y, *x, "?");
+                    refresh();
                     attroff(COLOR_PAIR(1)); 
                 }
                 else{
-                   draw_room(room[(i+1)/2],(i+1)/2);
-                    room[(i+1)/2].hide=1;
                     attron(COLOR_PAIR(1));
                     mvprintw(*y, *x, "+");
+                    refresh();
                     attroff(COLOR_PAIR(1)); 
                 }
+                draw_room(room[(i+1)/2],(i+1)/2);
+                room[(i+1)/2].hide=1;
                 *x = newx;
                 *y = newy;
                 mvprintw(*y, *x, "I");
