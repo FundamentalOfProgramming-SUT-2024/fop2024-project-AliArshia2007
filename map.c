@@ -9,6 +9,7 @@
 int password[1][2];
 int key[4];
 int num_key=0;
+int floor;
 typedef struct {
     int x;
     int y;
@@ -22,8 +23,8 @@ void create_random_rooms(Room rooms[],int num , int y, int x) {
     new_room.height = rand() % 5 + 6;
     new_room.x = x;
     new_room.y = y;
+    new_room.hide=0;
     rooms[num] = new_room;
-    rooms->hide=0;
 }
 int dar_positions[11][3];
 int num_dar=0;
@@ -1057,6 +1058,41 @@ int move_character(Room room[6], int *x, int *y) {
             clrtoeol();
             return 1;
         case 'q':
+            clear();
+            attron(COLOR_PAIR(7));
+            mvprintw(10,20,"Please type your game name:");
+            refresh();
+            move(10,50);
+            char name[20];
+            scanw("%s",name);
+            mvprintw(10,50,"%s",name);
+            refresh();
+            attroff(COLOR_PAIR(7));
+            FILE *file = fopen(name,"w");
+            for(int i=0 ; i<6 ; i++){
+                fprintf(file,"%d %d %d %d %d\n",room[i].x,room[i].y,room[i].width,room[i].height,room[i].hide);
+            }
+            for(int i=0 ; i<num_dar ; i++){
+                fprintf(file,"%d %d %d\n",dar_positions[i][0],dar_positions[i][1],dar_positions[i][2]);
+            }
+            for(int i=0 ; i<num_soton ; i++){
+                fprintf(file,"%d %d %d\n",soton_position[i][0],soton_position[i][1],soton_position[i][2]);
+            }
+            for(int i=0 ; i<num_gold ; i++){
+                fprintf(file,"%d %d %d %d\n",gold_position[i][0],gold_position[i][1],gold_position[i][2],gold_position[i][3]);
+            }
+            for(int i=0 ; i<num_tale ; i++){
+                fprintf(file,"%d %d %d %d\n",tale_position[i][0],tale_position[i][1],tale_position[i][2],tale_position[i][3]);
+            }
+            for(int i=0 ; i<num_food ; i++){
+                fprintf(file,"%d %d %d\n",food_position[i][0],food_position[i][1],food_position[i][2]);
+            }
+            for(int i=0 ; i<num_path ; i++){
+                fprintf(file,"%d %d %d %d\n",path_position[i][0],path_position[i][1],path_position[i][2],path_position[i][3]);
+            }
+            fprintf(file,"%d %d %d %d %d %d\n",floor,g,nf,health,*x,*y);
+            fclose(file);
+            getchar();
             return 0;
     }
     if (check_move(newx, newy, room)) {
@@ -1271,6 +1307,7 @@ int main() {
     init_pair(6, COLOR_YELLOW, COLOR_BLACK);
     init_pair(7,COLOR_CYAN,COLOR_BLACK);
     for(int i=0 ; i<4 ; i++){
+        floor=i;
         clear();
         srand(time(0));
         int num_rooms = 6 ;
@@ -1325,7 +1362,7 @@ int main() {
             }
             if (move_character(rooms, &x, &y) == 0) {
                 clear();
-                mvprintw(20,140,"I hope enjoy the game.");
+                mvprintw(20,20,"I hope enjoy the game.");
                 refresh();
                 getchar();
                 endwin();
