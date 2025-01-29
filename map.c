@@ -289,7 +289,7 @@ void draw_room(Room room ,int num) {
             mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"@");
             attroff(COLOR_PAIR(2));
             attron(COLOR_PAIR(4));
-            int x=(room.x+room.width-1) , y=(room.y+room.height-1);
+            int x=(room.x+room.width-2) , y=(room.y+room.height-1);
             password[0][0]=x;
             password[0][1]=y;
             mvprintw(y,x,"&");
@@ -300,6 +300,9 @@ void draw_room(Room room ,int num) {
             attron(COLOR_PAIR(1));
             mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"@");
             attroff(COLOR_PAIR(1));
+            attron(COLOR_PAIR(4));
+            mvprintw(password[0][1],password[0][0],"&");
+            attroff(COLOR_PAIR(4));
         }
         else if(dar_positions[2*num][2]==5){
             attron(COLOR_PAIR(1));
@@ -790,6 +793,7 @@ int check_move(int x, int y, Room room[6]) {
     }
     return 0;
 }
+int numroom=0;
 int move_character(Room room[6], int *x, int *y) {
     int newx = *x;
     int newy = *y;
@@ -839,6 +843,51 @@ int move_character(Room room[6], int *x, int *y) {
             while(1){
                 int c = getch();
                 if(c=='a'){
+                    break;
+                }
+            }
+            clear();
+            for (int i=0 ; i< 6; i++)
+            {
+                if(room[i].hide==1){
+                    draw_room(room[i],i);
+                }
+                refresh();
+            }
+            for(int i=0 ; i<num_path ; i++){
+                if(path_position[i][2]==1){
+                    attron(COLOR_PAIR(1));
+                    mvprintw(path_position[i][1],path_position[i][0],"#");
+                    attroff(COLOR_PAIR(1));
+                }
+            }
+            mvprintw(newy,newx,"I");
+            break;
+        case 's':
+            clear();
+            for(int i=0 ; i<=(numroom+1) ; i++){
+                draw_room(room[i],i);
+                refresh();
+            }
+            draw_page();
+            refresh();
+            for(int i=0 ; i<=(numroom+1) ; i++){
+                if(tale_position[i][2]==0);
+                attron(COLOR_PAIR(2));
+                mvprintw(tale_position[i][1],tale_position[i][0],"^");
+                refresh();
+                attroff(COLOR_PAIR(2));
+            }
+            for(int i=0 ; i<=(numroom+1) ; i++){
+                if(dar_positions[i][2]==2);
+                attron(COLOR_PAIR(4));
+                mvprintw(dar_positions[i][1],dar_positions[i][0],"?");
+                refresh();
+                attroff(COLOR_PAIR(4));
+            }
+            while(1){
+                int c = getch();
+                if(c=='s'){
                     break;
                 }
             }
@@ -940,8 +989,8 @@ int move_character(Room room[6], int *x, int *y) {
                 }
                 attron(COLOR_PAIR(7));
                 for(int i=0 ; i<nf ; i++){
-                    if(food_position[i][2]>0)
-                        mvprintw(43-i,130,"food %d",nf-i);
+                    mvprintw(43-i,130,"food %d",nf-i);
+                    refresh();
                 }
                 mvprintw(44,130,"press 10 to return the game.");
                 mvprintw(45,130,"enter your choise:");
@@ -956,9 +1005,11 @@ int move_character(Room room[6], int *x, int *y) {
                     break;
                 refresh();
                 srand(time(0));
-                int h=rand()%2;
-                if(h==1){
-                    health += 3;
+                int h=rand()%4;
+                if(h>0){
+                    health += 2;
+                    if(health>20)
+                        health=20;
                     mvprintw(15,140,"your food is healthy.");
                     draw_page();
                     refresh();
@@ -968,10 +1019,21 @@ int move_character(Room room[6], int *x, int *y) {
                 else{
                     health -= 1;
                     mvprintw(15,140,"your food is unhealthy.");
-                    refresh();
                     draw_page();
+                    refresh();
                     sleep(2);
                     nf--;
+                    if(health<0)
+                        health=0;
+                    if(health==0){
+                        attron(COLOR_PAIR(2));
+                        mvprintw(20,140,"You are Lost.");
+                        refresh();
+                        attroff(COLOR_PAIR(2));
+                        getchar();
+                        endwin();
+                        return 0;
+                    }
                 }
                 move(15,139);
                 clrtoeol();
@@ -1030,6 +1092,9 @@ int move_character(Room room[6], int *x, int *y) {
         }
         for(int i=0 ; i<num_dar ; i++){
             if(dar_positions[i][0]==*x && dar_positions[i][1]==*y){
+                if(i%2==1 && numroom<4){
+                    numroom ++;
+                }
                 if(dar_positions[i][2]==4){
                     attron(COLOR_PAIR(1));
                     mvprintw(*y, *x, "@");
@@ -1213,16 +1278,16 @@ int main() {
         create_random_rooms(rooms,0,5+y1,10+x1);
         x1 = rand()%5;
         y1 = rand()%5;
-        create_random_rooms(rooms,1,5+y1,60+x1);
+        create_random_rooms(rooms,1,5+y1,50+x1);
         x1 = rand()%5;
         y1 = rand()%5;
-        create_random_rooms(rooms,2,5+y1,110+x1);
+        create_random_rooms(rooms,2,5+y1,90+x1);
         x1 = rand()%5;
         y1 = rand()%5;
-        create_random_rooms(rooms,3,25+y1,110+x1);
+        create_random_rooms(rooms,3,25+y1,90+x1);
         x1 = rand()%5;
         y1 = rand()%5;
-        create_random_rooms(rooms,4,25+y1,60);
+        create_random_rooms(rooms,4,25+y1,50);
         x1 = rand()%5;
         y1 = rand()%5;
         create_random_rooms(rooms,5,25+y1,10+x1);
@@ -1252,7 +1317,7 @@ int main() {
         time(&startTime);
         while (health > 0) {
             time(&currentTime);
-            if (difftime(currentTime, startTime) >= 8) {
+            if (difftime(currentTime, startTime) >= 15) {
                 healthy();
                 time(&startTime);
             }
@@ -1297,8 +1362,15 @@ int main() {
             food_position[j][0]=food_position[j][1]=food_position[j][2]=0;
         }
         key[0]=key[1]=key[2]=key[3]=0;
-        num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=0;
+        num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=0;
         sleep(2);
         }
+        attron(COLOR_PAIR(6));
+        mvprintw(10,50,"You won.");
+        mvprintw(11,40,"Gold: %d score: %d",g,g*3);
+        refresh();
+        attroff(COLOR_PAIR(6));
+        getchar();
+        endwin();
         return 0;
 }
