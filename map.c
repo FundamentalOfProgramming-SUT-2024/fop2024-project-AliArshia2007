@@ -729,6 +729,9 @@ int check_move(int x, int y, Room room[6]) {
                             refresh();
                             sleep(2);
                             move(17,139); clrtoeol();
+                            move(15,139); clrtoeol();
+                            move(16,139); clrtoeol();
+                            refresh();
                             ramz=0;
                             return 0;
                         }
@@ -985,7 +988,6 @@ int move_character(Room room[6], int *x, int *y) {
                     mvprintw(15,140,"you don't have any food.");
                     refresh();
                     attroff(COLOR_PAIR(2));
-                    sleep(2);
                 }
                 attron(COLOR_PAIR(7));
                 for(int i=0 ; i<nf ; i++){
