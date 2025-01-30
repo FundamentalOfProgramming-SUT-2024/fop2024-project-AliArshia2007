@@ -22,6 +22,8 @@ void new_game();
 void load_game();
 void set_difficulty();
 void set_hero_color();
+void play_music();
+void choose_music();
 typedef struct {
     char name[50];
     char password[50];
@@ -255,14 +257,15 @@ void settings_menu(const char* name){
     attron(COLOR_PAIR(1));
     mvprintw(5, 10, "1. Set Difficulty");
     mvprintw(7, 10, "2. Set Hero Color");
-    mvprintw(9, 10, "3. Exit");
+    mvprintw(9,10,"3. Set Background Music");
+    mvprintw(11, 10, "4. Exit");
     attroff(COLOR_PAIR(1));
     refresh();
-    mvprintw(11, 10, "Enter your choice: ");
+    mvprintw(13, 10, "Enter your choice: ");
     while (TRUE) {
-        move(11,30);
+        move(13,30);
         clrtoeol();
-        move(11,30);
+        move(13,30);
         scanw("%d", &choice);
         switch (choice) {
             case 1:
@@ -272,11 +275,14 @@ void settings_menu(const char* name){
                 set_hero_color(name);
                 break;
             case 3:
+                choose_music(name);
+                break;
+            case 4:
                 menu(name);
                 return;
             default:
                 attron(COLOR_PAIR(2));
-                mvprintw(13, 10, "Invalid choice! Please try again.");
+                mvprintw(15, 10, "Invalid choice! Please try again.");
                 attroff(COLOR_PAIR(2));
                 refresh();
                 break;
@@ -285,6 +291,49 @@ void settings_menu(const char* name){
             break;
         }
     }
+}
+void play_music(const char *file) {
+    if (fork() == 0) {
+        char command[256];
+        snprintf(command, sizeof(command), "ffplay -nodisp -autoexit %s > /dev/null 2>&1", file);
+        execl("/bin/sh", "sh", "-c", command, (char *) 0);
+        exit(0);
+    }
+}
+void stop_music() {
+    system("pkill ffplay");
+}
+void choose_music( const char* name) {
+    int music_choice;
+    initscr();
+    clear();
+    attron(COLOR_PAIR(1));
+    mvprintw(5, 10, "Choose Background Music");
+    mvprintw(7, 10, "1. Music 1");
+    mvprintw(9, 10, "2. Music 2");
+    mvprintw(11, 10, "3. Music 3");
+    mvprintw(13, 10, "4. exit");
+    attroff(COLOR_PAIR(1));
+    refresh();
+    mvprintw(15, 10, "Enter your choice: ");
+    scanw("%d", &music_choice);
+    switch (music_choice)
+    {
+    case 1:
+        play_music("music1.mp3");
+        break;
+    
+    case 2:
+        play_music("music2.mp3");
+
+        break;
+    case 3:
+        play_music("music3.mp3");
+        break;
+    }
+    refresh();
+    getch();
+    settings_menu(name);
 }
 void set_difficulty(const char* name) {
     int difficulty;
@@ -616,7 +665,8 @@ int main() {
     init_pair(7,COLOR_CYAN,COLOR_BLACK);
     entery();
     refresh();             
-    getch();               
+    getch();           
+    stop_music();  
     endwin();              
     return 0;
 }
