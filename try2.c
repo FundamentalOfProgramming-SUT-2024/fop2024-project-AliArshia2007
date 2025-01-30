@@ -295,11 +295,12 @@ void settings_menu(const char* name){
 void play_music(const char *file) {
     if (fork() == 0) {
         char command[256];
-        snprintf(command, sizeof(command), "ffplay -nodisp -autoexit %s > /dev/null 2>&1", file);
+        snprintf(command, sizeof(command), "ffplay -nodisp -autoexit -loop 0 %s > /dev/null 2>&1", file);
         execl("/bin/sh", "sh", "-c", command, (char *) 0);
         exit(0);
     }
 }
+
 void stop_music() {
     system("pkill ffplay");
 }
@@ -312,24 +313,43 @@ void choose_music( const char* name) {
     mvprintw(7, 10, "1. Music 1");
     mvprintw(9, 10, "2. Music 2");
     mvprintw(11, 10, "3. Music 3");
-    mvprintw(13, 10, "4. exit");
+    mvprintw(13, 10, "4. Music 4");
+    mvprintw(15, 10, "5. Music 5");
+    mvprintw(17, 10, "6. Music 6");
+    mvprintw(19, 10, "7. exit");
     attroff(COLOR_PAIR(1));
     refresh();
-    mvprintw(15, 10, "Enter your choice: ");
+    mvprintw(21, 10, "Enter your choice: ");
     scanw("%d", &music_choice);
     switch (music_choice)
     {
     case 1:
+        stop_music();
         play_music("music1.mp3");
         break;
     
     case 2:
+        stop_music();
         play_music("music2.mp3");
 
         break;
     case 3:
+        stop_music();
         play_music("music3.mp3");
         break;
+    case 4:
+        stop_music();
+        play_music("music4.mp3");
+        break;
+    case 5:
+        stop_music();
+        play_music("music5.mp3");
+        break;
+    case 6:
+        stop_music();
+        play_music("music6.mp3");
+        break;
+    
     }
     refresh();
     getch();
