@@ -3,7 +3,9 @@
 #include<string.h>
 #include <time.h>
 #include<stdlib.h>
-
+#include <unistd.h>
+#include <locale.h>
+#include <wchar.h>
 int check_pas();
 int check_email();
 void save_user();
@@ -20,7 +22,6 @@ void new_game();
 void load_game();
 void set_difficulty();
 void set_hero_color();
-
 typedef struct {
     char name[50];
     char password[50];
@@ -34,7 +35,6 @@ typedef struct{
     char password[50];
     char name[50];
 }Game;
-
 int check_pas(char password[]){
     if(strlen(password)>7){
         int up=0,low=0,adad=0;
@@ -130,7 +130,7 @@ void safhe(){
     }
 }
 void find_pas(const char* filename){
-    attron(COLOR_PAIR(3));
+    attron(COLOR_PAIR(6));
     move(17,61);
     clrtoeol();
     mvprintw(16,61,"Email address:");
@@ -150,7 +150,7 @@ void find_pas(const char* filename){
             break;
         }
     }
-    attroff(COLOR_PAIR(3));
+    attroff(COLOR_PAIR(6));
     if(i==0){
         attron(COLOR_PAIR(2));
         mvprintw(20,61,"Your email-address can't be found.");
@@ -191,28 +191,28 @@ void table(const char* filename,const char*name){
         time_t currentTime = time(NULL);
         double experience = difftime(currentTime, users[i].first_Game_Time) / (60 * 60);
         if(i==0){
-            attron(COLOR_PAIR(3) | A_BOLD);
+            attron(COLOR_PAIR(6) | A_BOLD);
             mvprintw(i+5,20,"Goat      %s",users[i].name);
             mvprintw(i+5,43,"%d    %d",users[i].score,users[i].gold);
             mvprintw(i+5,60,"%d",users[i].number_of_games);
             mvprintw(i+5,73,"%.2f hour",experience);
-            attroff(COLOR_PAIR(3) | A_BOLD);
+            attroff(COLOR_PAIR(6) | A_BOLD);
         }
         else if(i==1){
-            attron(COLOR_PAIR(3) | A_BOLD);
+            attron(COLOR_PAIR(6) | A_BOLD);
             mvprintw(i+5,20,"Legend    %s",users[i].name);
             mvprintw(i+5,43,"%d    %d",users[i].score,users[i].gold);
             mvprintw(i+5,60,"%d",users[i].number_of_games);
             mvprintw(i+5,73,"%.2f hour",experience);
-            attroff(COLOR_PAIR(3) | A_BOLD);
+            attroff(COLOR_PAIR(6) | A_BOLD);
         }
         else if(i==2){
-            attron(COLOR_PAIR(3) | A_BOLD);
+            attron(COLOR_PAIR(6) | A_BOLD);
             mvprintw(i+5,20,"Silver    %s",users[i].name);
             mvprintw(i+5,43,"%d    %d",users[i].score,users[i].gold);
             mvprintw(i+5,60,"%d",users[i].number_of_games);
             mvprintw(i+5,73,"%.2f hour",experience);
-            attroff(COLOR_PAIR(3) | A_BOLD);
+            attroff(COLOR_PAIR(6) | A_BOLD);
         }
         else{
             mvprintw(i+5,20," %d        %s",i+1,users[i].name);
@@ -232,10 +232,20 @@ void table(const char* filename,const char*name){
     menu(name);
     refresh();
 }
-void new_game(){
+void new_game(const char*filename ,const char *name){
+    // FILE *file = fopen(filename,"r");
+    // User user;
+    // while (fscanf(file , "%s %s %s" , user.name , user.password , user.email)!= EOF )
+    // {
+    //     if(strcmp(user.name , name)==0){
+    //         user.gold=g;
+    //         user.score=g*3;
+    //     }
+    // }
     clear();
+    menu(name);
 }
-void load_game(const char*filename){
+void load_game(const char*filename , const char*game_name , const char* name){
     clear();
 }
 void settings_menu(const char* name){
@@ -316,12 +326,12 @@ void set_hero_color(const char* name) {
     attron(COLOR_PAIR(1));
     mvprintw(8, 10, "2. Green");
     attroff(COLOR_PAIR(1));
-    attron(COLOR_PAIR(4));
+    attron(COLOR_PAIR(7));
     mvprintw(9, 10, "3. Blue");
-    attroff(COLOR_PAIR(4));
-    attron(COLOR_PAIR(3));
+    attroff(COLOR_PAIR(7));
+    attron(COLOR_PAIR(6));
     mvprintw(10, 10, "4. Yellow");
-    attroff(COLOR_PAIR(3));
+    attroff(COLOR_PAIR(6));
     refresh();
     mvprintw(13, 10, "Enter your choice: ");
     scanw("%d", &color);
@@ -338,21 +348,21 @@ void set_hero_color(const char* name) {
         attroff(COLOR_PAIR(1));
         break;
     case 3:
-        attron(COLOR_PAIR(4));
+        attron(COLOR_PAIR(7));
         mvprintw(15, 10, "Hero color set to Blue.");
-        attroff(COLOR_PAIR(4));
+        attroff(COLOR_PAIR(7));
         break;
     case 4:
-        attron(COLOR_PAIR(3));
+        attron(COLOR_PAIR(6));
         mvprintw(15, 10, "Hero color set to Yellow.");
-        attroff(COLOR_PAIR(3));
+        attroff(COLOR_PAIR(6));
         break;
     }
     refresh();
     getch();
     settings_menu(name);
 }
-void menu(const char*name ){
+void menu(const char*name){
     clear();
     attron(COLOR_PAIR(1));
     mvprintw(3,5,"Welcome %s",name);
@@ -361,13 +371,13 @@ void menu(const char*name ){
     int choice;
     initscr();
     start_color();
-    attron(COLOR_PAIR(3));
+    attron(COLOR_PAIR(6));
     mvprintw(5, 10, "1- New Game");
     mvprintw(7, 10, "2- Load Game");
     mvprintw(9, 10, "3- Table");
     mvprintw(11,10, "4- Settings_menu");
     mvprintw(13, 10, "5- Exit");
-    attroff(COLOR_PAIR(3));
+    attroff(COLOR_PAIR(6));
     mvprintw(15, 10, "Enter your choice: ");
     refresh();
     while (TRUE) {
@@ -378,10 +388,16 @@ void menu(const char*name ){
         refresh();
         switch (choice) {
             case 1:
-                new_game();
+                new_game("users.txt",name);
                 break;
             case 2:
-                load_game("users game");
+                attron(COLOR_PAIR(7));
+                mvprintw(8,10,"write your game name.");
+                char s[20];
+                scanw("%s",s);
+                mvprintw(8,35,"%s",s);
+                attroff(COLOR_PAIR(7));
+                load_game("users.txt",s,name);
                 break;
             case 3:
                 table("users.txt",name);
@@ -447,11 +463,11 @@ void login(){
         } 
     }
     move(23,72);
-    attron(COLOR_PAIR(3));
+    attron(COLOR_PAIR(7));
     printw("press any key to continue");safhe();
     refresh();
     getchar();
-    attroff(COLOR_PAIR(3));
+    attroff(COLOR_PAIR(7));
     menu(name);
     refresh();
 }
@@ -520,12 +536,12 @@ void new_user(){
     user.number_of_games=0;
     user.first_Game_Time = time(NULL);
     move(22,68);
-    attron(COLOR_PAIR(3));
+    attron(COLOR_PAIR(7));
     save_user("users.txt",&user);
     printw("Your account save succesfully.");
     mvprintw(23,70,"press any key to continue.");
     refresh();
-    attroff(COLOR_PAIR(3));
+    attroff(COLOR_PAIR(7));
     getch();
     clear();
     entery();
@@ -587,12 +603,17 @@ void entery(){
     }
 }
 int main() {
+    setlocale(LC_ALL, "");
     initscr();
+    srand(time(NULL));
     start_color();
-    init_pair(1,COLOR_GREEN,COLOR_BLACK);
-    init_pair(2,COLOR_RED,COLOR_BLACK);
-    init_pair(3,COLOR_YELLOW,COLOR_BLACK);
-    init_pair(4,COLOR_BLUE,COLOR_BLACK);
+    init_pair(1, COLOR_GREEN, COLOR_BLACK);
+    init_pair(2, COLOR_RED, COLOR_BLACK);
+    init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(4, COLOR_BLUE, COLOR_BLACK);
+    init_pair(5, COLOR_BLACK, COLOR_YELLOW);
+    init_pair(6, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(7,COLOR_CYAN,COLOR_BLACK);
     entery();
     refresh();             
     getch();               
