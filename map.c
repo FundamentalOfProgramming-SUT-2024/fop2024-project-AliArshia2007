@@ -65,8 +65,8 @@ int soton_position[12][3];
 int num_soton=0;
 void soton(Room room) {
     int x1,x2, y1,y2;
-    x1 = (rand() % (room.width-2));
-    y1 = (rand() % (room.height-2));
+    x1 = (rand() % (room.width-3));
+    y1 = (rand() % (room.height-3));
     if(x1==0)
         x1++;
     if(y1==0)
@@ -221,6 +221,43 @@ void food(Room room){
         food_position[num_food][2]=0;
         num_food++;
 }
+int telesm_position[3][4],num_tel=0,tel=0;
+void telesm(Room room , int num){
+    int x1,y1;
+        x1 = (rand() % (room.width-2));
+        y1 = (rand() % (room.height-2));
+        if (x1 <= 0)
+            x1=1;
+        if (y1 <= 0)
+            y1=1;
+        x1 = room.x + x1+1; 
+        y1 = room.y + y1+1;
+        for(int i=0 ; i<num_soton ; i++){
+            if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
+                x1 ++ ;
+            }
+        }
+        for(int i=0 ; i<num_gold ; i++){
+            if(gold_position[i][0]==x1 && gold_position[i][1]==y1){
+                x1 ++ ;
+            }
+        }
+        for(int i=0 ; i<num_tale ; i++){
+            if(tale_position[i][0]==x1 && tale_position[i][1]==y1){
+                x1 ++ ;
+            }
+        }
+        for(int i=0 ; i<num_food ; i++){
+            if(food_position[i][0]==x1 && food_position[i][1]==y1){
+                x1 ++ ;
+            }
+        }
+        telesm_position[num_tel][0] = x1;
+        telesm_position[num_tel][1] = y1;
+        telesm_position[num_tel][2]=num;
+        telesm_position[num_tel][3]=0;
+        num_tel++;
+}
 void draw_room(Room room ,int num) {
     attron(COLOR_PAIR(2));
     for (int i = 0; i < room.width; i++) {
@@ -257,6 +294,22 @@ void draw_room(Room room ,int num) {
     mvprintw(food_position[num][1],food_position[num][0],"\u03C6");
     refresh();
     attroff(COLOR_PAIR(7));
+        switch (num)
+        {
+        case 0:
+            attron(COLOR_PAIR(1));
+            mvprintw(telesm_position[num][1],telesm_position[num][0],"\u22D2");
+            attroff(COLOR_PAIR(1));
+            break;
+        case 2:
+            attron(COLOR_PAIR(4));
+            mvprintw(telesm_position[num/2][1],telesm_position[num/2][0],"\u0E19");
+            attroff(COLOR_PAIR(4));
+            break;
+        case 4:
+            mvprintw(telesm_position[num/2][1],telesm_position[num/2][0],"\u03BB");
+            break;
+        }
     if(num==0){
         if(dar_positions[num][2]==2){
             attron(COLOR_PAIR(2));
@@ -361,6 +414,28 @@ void draw_room(Room room ,int num) {
             attron(COLOR_PAIR(2));
             mvprintw(tale_position[i][1],tale_position[i][0],"^");
             attroff(COLOR_PAIR(2));
+        }
+    }
+    for(int i=0 ; i<num_tel ; i++){
+        if(telesm_position[i][3]==1){
+            switch (i)
+            {
+            case 0:
+                attron(COLOR_PAIR(2));
+                mvprintw(telesm_position[i][1],telesm_position[i][0],"\u22D2");
+                attroff(COLOR_PAIR(2));
+                break;
+            case 1:
+                attron(COLOR_PAIR(2));
+                mvprintw(telesm_position[i][1],telesm_position[i][0],"\u0E19");
+                attroff(COLOR_PAIR(2));
+                break;
+            case 2:
+                attron(COLOR_PAIR(2));
+                mvprintw(telesm_position[i][1],telesm_position[i][0],"\u03BB");
+                attroff(COLOR_PAIR(2));
+                break;
+            }
         }
     }
     if(key[2]==num){
@@ -536,7 +611,6 @@ void path(Room room[6]) {
         path_position[i][2]=0;   
     }
 }
-
 void print_path(int x , int y){
     for(int i=0 ; i<num_path ; i++){
         if(x+1 == path_position[i][0] && y+1 == path_position[i][1] && path_position[i][2]==0){
@@ -620,7 +694,7 @@ void draw_page(){
     mvprintw(35,55,"weapon:");
     attroff(COLOR_PAIR(2));
     attron(COLOR_PAIR(6));
-    mvprintw(35,70,"talisman:");
+    mvprintw(35,70,"talisman %d:" , tel);
     attroff(COLOR_PAIR(6));
     move(2,0);
     clrtoeol();
@@ -795,6 +869,11 @@ int check_move(int x, int y, Room room[6]) {
     }
     for (int i = 0; i <num_food; i++) {
         if (x == food_position[i][0] && y == food_position[i][1] && nf<5) {
+            return 1;
+        }
+    }
+    for (int i = 0; i <num_tel; i++) {
+        if (x == telesm_position[i][0] && y == telesm_position[i][1]) {
             return 1;
         }
     }
@@ -1112,6 +1191,9 @@ int move_character(Room room[6], int *x, int *y) {
             for(int i=0 ; i<num_path ; i++){
                 fprintf(file,"%d %d %d %d\n",path_position[i][0],path_position[i][1],path_position[i][2],path_position[i][3]);
             }
+            for(int i=0 ; i<num_tel ; i++){
+                fprintf(file,"%d %d %d %d\n",telesm_position[i][0],telesm_position[i][1],telesm_position[i][2],telesm_position[i][3]);
+            }
             fprintf(file,"%d %d %d %d %d %d\n",fl,g,nf,health,*x,*y);
             fclose(file);
             getchar();
@@ -1249,6 +1331,75 @@ int move_character(Room room[6], int *x, int *y) {
                 g += gold_position[i][3];
             }
         }
+        for(int i=0 ; i<num_tel ; i++){
+            if(telesm_position[i][0]==*x && telesm_position[i][1]==*y){
+                if(telesm_position[i][3]==1){
+                    attron(COLOR_PAIR(6));
+                    mvprintw(10,80,"You take it befor.");
+                    attron(COLOR_PAIR(6));
+                    refresh();
+                    sleep(1);
+                    move(10,79);
+                    clrtoeol();
+                    refresh();
+                }
+                else{
+                    switch (telesm_position[i][2])
+                    {
+                    case 0:
+                        attron(COLOR_PAIR(6));
+                        mvprintw(10,80,"You take the health Talisman.");
+                        attroff(COLOR_PAIR(6));
+                        refresh();
+                        break;
+                    
+                    case 2:
+                        attron(COLOR_PAIR(6));
+                        mvprintw(10,80,"You take the speed Talisman.");
+                        attroff(COLOR_PAIR(6));
+                        refresh();
+                        break;
+                    case 4:
+                        attron(COLOR_PAIR(6));
+                        mvprintw(10,80,"You take the strength Talisman.");
+                        attroff(COLOR_PAIR(6));
+                        refresh();
+                        break;
+                    
+                    }
+                    telesm_position[i][3]=1;
+                    refresh();
+                    sleep(1);
+                    move(10,79);
+                    clrtoeol();
+                    refresh();
+                }
+                switch (i)
+                    {
+                    case 0:
+                        attron(COLOR_PAIR(2));
+                        mvprintw(*y, *x, "\u22D2");
+                        refresh();
+                        attroff(COLOR_PAIR(2));
+                        break;
+                    case 1:
+                        attron(COLOR_PAIR(2));
+                        mvprintw(*y, *x, "\u0E19");
+                        refresh();
+                        attroff(COLOR_PAIR(2));
+                        break;
+                    case 2:
+                        attron(COLOR_PAIR(2));
+                        mvprintw(*y, *x, "\u03BB");
+                        refresh();
+                        attroff(COLOR_PAIR(2));
+                        break;
+                    }
+                *x = newx;
+                *y = newy;
+                tel ++;
+            }
+        }
         for(int i=0 ; i<num_tale ; i++){
             if(tale_position[i][0]==*x && tale_position[i][1]==*y){
                 if(tale_position[i][2]==0)
@@ -1351,6 +1502,9 @@ int main() {
             gold(rooms[j]);
             tale(rooms[j]);
             food(rooms[j]);
+            if(j%2 ==0){
+                telesm(rooms[j],j/2);
+            }
         }
         int q=rand()%3;
         key[0]=rooms[q].x+rand()%(rooms[q].width-2)+1;
