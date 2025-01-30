@@ -246,15 +246,15 @@ void draw_room(Room room ,int num) {
     mvprintw(soton_position[2*num+1][1],soton_position[2*num+1][0],"O");
     soton_position[2*num+1][2]=1;
     refresh();
-    attron(COLOR_PAIR(5));
-    mvprintw(gold_position[2*num][1],gold_position[2*num][0],"G");
-    mvprintw(gold_position[2*num+1][1],gold_position[2*num+1][0],"G");
+    attron(COLOR_PAIR(6));
+    mvprintw(gold_position[2*num][1],gold_position[2*num][0],"\u0454");
+    mvprintw(gold_position[2*num+1][1],gold_position[2*num+1][0],"\u0454");
     soton_position[2*num][2]=0;
     soton_position[2*num+1][2]=0;
     refresh();
-    attroff(COLOR_PAIR(5));
+    attroff(COLOR_PAIR(6));
     attron(COLOR_PAIR(7));
-    mvprintw(food_position[num][1],food_position[num][0],"F");
+    mvprintw(food_position[num][1],food_position[num][0],"\u03C6");
     refresh();
     attroff(COLOR_PAIR(7));
     if(num==0){
@@ -328,14 +328,14 @@ void draw_room(Room room ,int num) {
     for(int i=0 ; i<num_gold ; i++){
         if(gold_position[i][2]==1){
             attron(COLOR_PAIR(2));
-            mvprintw(gold_position[i][1],gold_position[i][0],"G");
+            mvprintw(gold_position[i][1],gold_position[i][0],"\u0454");
             attroff(COLOR_PAIR(2));
         }
     }
     for(int i=0 ; i<num_food ; i++){
         if(food_position[i][2]==1){
             attron(COLOR_PAIR(2));
-            mvprintw(food_position[i][1],food_position[i][0],"F");
+            mvprintw(food_position[i][1],food_position[i][0],"\u03C6");
             attroff(COLOR_PAIR(2));
         }
     }
@@ -1169,7 +1169,7 @@ int move_character(Room room[6], int *x, int *y) {
                     clrtoeol();
                     refresh();
                     attron(COLOR_PAIR(7));
-                    mvprintw(*y, *x, "F");
+                    mvprintw(*y, *x, "\u03C6");
                     attroff(COLOR_PAIR(7));
                     *x = newx;
                     *y = newy;
@@ -1199,7 +1199,7 @@ int move_character(Room room[6], int *x, int *y) {
                     refresh();
                 }
                 attron(COLOR_PAIR(2));
-                mvprintw(*y, *x, "F");
+                mvprintw(*y, *x, "\u03C6");
                 attroff(COLOR_PAIR(2));
                 *x = newx;
                 *y = newy;
@@ -1229,7 +1229,7 @@ int move_character(Room room[6], int *x, int *y) {
                     refresh();
                 }
                 attron(COLOR_PAIR(2));
-                mvprintw(*y, *x, "G");
+                mvprintw(*y, *x, "\u0454");
                 attroff(COLOR_PAIR(2));
                 *x = newx;
                 *y = newy;
@@ -1267,25 +1267,25 @@ int move_character(Room room[6], int *x, int *y) {
             {
             case 1:
                 attron(COLOR_PAIR(2));
-                mvprintw(*y, *x, "I");
+                mvprintw(*y, *x, "\u2735");
                 refresh();
                 attroff(COLOR_PAIR(2));
                 break;
             case 2:
                 attron(COLOR_PAIR(1));
-                mvprintw(*y, *x, "I");
+                mvprintw(*y, *x, "\u2735");
                 refresh();
                 attroff(COLOR_PAIR(1));
                 break;
             case 3:
                 attron(COLOR_PAIR(7));
-                mvprintw(*y, *x, "I");
+                mvprintw(*y, *x, "\u2735");
                 refresh();
                 attroff(COLOR_PAIR(7));
                 break;
             case 4:
                 attron(COLOR_PAIR(6));
-                mvprintw(*y, *x, "I");
+                mvprintw(*y, *x, "\u2735");
                 refresh();
                 attroff(COLOR_PAIR(6));
                 break;
@@ -1353,7 +1353,7 @@ int main() {
         int y = rooms[0].y + 1;
         path(rooms);
         refresh();
-        mvprintw(y, x, "\U0001F60E");
+        mvprintw(y, x, "\u2735");
         refresh();
         time(&startTime);
         while (health > 0) {
