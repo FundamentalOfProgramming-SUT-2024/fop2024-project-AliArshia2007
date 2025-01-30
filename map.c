@@ -613,13 +613,26 @@ void draw_page(){
     mvprintw(35,25,"score: %d",(g*3));
     attroff(COLOR_PAIR(1));
     attron(COLOR_PAIR(2));
-    if(health>=10)
-        mvprintw(35,40,"health: %d",health);
-    else
-       mvprintw(35,40,"health: 0%d",health); 
     attron(COLOR_PAIR(7));
-    mvprintw(35,55,"food: %d",nf);
+    mvprintw(35,40,"food: %d",nf);
     attroff(COLOR_PAIR(7));
+    attron(COLOR_PAIR(2));
+    mvprintw(35,55,"weapon:");
+    attroff(COLOR_PAIR(2));
+    attron(COLOR_PAIR(6));
+    mvprintw(35,70,"talisman:");
+    attroff(COLOR_PAIR(6));
+    move(2,0);
+    clrtoeol();
+    attron(COLOR_PAIR(3));
+    mvprintw(2,1,"healty:");
+    attroff(COLOR_PAIR(3));
+    for(int i=0 ; i<(health) ; i+=2){
+        attron(COLOR_PAIR(2));
+        mvprintw(2,10+i,"\u2665");
+        attroff(COLOR_PAIR(2));
+    }
+    refresh();
 }
 int ramz;
 int check_move(int x, int y, Room room[6]) {
