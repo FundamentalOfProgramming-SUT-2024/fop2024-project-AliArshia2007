@@ -9,7 +9,7 @@
 int password[1][2];
 int key[4];
 int num_key=0;
-int floor,color=3,dif=3;
+int fl,color=3,dif=3;
 typedef struct {
     int x;
     int y;
@@ -19,8 +19,8 @@ typedef struct {
 } Room;
 void create_random_rooms(Room rooms[],int num , int y, int x) {
     Room new_room;
-    new_room.width = rand() % 6 + 6;
-    new_room.height = rand() % 5 + 6;
+    new_room.width = rand() % 3+ 6;
+    new_room.height = rand() % 3 + 6;
     new_room.x = x;
     new_room.y = y;
     new_room.hide=0;
@@ -607,18 +607,18 @@ void healthy(){
 }
 void draw_page(){
     attron(COLOR_PAIR(6));
-    mvprintw(45,20,"gold: %d",g);
+    mvprintw(35,10,"gold: %d",g);
     attroff(COLOR_PAIR(6));
     attron(COLOR_PAIR(1));
-    mvprintw(45,50,"score: %d",(g*3));
+    mvprintw(35,25,"score: %d",(g*3));
     attroff(COLOR_PAIR(1));
     attron(COLOR_PAIR(2));
     if(health>=10)
-        mvprintw(45,80,"health: %d",health);
+        mvprintw(35,40,"health: %d",health);
     else
-       mvprintw(45,80,"health: 0%d",health); 
+       mvprintw(35,40,"health: 0%d",health); 
     attron(COLOR_PAIR(7));
-    mvprintw(45,110,"food: %d",nf);
+    mvprintw(35,55,"food: %d",nf);
     attroff(COLOR_PAIR(7));
 }
 int ramz;
@@ -632,11 +632,11 @@ int check_move(int x, int y, Room room[6]) {
         srand(time(0));
             ramz= rand()%9000 +1000;
             attron(COLOR_PAIR(2));
-            mvprintw(15,140,"password is %d.",ramz);
+            mvprintw(10,80,"password is %d.",ramz);
             attroff(COLOR_PAIR(2));
             refresh();
             sleep(10);
-            move(15,139);
+            move(10,59);
             clrtoeol();
     }
     if(key[0]==x && key[1]==y){
@@ -647,35 +647,35 @@ int check_move(int x, int y, Room room[6]) {
             srand(time(0));
             if(dar_positions[i][2]==3){
                 attron(COLOR_PAIR(2));
-                mvprintw(15,140,"write password: ");
+                mvprintw(10,80,"write password: ");
                 int mistake=0;
                 attroff(COLOR_PAIR(2));
                 if(num_key==1){
                     attron(COLOR_PAIR(1));
-                    mvprintw(16,140,"press 1 to use master key.");
+                    mvprintw(11,80,"press 1 to use master key.");
                     attroff(COLOR_PAIR(1));
                 }
                 while(1){
-                    move(17,139);
+                    move(12,79);
                     clrtoeol();
-                    move(15,155);
+                    move(10,95);
                     clrtoeol();
                     int d; 
                     scanw("%d",&d);
-                    mvprintw(15,155,"%d",d);
+                    mvprintw(10,95,"%d",d);
                     if(num_key==1){
                         if(d==1){
                             attron(COLOR_PAIR(1));
-                            move(15,139);
+                            move(10,79);
                             clrtoeol();
-                            move(16,139);
+                            move(11,79);
                             clrtoeol();
-                            mvprintw(15,140,"You use the master key.");
+                            mvprintw(10,80,"You use the master key.");
                             dar_positions[i][2]=4;
                             refresh();
                             attroff(COLOR_PAIR(1));
                             sleep(2);
-                            move(15,139);
+                            move(10,79);
                             clrtoeol();
                             refresh();
                             num_key--;  
@@ -683,25 +683,25 @@ int check_move(int x, int y, Room room[6]) {
                         }
                     }
                     if(d==ramz){
-                        move(15,139);
+                        move(10,79);
                         clrtoeol();
-                        move(16,139);
+                        move(11,79);
                         clrtoeol();
                         attron(COLOR_PAIR(1));
-                        mvprintw(15,140,"password is correct.");
+                        mvprintw(10,80,"password is correct.");
                         dar_positions[i][2]=4;
                         refresh();
                         attroff(COLOR_PAIR(1));
                         sleep(2);
                         refresh();
-                        move(15,139);
+                        move(10,79);
                         clrtoeol();
                         return 1;
                     }
                     else{
                         if(mistake==0){
                             attron(COLOR_PAIR(6));
-                            mvprintw(17,140,"password is not corect.");
+                            mvprintw(12,80,"password is not corect.");
                             attroff(COLOR_PAIR(6));
                             refresh();
                             sleep(2);
@@ -709,7 +709,7 @@ int check_move(int x, int y, Room room[6]) {
                         }
                         else if(mistake==1){
                             attron(COLOR_PAIR(2));
-                            mvprintw(17,140,"password is not corect.");
+                            mvprintw(12,80,"password is not corect.");
                             attroff(COLOR_PAIR(6));
                             refresh();
                             sleep(2);
@@ -717,7 +717,7 @@ int check_move(int x, int y, Room room[6]) {
                         }
                         else if(mistake==2){
                             attron(COLOR_PAIR(3));
-                            mvprintw(17,140,"IF write wrong answer , password is change!");
+                            mvprintw(12,80,"IF write wrong answer,password is change!");
                             attroff(COLOR_PAIR(3));
                             refresh();
                             sleep(2);
@@ -725,13 +725,13 @@ int check_move(int x, int y, Room room[6]) {
                         }
                         else{
                             attron(COLOR_PAIR(3));
-                            mvprintw(17,140,"password is change!");
+                            mvprintw(12,80,"password is change!");
                             attroff(COLOR_PAIR(3));
                             refresh();
                             sleep(2);
-                            move(17,139); clrtoeol();
-                            move(15,139); clrtoeol();
-                            move(16,139); clrtoeol();
+                            move(12,79); clrtoeol();
+                            move(10,79); clrtoeol();
+                            move(11,79); clrtoeol();
                             refresh();
                             ramz=0;
                             return 0;
@@ -876,18 +876,26 @@ int move_character(Room room[6], int *x, int *y) {
             draw_page();
             refresh();
             for(int i=0 ; i<=(numroom+1) ; i++){
-                if(tale_position[i][2]==0);
-                attron(COLOR_PAIR(2));
-                mvprintw(tale_position[i][1],tale_position[i][0],"^");
-                refresh();
-                attroff(COLOR_PAIR(2));
+                if(tale_position[i][2]==0){
+                    attron(COLOR_PAIR(2));
+                    mvprintw(tale_position[i][1],tale_position[i][0],"^");
+                    refresh();
+                    attroff(COLOR_PAIR(2));
+                }
             }
             for(int i=0 ; i<=(numroom+1) ; i++){
-                if(dar_positions[i][2]==2);
-                attron(COLOR_PAIR(4));
-                mvprintw(dar_positions[i][1],dar_positions[i][0],"?");
-                refresh();
-                attroff(COLOR_PAIR(4));
+                if(dar_positions[i][2]==2){
+                    attron(COLOR_PAIR(4));
+                    mvprintw(dar_positions[i][1],dar_positions[i][0],"?");
+                    refresh();
+                    attroff(COLOR_PAIR(4));
+                }
+                if(dar_positions[i][2]==5){
+                    attron(COLOR_PAIR(1));
+                    mvprintw(dar_positions[i][1],dar_positions[i][0],"?");
+                    refresh();
+                    attroff(COLOR_PAIR(1));
+                }
             }
             while(1){
                 int c = getch();
@@ -984,26 +992,27 @@ int move_character(Room room[6], int *x, int *y) {
             break;
         case 'e':
             while(TRUE){
+                move(10,79);clrtoeol();
                 if(nf==0){
                     attron(COLOR_PAIR(2));
-                    mvprintw(15,140,"you don't have any food.");
+                    mvprintw(10,80,"you don't have any food.");
                     refresh();
                     attroff(COLOR_PAIR(2));
                 }
                 attron(COLOR_PAIR(7));
                 for(int i=0 ; i<nf ; i++){
-                    mvprintw(43-i,130,"food %d",nf-i);
+                    mvprintw(29-i,80,"food %d",nf-i);
                     refresh();
                 }
-                mvprintw(44,130,"press 10 to return the game.");
-                mvprintw(45,130,"enter your choise:");
+                mvprintw(30,80,"press 10 to return the game.");
+                mvprintw(31,80,"enter your choise:");
                 refresh();
-                move(45,147);
+                move(31,99);
                 clrtoeol();
                 int d;
-                move(45,148);
+                move(31,100);
                 scanw("%d",&d);
-                mvprintw(45,148,"%d",d);
+                mvprintw(31,100,"%d",d);
                 if(d==10)
                     break;
                 refresh();
@@ -1013,7 +1022,7 @@ int move_character(Room room[6], int *x, int *y) {
                     health += 2;
                     if(health>20)
                         health=20;
-                    mvprintw(15,140,"your food is healthy.");
+                    mvprintw(10,80,"your food is healthy.");
                     draw_page();
                     refresh();
                     sleep(2);
@@ -1021,7 +1030,7 @@ int move_character(Room room[6], int *x, int *y) {
                 }
                 else{
                     health -= 1;
-                    mvprintw(15,140,"your food is unhealthy.");
+                    mvprintw(10,80,"your food is unhealthy.");
                     draw_page();
                     refresh();
                     sleep(2);
@@ -1030,7 +1039,7 @@ int move_character(Room room[6], int *x, int *y) {
                         health=0;
                     if(health==0){
                         attron(COLOR_PAIR(2));
-                        mvprintw(20,140,"You are Lost.");
+                        mvprintw(20,80,"You are Lost.");
                         refresh();
                         attroff(COLOR_PAIR(2));
                         getchar();
@@ -1041,20 +1050,20 @@ int move_character(Room room[6], int *x, int *y) {
                 move(15,139);
                 clrtoeol();
                 for(int i=0 ; i<=6 ; i++){
-                    move(39+i,129);
+                    move(25+i,79);
                     clrtoeol();
                 }
             }
             for(int i=0 ; i<=6 ; i++){
-                move(39+i,129);
+                move(25+i,79);
                 clrtoeol();
             }
             attroff(COLOR_PAIR(7));
-            move(15,139);
+            move(10,79);
             clrtoeol();
-            move(44,129);
+            move(30,79);
             clrtoeol();
-            move(45,129);
+            move(31,79);
             clrtoeol();
             return 1;
         case 'q':
@@ -1090,7 +1099,7 @@ int move_character(Room room[6], int *x, int *y) {
             for(int i=0 ; i<num_path ; i++){
                 fprintf(file,"%d %d %d %d\n",path_position[i][0],path_position[i][1],path_position[i][2],path_position[i][3]);
             }
-            fprintf(file,"%d %d %d %d %d %d\n",floor,g,nf,health,*x,*y);
+            fprintf(file,"%d %d %d %d %d %d\n",fl,g,nf,health,*x,*y);
             fclose(file);
             getchar();
             return 0;
@@ -1108,12 +1117,12 @@ int move_character(Room room[6], int *x, int *y) {
             mvprintw(*y, *x, "\u0394");
             attroff(COLOR_PAIR(1));
             attron(COLOR_PAIR(6));
-            mvprintw(10,140,"You get the master key.");
+            mvprintw(10,80,"You get the master key.");
             key[3]=1;
             attroff(COLOR_PAIR(6));
             refresh();
             sleep(1);
-            move(10,139);
+            move(10,79);
             clrtoeol();
             refresh();
             *x = newx;
@@ -1152,11 +1161,11 @@ int move_character(Room room[6], int *x, int *y) {
             if(food_position[i][0]==*x && food_position[i][1]==*y){
                 if(nf==5){
                     attron(COLOR_PAIR(2));
-                    mvprintw(10,140,"You have enough food.");
+                    mvprintw(10,80,"You have enough food.");
                     attron(COLOR_PAIR(2));
                     refresh();
                     sleep(1);
-                    move(10,139);
+                    move(10,79);
                     clrtoeol();
                     refresh();
                     attron(COLOR_PAIR(7));
@@ -1167,25 +1176,25 @@ int move_character(Room room[6], int *x, int *y) {
                 }
                 if(food_position[i][2]==1){
                     attron(COLOR_PAIR(6));
-                    mvprintw(10,140,"You take it befor.");
+                    mvprintw(10,80,"You take it befor.");
                     attroff(COLOR_PAIR(6));
                     refresh();
                     sleep(1);
-                    move(10,139);
+                    move(10,79);
                     clrtoeol();
                     refresh();
                 }
                 else{
                     attron(COLOR_PAIR(6));
                     if(food_position[i][2]==0){
-                        mvprintw(10,140,"You get food.");
+                        mvprintw(10,80,"You get food.");
                         food_position[i][2]=1;
                         nf ++;
                     }
                     attroff(COLOR_PAIR(6));
                     refresh();
                     sleep(1);
-                    move(10,139);
+                    move(10,79);
                     clrtoeol();
                     refresh();
                 }
@@ -1200,22 +1209,22 @@ int move_character(Room room[6], int *x, int *y) {
             if(gold_position[i][0]==*x && gold_position[i][1]==*y){
                 if(gold_position[i][2]==1){
                     attron(COLOR_PAIR(6));
-                    mvprintw(10,140,"You take it befor.");
+                    mvprintw(10,80,"You take it befor.");
                     attron(COLOR_PAIR(6));
                     refresh();
                     sleep(1);
-                    move(10,139);
+                    move(10,79);
                     clrtoeol();
                     refresh();
                 }
                 else{
                     attron(COLOR_PAIR(6));
-                    mvprintw(10,140,"You get %d gold.",gold_position[i][3]);
+                    mvprintw(10,80,"You get %d gold.",gold_position[i][3]);
                     gold_position[i][2]=1;
                     attron(COLOR_PAIR(6));
                     refresh();
                     sleep(1);
-                    move(10,139);
+                    move(10,79);
                     clrtoeol();
                     refresh();
                 }
@@ -1300,7 +1309,7 @@ int main() {
     init_pair(6, COLOR_YELLOW, COLOR_BLACK);
     init_pair(7,COLOR_CYAN,COLOR_BLACK);
     for(int i=0 ; i<4 ; i++){
-        floor=i;
+        fl=i;
         clear();
         srand(time(0));
         int num_rooms = 6 ;
@@ -1310,19 +1319,19 @@ int main() {
         create_random_rooms(rooms,0,5+y1,10+x1);
         x1 = rand()%5;
         y1 = rand()%5;
-        create_random_rooms(rooms,1,5+y1,50+x1);
+        create_random_rooms(rooms,1,5+y1,35+x1);
         x1 = rand()%5;
         y1 = rand()%5;
-        create_random_rooms(rooms,2,5+y1,90+x1);
+        create_random_rooms(rooms,2,5+y1,60+x1);
         x1 = rand()%5;
         y1 = rand()%5;
-        create_random_rooms(rooms,3,25+y1,90+x1);
+        create_random_rooms(rooms,3,20+y1,60+x1);
         x1 = rand()%5;
         y1 = rand()%5;
-        create_random_rooms(rooms,4,25+y1,50);
+        create_random_rooms(rooms,4,20+y1,35+x1);
         x1 = rand()%5;
         y1 = rand()%5;
-        create_random_rooms(rooms,5,25+y1,10+x1);
+        create_random_rooms(rooms,5,20+y1,10+x1);
         for(int j=0 ; j<6 ; j++){
             draw_dar(rooms[j],j);
             soton(rooms[j]);
@@ -1344,7 +1353,7 @@ int main() {
         int y = rooms[0].y + 1;
         path(rooms);
         refresh();
-        mvprintw(y, x, "\u2692");
+        mvprintw(y, x, "\U0001F60E");
         refresh();
         time(&startTime);
         while (health > 0) {
