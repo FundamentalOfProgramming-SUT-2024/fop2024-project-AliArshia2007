@@ -1742,29 +1742,35 @@ void safhe(){
 }
 void find_pas(const char* filename){
     attron(COLOR_PAIR(6));
-    move(17,61);
+    move(18,20);
     clrtoeol();
-    mvprintw(16,21,"Email address:");
+    mvprintw(16,22,"Email address:");
     char email[50];
     move(20,21);
     clrtoeol();
+    move(19,21);
+    clrtoeol();
     scanw("%s",email);
     FILE *file=fopen(filename,"r");
-    User user;
-    int i=0;
-    while (fscanf(file, "%s %s %s",user.name,user.password,user.email) != EOF)
+    User users[100];
+    int count=0,check=0;
+    while (fscanf(file, "%s %s %s %d %d %d %ld", users[count].name, users[count].password, 
+                users[count].email, &users[count].score ,&users[count].gold,&users[count].number_of_games,&users[count].first_Game_Time) != EOF)
     {
-        if(strcmp(user.email , email)==0){
-            i++;
-            mvprintw(21,21,"Your password is: %s",user.password);
+        if(strcmp(users[count].email , email)==0){
+            move(19,20);
+            clrtoeol();
+            mvprintw(19,22,"Your password is: %s",users[count].password);
             fclose(file);
+            check++;
             break;
         }
+        count++;
     }
     attroff(COLOR_PAIR(6));
-    if(i==0){
+    if(check==0){
         attron(COLOR_PAIR(2));
-        mvprintw(20,61,"Your email-address can't be found.");
+        mvprintw(20,22,"Your email-address can't be found.");
         attroff(COLOR_PAIR(2));
     }
 }
