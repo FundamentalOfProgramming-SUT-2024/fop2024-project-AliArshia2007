@@ -427,7 +427,7 @@ void tal_gold(Room room){
 }
 void draw_room(Room room ,int num) {
     if(fl==3 && num==5){
-        attron(COLOR_PAIR(2));
+        attron(COLOR_PAIR(6));
         for (int i = 0; i < room.width; i++) {
             mvprintw(room.y, room.x + i, "_");
             mvprintw(room.y + room.height, room.x + i, "_");
@@ -436,7 +436,7 @@ void draw_room(Room room ,int num) {
             mvprintw(room.y + i, room.x, "|");
             mvprintw(room.y + i, room.x + room.width, "|");
         }
-        attroff(COLOR_PAIR(2));
+        attroff(COLOR_PAIR(6));
         attron(COLOR_PAIR(3));
         for (int i = 1; i < room.width; i++) {
             for (int j = 1; j < room.height; j++) {
