@@ -1545,7 +1545,7 @@ int move_character(Room room[6], int *x, int *y) {
             }
         }for(int i=0 ; i<num_food ; i++){
             if(food_position[i][0]==*x && food_position[i][1]==*y){
-                if(nf==5){
+                if(nf>=5){
                     attron(COLOR_PAIR(2));
                     mvprintw(10,80,"You have enough food.");
                     attron(COLOR_PAIR(2));
@@ -1560,7 +1560,7 @@ int move_character(Room room[6], int *x, int *y) {
                     *x = newx;
                     *y = newy;
                 }
-                if(food_position[i][2]==1){
+                else if(food_position[i][2]==1){
                     attron(COLOR_PAIR(6));
                     mvprintw(10,80,"You take it befor.");
                     attroff(COLOR_PAIR(6));
@@ -1569,6 +1569,11 @@ int move_character(Room room[6], int *x, int *y) {
                     move(10,79);
                     clrtoeol();
                     refresh();
+                    attron(COLOR_PAIR(2));
+                    mvprintw(*y, *x, "\u03C6");
+                    attroff(COLOR_PAIR(2));
+                    *x = newx;
+                    *y = newy;
                 }
                 else{
                     attron(COLOR_PAIR(6));
@@ -1583,12 +1588,12 @@ int move_character(Room room[6], int *x, int *y) {
                     move(10,79);
                     clrtoeol();
                     refresh();
+                    attron(COLOR_PAIR(2));
+                    mvprintw(*y, *x, "\u03C6");
+                    attroff(COLOR_PAIR(2));
+                    *x = newx;
+                    *y = newy;
                 }
-                attron(COLOR_PAIR(2));
-                mvprintw(*y, *x, "\u03C6");
-                attroff(COLOR_PAIR(2));
-                *x = newx;
-                *y = newy;
             }
         }
         for(int i=0 ; i<num_gold ; i++){
@@ -1602,6 +1607,11 @@ int move_character(Room room[6], int *x, int *y) {
                     move(10,79);
                     clrtoeol();
                     refresh();
+                    attron(COLOR_PAIR(2));
+                    mvprintw(*y, *x, "\u0454");
+                    attroff(COLOR_PAIR(2));
+                    *x = newx;
+                    *y = newy;
                 }
                 else{
                     attron(COLOR_PAIR(6));
@@ -1613,13 +1623,13 @@ int move_character(Room room[6], int *x, int *y) {
                     move(10,79);
                     clrtoeol();
                     refresh();
+                    attron(COLOR_PAIR(2));
+                    mvprintw(*y, *x, "\u0454");
+                    attroff(COLOR_PAIR(2));
+                    *x = newx;
+                    *y = newy;
+                    g += gold_position[i][3];
                 }
-                attron(COLOR_PAIR(2));
-                mvprintw(*y, *x, "\u0454");
-                attroff(COLOR_PAIR(2));
-                *x = newx;
-                *y = newy;
-                g += gold_position[i][3];
             }
         }
         for(int i=0 ; i<num_gol ; i++){
@@ -1633,6 +1643,11 @@ int move_character(Room room[6], int *x, int *y) {
                     move(10,79);
                     clrtoeol();
                     refresh();
+                    attron(COLOR_PAIR(2));
+                    mvprintw(*y, *x, "\u0454");
+                    attroff(COLOR_PAIR(2));
+                    *x = newx;
+                    *y = newy;
                 }
                 else{
                     attron(COLOR_PAIR(6));
@@ -1644,13 +1659,13 @@ int move_character(Room room[6], int *x, int *y) {
                     move(10,79);
                     clrtoeol();
                     refresh();
+                    attron(COLOR_PAIR(2));
+                    mvprintw(*y, *x, "\u0454");
+                    attroff(COLOR_PAIR(2));
+                    *x = newx;
+                    *y = newy;
+                    g += gol[i][3];
                 }
-                attron(COLOR_PAIR(2));
-                mvprintw(*y, *x, "\u0454");
-                attroff(COLOR_PAIR(2));
-                *x = newx;
-                *y = newy;
-                g += gol[i][3];
             }
         }
         for(int i=0 ; i<num_tel ; i++){
