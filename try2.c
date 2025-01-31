@@ -2494,7 +2494,7 @@ int main() {
             login();
             break;
         case 3:
-            login("guset");
+            menu("guset");
             break;
         case 4:
             break;
