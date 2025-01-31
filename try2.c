@@ -111,33 +111,33 @@ int check_name(const char* filename , const char * name){
     return 1;
 }
 void safhe(){
-    move(5,60);
+    move(5,20);
     for(int i=0 ; i<20 ; i++){
         printw("*");
-        move(5+i,60);
+        move(5+i,20);
     }
-    move(5,60);
+    move(5,20);
     for(int i=0 ; i<50 ; i++){
         printw("*");
-        move(5,60+i);
+        move(5,20+i);
     }
     for(int i=0 ; i<20 ; i++){
         printw("*");
-        move(5+i,110);
+        move(5+i,70);
     }
-    move(24,60);
+    move(24,20);
     for(int i=0 ; i<=51 ; i++){
         printw("*");
-        move(24,60+i);
+        move(24,20+i);
     }
 }
 void find_pas(const char* filename){
     attron(COLOR_PAIR(6));
     move(17,61);
     clrtoeol();
-    mvprintw(16,61,"Email address:");
+    mvprintw(16,21,"Email address:");
     char email[50];
-    move(20,61);
+    move(20,21);
     clrtoeol();
     scanw("%s",email);
     FILE *file=fopen(filename,"r");
@@ -147,7 +147,7 @@ void find_pas(const char* filename){
     {
         if(strcmp(user.email , email)==0){
             i++;
-            mvprintw(21,61,"Your password is: %s",user.password);
+            mvprintw(21,21,"Your password is: %s",user.password);
             fclose(file);
             break;
         }
@@ -316,10 +316,11 @@ void choose_music( const char* name) {
     mvprintw(13, 10, "4. Music 4");
     mvprintw(15, 10, "5. Music 5");
     mvprintw(17, 10, "6. Music 6");
-    mvprintw(19, 10, "7. exit");
+    mvprintw(19, 10, "7. Music 7");
+    mvprintw(21, 10, "8. exit");
     attroff(COLOR_PAIR(1));
     refresh();
-    mvprintw(21, 10, "Enter your choice: ");
+    mvprintw(23, 10, "Enter your choice: ");
     scanw("%d", &music_choice);
     switch (music_choice)
     {
@@ -349,7 +350,12 @@ void choose_music( const char* name) {
         stop_music();
         play_music("music6.mp3");
         break;
-    
+    case 7:
+        stop_music();
+        play_music("music7.mp3");
+        break;
+    case 8:
+        break;
     }
     refresh();
     getch();
@@ -500,16 +506,16 @@ void login(){
     char name[20];
     char password[20];
     attron(COLOR_PAIR(1));
-    mvprintw(10,62,"User Name:");
-    mvprintw(13,62,"Password:");
-    mvprintw(15,62,"If you forgot password,writ 3 in password");
+    mvprintw(10,22,"User Name:");
+    mvprintw(13,22,"Password:");
+    mvprintw(15,22,"If you forgot password,writ 3 in password");
     attroff(COLOR_PAIR(1));
     while (TRUE)
     {
-        move(10,74);
+        move(10,34);
         clrtoeol();
         scanw("%s",name);safhe();
-        move(13,74);
+        move(13,34);
         clrtoeol();
         scanw("%s",password);safhe();
         if(strcmp(password,"3")==0){
@@ -518,12 +524,12 @@ void login(){
         else{
             clrtoeol();
             if(check_login("users.txt" , name , password)){
-                move(23,72);
+                move(23,32);
                 clrtoeol();
                 break;
             }
             else{
-                move(23,72);
+                move(23,32);
                 clrtoeol();
                 attron(COLOR_PAIR(2));
                 printw("Your name/password isn't correct");safhe();
@@ -531,7 +537,7 @@ void login(){
             }
         } 
     }
-    move(23,72);
+    move(23,32);
     attron(COLOR_PAIR(7));
     printw("press any key to continue");safhe();
     refresh();
@@ -544,56 +550,56 @@ void new_user(){
     safhe();
     User user;
     attron(COLOR_PAIR(1));
-    mvprintw(10,62,"User Name:");
-    mvprintw(15,62,"Password:");
-    mvprintw(20,62,"Email Adress:");
+    mvprintw(10,32,"User Name:");
+    mvprintw(15,32,"Password:");
+    mvprintw(20,32,"Email Adress:");
     attroff(COLOR_PAIR(1));
     while (TRUE)
     {
-        move(10,73);
+        move(10,43);
         clrtoeol();
         scanw("%s",user.name);safhe();
         if(check_name("users.txt",user.name)){
-            move(11,73);
+            move(11,33);
             clrtoeol();
             break;
         }
         else{
-            move(11,73);
+            move(11,33);
             attron(COLOR_PAIR(2));
             printw("your username has taken befor.");safhe();
             clrtoeol();
             attroff(COLOR_PAIR(2));
         }
     }
-    move(15,73);
+    move(15,43);
     while(true){
         clrtoeol();
         scanw("%s",user.password);safhe();
-        move(16,62);
+        move(16,24);
         if(check_pas(user.password) == 0){
             attron(COLOR_PAIR(2));
             printw("your password isn't correct");safhe();
             clrtoeol();
             attroff(COLOR_PAIR(2));
-            move(15,73);
+            move(15,42);
         }
         else{
             clrtoeol();
             break;
         }
     }
-    move(20,76);
+    move(20,46);
     while(true){
         clrtoeol();
         scanw("%s",user.email);safhe();
-        move(21,62);
+        move(21,22);
         if(check_email(user.email) == 0){
             attron(COLOR_PAIR(2));
             printw("your Email isn't correct");safhe();
             clrtoeol();
             attroff(COLOR_PAIR(2));
-            move(20,76);
+            move(20,45);
         }
         else{
             clrtoeol();
@@ -604,11 +610,11 @@ void new_user(){
     user.gold=0;
     user.number_of_games=0;
     user.first_Game_Time = time(NULL);
-    move(22,68);
+    move(22,28);
     attron(COLOR_PAIR(7));
     save_user("users.txt",&user);
     printw("Your account save succesfully.");
-    mvprintw(23,70,"press any key to continue.");
+    mvprintw(23,30,"press any key to continue.");
     refresh();
     attroff(COLOR_PAIR(7));
     getch();
@@ -618,29 +624,29 @@ void new_user(){
 void entery(){
     safhe();
     attron(COLOR_PAIR(1));
-    move(6,62);
+    move(6,22);
     printw("1-login");
-    move(10,62);
+    move(10,22);
     printw("2-Creat New account");
-    move(14,62);
+    move(14,22);
     printw("3-Guest");
-    move(18,62);
+    move(18,22);
     printw("4-exit");
     attroff(COLOR_PAIR(2));
     int ch;
     while (true) { 
-        mvprintw(20, 62, "Please enter your choice: ");
+        mvprintw(20, 22, "Please enter your choice: ");
         refresh();
         clrtoeol(); 
         scanw("%d", &ch); safhe();
         if (ch < 1 || ch > 4) { 
             attron(COLOR_PAIR(2));
-            mvprintw(23, 62, "Invalid choice! Please try again."); safhe();
+            mvprintw(23, 22, "Invalid choice! Please try again."); safhe();
             attroff(COLOR_PAIR(2)); 
             refresh(); 
         } 
         else { 
-            move(23,62);
+            move(23,22);
             clrtoeol(); 
             break; 
         } 
@@ -648,23 +654,23 @@ void entery(){
     switch (ch)
     {
     case 1:
-        move(10,62);
+        move(10,22);
         clear();
         login();
         break;
     case 2:
-        move(10,62);
+        move(10,22);
         clear();
         new_user();
     case 3:
-        move(14,62);
+        move(14,22);
         menu("gust");
         break;
     case 4:
-        move(18,62);
+        move(18,22);
         clear();
         attron(COLOR_PAIR(2));
-        mvprintw(25, 75, "I hope you enjoy the game.");
+        mvprintw(15, 15, "I hope you enjoy the game.");
         refresh();
         attroff(COLOR_PAIR(2));
         getch();
