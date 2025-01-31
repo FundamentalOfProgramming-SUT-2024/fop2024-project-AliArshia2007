@@ -1571,7 +1571,7 @@ int move_character(Room room[6], int *x, int *y) {
                         break;    
                     case 10:
                         attron(COLOR_PAIR(7));
-                        mvprintw(10, 80, "You pick up w Sword.");
+                        mvprintw(10, 80, "You pick up Sword.");
                         refresh();
                         attroff(COLOR_PAIR(7));
                         sleep(2);
@@ -2109,10 +2109,11 @@ void choose_music( const char* name) {
     mvprintw(15, 10, "5. Music 5");
     mvprintw(17, 10, "6. Music 6");
     mvprintw(19, 10, "7. Music 7");
-    mvprintw(21, 10, "8. exit");
+    mvprintw(21, 10, "8. stop music");
+    mvprintw(23, 10, "9. exit");
     attroff(COLOR_PAIR(1));
     refresh();
-    mvprintw(23, 10, "Enter your choice: ");
+    mvprintw(25, 10, "Enter your choice: ");
     scanw("%d", &music_choice);
     switch (music_choice)
     {
@@ -2147,6 +2148,9 @@ void choose_music( const char* name) {
         play_music("music7.mp3");
         break;
     case 8:
+        stop_music();
+        break;
+    case 9:
         break;
     }
     refresh();
