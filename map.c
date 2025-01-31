@@ -98,14 +98,14 @@ int soton_position[12][3];
 int num_soton=0;
 void soton(Room room) {
     int x1,x2, y1,y2;
-    x1 = (rand() % (room.width-4));
-    y1 = (rand() % (room.height-4));
+    x1 = (rand() % (room.width-3));
+    y1 = (rand() % (room.height-3));
     if(x1==0)
         x1++;
     if(y1==0)
         y1++;
-    x1 = room.x + x1 + 1; 
-    y1 = room.y + y1 + 1 ;
+    x1 = room.x + x1+1; 
+    y1 = room.y + y1+1;
     if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
         x1 += 2;
     }
@@ -113,8 +113,8 @@ void soton(Room room) {
     soton_position[num_soton][1] = y1;
     num_soton++;
     soton_position[num_soton][2]=0;
-    x2 = (rand() % (room.width-4));
-    y2 = (rand() % (room.height-4));
+    x2 = (rand() % (room.width-3));
+    y2 = (rand() % (room.height-3));
     if(x2==0)
         x2++;
     if(y2==0)
@@ -161,8 +161,8 @@ int num_gold=0;
 int g=0;
 void gold(Room room){
         int x1,y1,x2,y2,price1,price2;
-        x1 = (rand() % (room.width-4));
-        y1 = (rand() % (room.height-4));
+        x1 = (rand() % (room.width-2));
+        y1 = (rand() % (room.height-2));
         price1=(rand()%5)+1;
         if(x1==0)
             x1++;
@@ -171,11 +171,16 @@ void gold(Room room){
         x1 = room.x + x1 +1; 
         y1 = room.y + y1 +1;
         if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
-        x1 += 2;
+            x1 += 2;
         }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
-                x1 ++ ;
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
             }
         }
         gold_position[num_gold][0] = x1;
@@ -183,21 +188,26 @@ void gold(Room room){
         gold_position[num_gold][2]=0;
         gold_position[num_gold][3]=price1;
         num_gold++;
-        x2 = (rand() % (room.width-4));
-        y2 = (rand() % (room.height-4));
+        x2 = (rand() % (room.width-2));
+        y2 = (rand() % (room.height-2));
         price2=(rand()%5)+1;
         if(x2==0)
             x2++;
         if(y2==0)
             y2++;
-        x2 = room.x + x2 +1 ; 
+        x2 = room.x + x2 +1; 
         y2 = room.y + y2 +1;
         if((x2==(room.x+1)|| (x2)==room.x+2) && y2==(room.y+room.height-1)){
             x2 += 2;
         }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x2 && soton_position[i][1]==y2){
-                x2 ++ ;
+                if(x2 < (room.x+room.width-2)){
+                    x2 ++;
+                }
+                else{
+                    x2--;
+                }
             }
         }
         gold_position[num_gold][0] = x2;
@@ -206,12 +216,12 @@ void gold(Room room){
         gold_position[num_gold][3]=price2;
         num_gold++;
 }
-int tale_position[6][4];
+int tale_position[6][3];
 int num_tale=0;
 void tale(Room room){
         int x1,y1;
-        x1 = (rand() % (room.width-4));
-        y1 = (rand() % (room.height-4));
+        x1 = (rand() % (room.width-3));
+        y1 = (rand() % (room.height-3));
         if (x1 <= 0)
             x1=1;
         if (y1 <= 0)
@@ -223,12 +233,22 @@ void tale(Room room){
         }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
-                x1 ++ ;
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
             }
         }
         for(int i=0 ; i<num_gold ; i++){
             if(gold_position[i][0]==x1 && gold_position[i][1]==y1){
-                x1 ++ ;
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
             }
         }
         tale_position[num_tale][0] = x1;
@@ -241,8 +261,8 @@ int num_food=0;
 int nf=0;
 void food(Room room){
     int x1,y1;
-        x1 = (rand() % (room.width-4));
-        y1 = (rand() % (room.height-4));
+        x1 = (rand() % (room.width-2));
+        y1 = (rand() % (room.height-2));
         if (x1 <= 0)
             x1=1;
         if (y1 <= 0)
@@ -254,17 +274,32 @@ void food(Room room){
         }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
-                x1 ++ ;
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
             }
         }
         for(int i=0 ; i<num_gold ; i++){
             if(gold_position[i][0]==x1 && gold_position[i][1]==y1){
-                x1 ++ ;
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
             }
         }
         for(int i=0 ; i<num_tale ; i++){
             if(tale_position[i][0]==x1 && tale_position[i][1]==y1){
-                x1 ++ ;
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
             }
         }
         food_position[num_food][0] = x1;
@@ -275,8 +310,8 @@ void food(Room room){
 int telesm_position[3][4],num_tel=0,tel=0;
 void telesm(Room room , int num){
     int x1,y1;
-        x1 = (rand() % (room.width-4));
-        y1 = (rand() % (room.height-4));
+        x1 = (rand() % (room.width-2));
+        y1 = (rand() % (room.height-2));
         if(x1<=0)
             x1=1;
         if(y1<=0)
@@ -288,22 +323,42 @@ void telesm(Room room , int num){
         }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
-                x1 ++ ;
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
             }
         }
         for(int i=0 ; i<num_gold ; i++){
             if(gold_position[i][0]==x1 && gold_position[i][1]==y1){
-                x1 ++ ;
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
             }
         }
         for(int i=0 ; i<num_tale ; i++){
             if(tale_position[i][0]==x1 && tale_position[i][1]==y1){
-                x1 ++ ;
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
             }
         }
         for(int i=0 ; i<num_food ; i++){
             if(food_position[i][0]==x1 && food_position[i][1]==y1){
-                x1 ++ ;
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
             }
         }
         telesm_position[num_tel][0] = x1;
@@ -312,296 +367,369 @@ void telesm(Room room , int num){
         telesm_position[num_tel][3]=0;
         num_tel++;
 }
-void draw_room(Room room ,int num) {
-    attron(COLOR_PAIR(2));
-    for (int i = 0; i < room.width; i++) {
-        mvprintw(room.y, room.x + i, "_");
-        mvprintw(room.y + room.height, room.x + i, "_");
-    }
-    for (int i = 1; i <= room.height; i++) {
-        mvprintw(room.y + i, room.x, "|");
-        mvprintw(room.y + i, room.x + room.width, "|");
-    }
-    attroff(COLOR_PAIR(2));
-    attron(COLOR_PAIR(3));
-    for (int i = 1; i < room.width; i++) {
-        for (int j = 1; j < room.height; j++) {
-            if(num ==0 && i==2 && j==(room.height-1) && num==0){
-                mvprintw(room.y + j, room.x + i, " ");
-            }
-            else{
-                mvprintw(room.y + j, room.x + i, ".");
-            }
-        }
-    }
-    attroff(COLOR_PAIR(3));
-    attron(COLOR_PAIR(4));
-    mvprintw(soton_position[2*num][1],soton_position[2*num][0],"O");
-    soton_position[2*num][2]=1;
-    refresh();
-    mvprintw(soton_position[2*num+1][1],soton_position[2*num+1][0],"O");
-    soton_position[2*num+1][2]=1;
-    refresh();
-    attron(COLOR_PAIR(6));
-    mvprintw(gold_position[2*num][1],gold_position[2*num][0],"\u0454");
-    mvprintw(gold_position[2*num+1][1],gold_position[2*num+1][0],"\u0454");
-    soton_position[2*num][2]=0;
-    soton_position[2*num+1][2]=0;
-    refresh();
-    attroff(COLOR_PAIR(6));
-    attron(COLOR_PAIR(7));
-    mvprintw(food_position[num][1],food_position[num][0],"\u03C6");
-    refresh();
-    attroff(COLOR_PAIR(7));
-    switch (fl)
-    {
-    case 0:
-        if(weapon_position[1][2]==0)
-            mvprintw(weapon_position[1][1],weapon_position[1][0],"\U0001F5E1");
-        else{
-            attron(COLOR_PAIR(3));
-            mvprintw(weapon_position[1][1],weapon_position[1][0],".");
-            mvprintw(weapon_position[1][1],weapon_position[1][0]+1,".");
-            attroff(COLOR_PAIR(3));
-        }
-        refresh();
-        break;
-    
-    case 1:
-        if(weapon_position[2][2]==0)
-            mvprintw(weapon_position[2][1],weapon_position[2][0],"\u16E3");
-        else{
-            attron(COLOR_PAIR(3));
-            mvprintw(weapon_position[2][1],weapon_position[2][0],".");
-            mvprintw(weapon_position[2][1],weapon_position[2][0]+1,".");
-            attroff(COLOR_PAIR(3));
-        }
-        refresh();
-        break;
-    case 2:
-        if(weapon_position[3][2]==0)
-            mvprintw(weapon_position[3][1],weapon_position[3][0],"\u27B3");
-        else{
-            attron(COLOR_PAIR(3));
-            mvprintw(weapon_position[3][1],weapon_position[3][0],".");
-            mvprintw(weapon_position[3][1],weapon_position[3][0]+1,".");
-            attroff(COLOR_PAIR(3));
-        }
-        refresh();
-        break;
-    case 3:
-        if(weapon_position[4][2]==0)
-            mvprintw(weapon_position[4][1],weapon_position[4][0],"\u2694");
-        else{
-            attron(COLOR_PAIR(3));
-            mvprintw(weapon_position[4][1],weapon_position[4][0],".");
-            mvprintw(weapon_position[4][1],weapon_position[4][0]+1,".");
-            attroff(COLOR_PAIR(3));
-        }
-        refresh();
-        break;
-    }
-        switch (num)
-        {
-        case 0:
-            attron(COLOR_PAIR(1));
-            mvprintw(telesm_position[num][1],telesm_position[num][0],"\u22D2");
-            attroff(COLOR_PAIR(1));
-            break;
-        case 2:
-            attron(COLOR_PAIR(4));
-            mvprintw(telesm_position[num/2][1],telesm_position[num/2][0],"\u0E19");
-            attroff(COLOR_PAIR(4));
-            break;
-        case 4:
-            mvprintw(telesm_position[num/2][1],telesm_position[num/2][0],"\u03BB");
-            break;
-        }
-    if(num==0){
-        if(dar_positions[num][2]==2){
-            attron(COLOR_PAIR(2));
-            mvprintw(dar_positions[num][1],dar_positions[num][0],"|");
-            attroff(COLOR_PAIR(2));
-            refresh();
-        }
-        else if(dar_positions[num][2]==5){
-            attron(COLOR_PAIR(1));
-            mvprintw(dar_positions[num][1],dar_positions[num][0],"?");
-            attroff(COLOR_PAIR(1));
-        }
-        else{
-            attron(COLOR_PAIR(4));
-            mvprintw(dar_positions[num][1],dar_positions[num][0],"+");
-            attroff(COLOR_PAIR(4));
-            dar_positions[num][2]=1;
-            refresh();
-        }
-    }
-    else if(num>0 && num<5){
-        mvprintw(dar_positions[2*num-1][1],dar_positions[2*num-1][0],"+");
-        if(dar_positions[2*num][2]==2){
-            attron(COLOR_PAIR(2));
-            mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"|");
-            attroff(COLOR_PAIR(2));
-            refresh();
-        }
-        else if(dar_positions[2*num][2]==3){
-            attron(COLOR_PAIR(2));
-            mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"@");
-            attroff(COLOR_PAIR(2));
-            attron(COLOR_PAIR(4));
-            int x=(room.x+room.width-2) , y=(room.y+room.height-1);
-            password[0][0]=x;
-            password[0][1]=y;
-            mvprintw(y,x,"&");
-            attroff(COLOR_PAIR(4));
-            refresh();
-        }
-        else if(dar_positions[2*num][2]==4){
-            attron(COLOR_PAIR(1));
-            mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"@");
-            attroff(COLOR_PAIR(1));
-            attron(COLOR_PAIR(4));
-            mvprintw(password[0][1],password[0][0],"&");
-            attroff(COLOR_PAIR(4));
-        }
-        else if(dar_positions[2*num][2]==5){
-            attron(COLOR_PAIR(1));
-            mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"?");
-            attroff(COLOR_PAIR(1));
-        }
-        else{
-            attron(COLOR_PAIR(4));
-            mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"+");
-            attroff(COLOR_PAIR(4));
-            refresh();
-        }
-        
-    }
-    else{
-        attron(COLOR_PAIR(4));
-        mvprintw(dar_positions[2*num-1][1],dar_positions[2*num-1][0],"+");
-        mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],">");
-        refresh();
-        attroff(COLOR_PAIR(4));
-    }
-    for(int i=0 ; i<num_gold ; i++){
-        if(gold_position[i][2]==1){
-            attron(COLOR_PAIR(2));
-            mvprintw(gold_position[i][1],gold_position[i][0],"\u0454");
-            attroff(COLOR_PAIR(2));
-        }
-    }
-    for(int i=0 ; i<num_food ; i++){
-        if(food_position[i][2]==1){
-            attron(COLOR_PAIR(2));
-            mvprintw(food_position[i][1],food_position[i][0],"\u03C6");
-            attroff(COLOR_PAIR(2));
-        }
-    }
-    for(int i=0 ; i<num_dar ; i++){
-        if(dar_positions[i][2]==1){
-            attron(COLOR_PAIR(1));
-            mvprintw(dar_positions[i][1],dar_positions[i][0],"+");
-            attroff(COLOR_PAIR(1));
-        }
-        else if(dar_positions[i][2]==4){
-            attron(COLOR_PAIR(1));
-            mvprintw(dar_positions[i][1],dar_positions[i][0],"@");
-            attroff(COLOR_PAIR(1));
-        }
-        else if(dar_positions[i][2]==5){
-            attron(COLOR_PAIR(1));
-            mvprintw(dar_positions[i][1],dar_positions[i][0],"?");
-            attroff(COLOR_PAIR(1));
-        }
-    }
-    for(int i=0 ; i<num_tale ; i++){
-        if(tale_position[i][2]==1){
-            attron(COLOR_PAIR(2));
-            mvprintw(tale_position[i][1],tale_position[i][0],"^");
-            attroff(COLOR_PAIR(2));
-        }
-    }
-    for(int i=0 ; i<num_tel ; i++){
-        if(telesm_position[i][3]==1){
-            switch (i)
-            {
-            case 0:
-                attron(COLOR_PAIR(2));
-                mvprintw(telesm_position[i][1],telesm_position[i][0],"\u22D2");
-                attroff(COLOR_PAIR(2));
-                break;
-            case 1:
-                attron(COLOR_PAIR(2));
-                mvprintw(telesm_position[i][1],telesm_position[i][0],"\u0E19");
-                attroff(COLOR_PAIR(2));
-                break;
-            case 2:
-                attron(COLOR_PAIR(2));
-                mvprintw(telesm_position[i][1],telesm_position[i][0],"\u03BB");
-                attroff(COLOR_PAIR(2));
-                break;
+int tal[5][3],num_tal;
+int gol[8][4],num_gol;
+void gold_gold(Room room){
+    for(int i=0 ; i<8 ; i++){
+        int x1,y1,price1;
+        x1 = (rand() % (room.width));
+        y1 = (rand() % (room.height));
+        price1=(rand()%5)+1;
+        if(x1==0)
+            x1++;
+        if(y1==0)
+            y1++;
+        x1 = room.x + x1; 
+        y1 = room.y + y1;
+        for(int i=0 ; i<num_gol ; i++){
+            if(x1==gol[i][0] && y1==gol[i][1]){
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
             }
         }
-    }
-    if(key[2]==num){
-        if(key[3]==0){
-            attron(COLOR_PAIR(6));
-            move(key[1], key[0]);
-            printw("\u0394");
-            attroff(COLOR_PAIR(6));
-            refresh();
-        }
-        else{
-            attron(COLOR_PAIR(1));
-            move(key[1], key[0]);
-            printw("\u0394");
-            attroff(COLOR_PAIR(1));
-            refresh(); 
-        }
-        
+        gol[num_gol][0] = x1;
+        gol[num_gol][1] = y1;
+        gol[num_gol][2]=0;
+        gol[num_gol][3]=price1;
+        num_gol++;
     }
 }
-int tal[5][4],num_tal;
-int gol[8][3],num_gol;
 void tal_gold(Room room){
     for(int i=0 ; i<5 ; i++){
         int x1,y1;
-        x1 = (rand() % (room.width-4));
-        y1 = (rand() % (room.height-4));
+        x1 = (rand() % (room.width));
+        y1 = (rand() % (room.height));
         if (x1 <= 0)
             x1=1;
         if (y1 <= 0)
             y1=1;
-        x1 = room.x + x1+1; 
-        y1 = room.y + y1+1;
+        x1 = room.x + x1; 
+        y1 = room.y + y1;
+        for(int i=0 ; i<num_gol ; i++){
+            if(x1==gol[i][0] && y1==gol[i][1]){
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
+            }
+        }
         tal[num_tal][0] = x1;
         tal[num_tal][1] = y1;
         tal[num_tal][2]=0;
         num_tal++;
     }
 }
-void draw_gold(){
-    
-}
-void gold_gold(Room room){
-    for(int i=0 ; i<8 ; i++){
-        int x1,y1,price1;
-        x1 = (rand() % (room.width-4));
-        y1 = (rand() % (room.height-4));
-        price1=(rand()%5)+1;
-        if(x1==0)
-            x1++;
-        if(y1==0)
-            y1++;
-        x1 = room.x + x1 +1; 
-        y1 = room.y + y1 +1;
-        gold_position[num_gol][0] = x1;
-        gold_position[num_gol][1] = y1;
-        gold_position[num_gol][2]=0;
-        gold_position[num_gol][3]=price1;
-        num_gol++;
+void draw_room(Room room ,int num) {
+    if(fl==3 && num==5){
+        attron(COLOR_PAIR(2));
+        for (int i = 0; i < room.width; i++) {
+            mvprintw(room.y, room.x + i, "_");
+            mvprintw(room.y + room.height, room.x + i, "_");
+        }
+        for (int i = 1; i <= room.height; i++) {
+            mvprintw(room.y + i, room.x, "|");
+            mvprintw(room.y + i, room.x + room.width, "|");
+        }
+        attroff(COLOR_PAIR(2));
+        attron(COLOR_PAIR(3));
+        for (int i = 1; i < room.width; i++) {
+            for (int j = 1; j < room.height; j++) {
+                mvprintw(room.y + j, room.x + i, ".");
+            }
+        }
+        if(dar_positions[9][2]==0){
+            attron(COLOR_PAIR(4));
+            mvprintw(dar_positions[2*num-1][1],dar_positions[2*num-1][0],"+");
+            mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],">");
+            attroff(COLOR_PAIR(4));
+            refresh();
+        }
+        else{
+           attron(COLOR_PAIR(1));
+            mvprintw(dar_positions[2*num-1][1],dar_positions[2*num-1][0],"+");
+            mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],">");
+            attroff(COLOR_PAIR(1));
+            refresh(); 
+        }
+        for(int i=0 ; i<num_gol ; i++){
+            if(gol[i][2]==0){
+                attron(COLOR_PAIR(6));
+                mvprintw(gol[i][1],gol[i][0],"\u0454");
+                refresh();
+                attroff(COLOR_PAIR(6));
+            }
+            if(gol[i][2]==1){
+                attron(COLOR_PAIR(2));
+                mvprintw(gol[i][1],gol[i][0],"\u0454");
+                refresh();
+                attroff(COLOR_PAIR(2));
+            }
+        }
+        for(int i=0 ; i<num_tal ; i++){
+            if(tal[i][2]==1){
+                attron(COLOR_PAIR(2));
+                mvprintw(tal[i][1],tal[i][0],"^");
+                refresh();
+                attroff(COLOR_PAIR(2));
+            }
+        }
+    }
+    else{
+        attron(COLOR_PAIR(2));
+        for (int i = 0; i < room.width; i++) {
+            mvprintw(room.y, room.x + i, "_");
+            mvprintw(room.y + room.height, room.x + i, "_");
+        }
+        for (int i = 1; i <= room.height; i++) {
+            mvprintw(room.y + i, room.x, "|");
+            mvprintw(room.y + i, room.x + room.width, "|");
+        }
+        attroff(COLOR_PAIR(2));
+        attron(COLOR_PAIR(3));
+        for (int i = 1; i < room.width; i++) {
+            for (int j = 1; j < room.height; j++) {
+                if(num ==0 && i==2 && j==(room.height-1) && num==0){
+                    mvprintw(room.y + j, room.x + i, " ");
+                }
+                else{
+                    mvprintw(room.y + j, room.x + i, ".");
+                }
+            }
+        }
+        attroff(COLOR_PAIR(3));
+        attron(COLOR_PAIR(4));
+        mvprintw(soton_position[2*num][1],soton_position[2*num][0],"O");
+        soton_position[2*num][2]=1;
+        refresh();
+        mvprintw(soton_position[2*num+1][1],soton_position[2*num+1][0],"O");
+        soton_position[2*num+1][2]=1;
+        refresh();
+        attron(COLOR_PAIR(6));
+        mvprintw(gold_position[2*num][1],gold_position[2*num][0],"\u0454");
+        mvprintw(gold_position[2*num+1][1],gold_position[2*num+1][0],"\u0454");
+        soton_position[2*num][2]=0;
+        soton_position[2*num+1][2]=0;
+        refresh();
+        attroff(COLOR_PAIR(6));
+        attron(COLOR_PAIR(7));
+        mvprintw(food_position[num][1],food_position[num][0],"\u03C6");
+        refresh();
+        attroff(COLOR_PAIR(7));
+        switch (fl)
+        {
+        case 0:
+            if(weapon_position[1][2]==0)
+                mvprintw(weapon_position[1][1],weapon_position[1][0],"\U0001F5E1");
+            else{
+                attron(COLOR_PAIR(3));
+                mvprintw(weapon_position[1][1],weapon_position[1][0],".");
+                mvprintw(weapon_position[1][1],weapon_position[1][0]+1,".");
+                attroff(COLOR_PAIR(3));
+            }
+            refresh();
+            break;
+        
+        case 1:
+            if(weapon_position[2][2]==0)
+                mvprintw(weapon_position[2][1],weapon_position[2][0],"\u16E3");
+            else{
+                attron(COLOR_PAIR(3));
+                mvprintw(weapon_position[2][1],weapon_position[2][0],".");
+                mvprintw(weapon_position[2][1],weapon_position[2][0]+1,".");
+                attroff(COLOR_PAIR(3));
+            }
+            refresh();
+            break;
+        case 2:
+            if(weapon_position[3][2]==0)
+                mvprintw(weapon_position[3][1],weapon_position[3][0],"\u27B3");
+            else{
+                attron(COLOR_PAIR(3));
+                mvprintw(weapon_position[3][1],weapon_position[3][0],".");
+                mvprintw(weapon_position[3][1],weapon_position[3][0]+1,".");
+                attroff(COLOR_PAIR(3));
+            }
+            refresh();
+            break;
+        case 3:
+            if(weapon_position[4][2]==0)
+                mvprintw(weapon_position[4][1],weapon_position[4][0],"\u2694");
+            else{
+                attron(COLOR_PAIR(3));
+                mvprintw(weapon_position[4][1],weapon_position[4][0],".");
+                mvprintw(weapon_position[4][1],weapon_position[4][0]+1,".");
+                attroff(COLOR_PAIR(3));
+            }
+            refresh();
+            break;
+        }
+            switch (num)
+            {
+            case 0:
+                attron(COLOR_PAIR(1));
+                mvprintw(telesm_position[num][1],telesm_position[num][0],"\u22D2");
+                attroff(COLOR_PAIR(1));
+                break;
+            case 2:
+                attron(COLOR_PAIR(4));
+                mvprintw(telesm_position[num/2][1],telesm_position[num/2][0],"\u0E19");
+                attroff(COLOR_PAIR(4));
+                break;
+            case 4:
+                mvprintw(telesm_position[num/2][1],telesm_position[num/2][0],"\u03BB");
+                break;
+            }
+        if(num==0){
+            if(dar_positions[num][2]==2){
+                attron(COLOR_PAIR(2));
+                mvprintw(dar_positions[num][1],dar_positions[num][0],"|");
+                attroff(COLOR_PAIR(2));
+                refresh();
+            }
+            else if(dar_positions[num][2]==5){
+                attron(COLOR_PAIR(1));
+                mvprintw(dar_positions[num][1],dar_positions[num][0],"?");
+                attroff(COLOR_PAIR(1));
+            }
+            else{
+                attron(COLOR_PAIR(4));
+                mvprintw(dar_positions[num][1],dar_positions[num][0],"+");
+                attroff(COLOR_PAIR(4));
+                dar_positions[num][2]=1;
+                refresh();
+            }
+        }
+        else if(num>0 && num<5){
+            mvprintw(dar_positions[2*num-1][1],dar_positions[2*num-1][0],"+");
+            if(dar_positions[2*num][2]==2){
+                attron(COLOR_PAIR(2));
+                mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"|");
+                attroff(COLOR_PAIR(2));
+                refresh();
+            }
+            else if(dar_positions[2*num][2]==3){
+                attron(COLOR_PAIR(2));
+                mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"@");
+                attroff(COLOR_PAIR(2));
+                attron(COLOR_PAIR(4));
+                int x=(room.x+room.width-2) , y=(room.y+room.height-1);
+                password[0][0]=x;
+                password[0][1]=y;
+                mvprintw(y,x,"&");
+                attroff(COLOR_PAIR(4));
+                refresh();
+            }
+            else if(dar_positions[2*num][2]==4){
+                attron(COLOR_PAIR(1));
+                mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"@");
+                attroff(COLOR_PAIR(1));
+                attron(COLOR_PAIR(4));
+                mvprintw(password[0][1],password[0][0],"&");
+                attroff(COLOR_PAIR(4));
+            }
+            else if(dar_positions[2*num][2]==5){
+                attron(COLOR_PAIR(1));
+                mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"?");
+                attroff(COLOR_PAIR(1));
+            }
+            else{
+                attron(COLOR_PAIR(4));
+                mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],"+");
+                attroff(COLOR_PAIR(4));
+                refresh();
+            }
+            
+        }
+        else{
+            attron(COLOR_PAIR(4));
+            mvprintw(dar_positions[2*num-1][1],dar_positions[2*num-1][0],"+");
+            mvprintw(dar_positions[2*num][1],dar_positions[2*num][0],">");
+            refresh();
+            attroff(COLOR_PAIR(4));
+        }
+        for(int i=0 ; i<num_gold ; i++){
+            if(gold_position[i][2]==1){
+                attron(COLOR_PAIR(2));
+                mvprintw(gold_position[i][1],gold_position[i][0],"\u0454");
+                attroff(COLOR_PAIR(2));
+            }
+        }
+        for(int i=0 ; i<num_food ; i++){
+            if(food_position[i][2]==1){
+                attron(COLOR_PAIR(2));
+                mvprintw(food_position[i][1],food_position[i][0],"\u03C6");
+                attroff(COLOR_PAIR(2));
+            }
+        }
+        for(int i=0 ; i<num_dar ; i++){
+            if(dar_positions[i][2]==1){
+                attron(COLOR_PAIR(1));
+                mvprintw(dar_positions[i][1],dar_positions[i][0],"+");
+                attroff(COLOR_PAIR(1));
+            }
+            else if(dar_positions[i][2]==4){
+                attron(COLOR_PAIR(1));
+                mvprintw(dar_positions[i][1],dar_positions[i][0],"@");
+                attroff(COLOR_PAIR(1));
+            }
+            else if(dar_positions[i][2]==5){
+                attron(COLOR_PAIR(1));
+                mvprintw(dar_positions[i][1],dar_positions[i][0],"?");
+                attroff(COLOR_PAIR(1));
+            }
+        }
+        for(int i=0 ; i<num_tale ; i++){
+            if(tale_position[i][2]==1){
+                attron(COLOR_PAIR(2));
+                mvprintw(tale_position[i][1],tale_position[i][0],"^");
+                attroff(COLOR_PAIR(2));
+            }
+        }
+        for(int i=0 ; i<num_tel ; i++){
+            if(telesm_position[i][3]==1){
+                switch (i)
+                {
+                case 0:
+                    attron(COLOR_PAIR(2));
+                    mvprintw(telesm_position[i][1],telesm_position[i][0],"\u22D2");
+                    attroff(COLOR_PAIR(2));
+                    break;
+                case 1:
+                    attron(COLOR_PAIR(2));
+                    mvprintw(telesm_position[i][1],telesm_position[i][0],"\u0E19");
+                    attroff(COLOR_PAIR(2));
+                    break;
+                case 2:
+                    attron(COLOR_PAIR(2));
+                    mvprintw(telesm_position[i][1],telesm_position[i][0],"\u03BB");
+                    attroff(COLOR_PAIR(2));
+                    break;
+                }
+            }
+        }
+        if(key[2]==num){
+            if(key[3]==0){
+                attron(COLOR_PAIR(6));
+                move(key[1], key[0]);
+                printw("\u0394");
+                attroff(COLOR_PAIR(6));
+                refresh();
+            }
+            else{
+                attron(COLOR_PAIR(1));
+                move(key[1], key[0]);
+                printw("\u0394");
+                attroff(COLOR_PAIR(1));
+                refresh(); 
+            }
+            
+        }
     }
 }
 int path_position[3000][3];
@@ -1025,6 +1153,11 @@ int check_move(int x, int y, Room room[6]) {
             return 1;
         }
     }
+    for (int i = 0; i <num_gol; i++) {
+        if (x == gol[i][0] && y == telesm_position[i][1]) {
+            return 1;
+        }
+    }
     for(int i=0 ; i<6 ; i++){
         if (x > room[i].x && x < (room[i].x + room[i].width) && y > room[i].y && y < (room[i].y + room[i].height)) {
         for (int i = 0; i < num_soton; i++) {
@@ -1121,6 +1254,16 @@ int move_character(Room room[6], int *x, int *y) {
                     mvprintw(tale_position[i][1],tale_position[i][0],"^");
                     refresh();
                     attroff(COLOR_PAIR(2));
+                }
+            }
+            if(numroom==4){
+                for(int i=0 ; i<num_tal ; i++){
+                    if(tal[i][2]==0){
+                    attron(COLOR_PAIR(2));
+                    mvprintw(tal[i][1],tal[i][0],"^");
+                    refresh();
+                    attroff(COLOR_PAIR(2));
+                }
                 }
             }
             for(int i=0 ; i<=(numroom+1) ; i++){
@@ -1479,6 +1622,37 @@ int move_character(Room room[6], int *x, int *y) {
                 g += gold_position[i][3];
             }
         }
+        for(int i=0 ; i<num_gol ; i++){
+            if(gol[i][0]==*x && gol[i][1]==*y){
+                if(gol[i][2]==1){
+                    attron(COLOR_PAIR(6));
+                    mvprintw(10,80,"You take it befor.");
+                    attron(COLOR_PAIR(6));
+                    refresh();
+                    sleep(1);
+                    move(10,79);
+                    clrtoeol();
+                    refresh();
+                }
+                else{
+                    attron(COLOR_PAIR(6));
+                    mvprintw(10,80,"You get %d gold.",gol[i][3]);
+                    gol[i][2]=1;
+                    attron(COLOR_PAIR(6));
+                    refresh();
+                    sleep(1);
+                    move(10,79);
+                    clrtoeol();
+                    refresh();
+                }
+                attron(COLOR_PAIR(2));
+                mvprintw(*y, *x, "\u0454");
+                attroff(COLOR_PAIR(2));
+                *x = newx;
+                *y = newy;
+                g += gol[i][3];
+            }
+        }
         for(int i=0 ; i<num_tel ; i++){
             if(telesm_position[i][0]==*x && telesm_position[i][1]==*y){
                 if(telesm_position[i][3]==1){
@@ -1558,6 +1732,18 @@ int move_character(Room room[6], int *x, int *y) {
                 *y = newy;
             }
         }
+        for(int i=0 ; i<num_tal ; i++){
+            if(tal[i][0]==*x && tal[i][1]==*y){
+                if(tal[i][2]==0)
+                    health -= 2;
+                    tal[i][2]=1;
+                attron(COLOR_PAIR(2));
+                mvprintw(*y, *x, "^");
+                attroff(COLOR_PAIR(2));
+                *x = newx;
+                *y = newy;
+            }
+        }
         for(int i=0 ; i<num_weapon ; i++){
             if(weapon_position[i][0]==*x && weapon_position[i][1]==*y){
                 if(weapon_position[i][2]==0){
@@ -1594,7 +1780,7 @@ int move_character(Room room[6], int *x, int *y) {
                         break;    
                     case 10:
                         attron(COLOR_PAIR(7));
-                        mvprintw(10, 80, "You pick up w Sword.");
+                        mvprintw(10, 80, "You pick up Sword.");
                         refresh();
                         attroff(COLOR_PAIR(7));
                         sleep(2);
@@ -1696,9 +1882,12 @@ int main() {
         y1 = rand()%5;
         create_random_rooms(rooms,5,20+y1,10+x1);
         for(int j=0 ; j<6 ; j++){
-            // if(i==3 && j==5){
-            // }
-            // else{
+            if(fl==3 && j==5){
+                draw_dar(rooms[j],j);
+                gold_gold(rooms[j]);
+                tal_gold(rooms[j]);
+            }
+            else{
                 if(j==0){
                 weapon(rooms[j],j);
                 }
@@ -1710,7 +1899,7 @@ int main() {
                 if(j%2 ==0){
                     telesm(rooms[j],j);
                 }
-            // }
+            }
         }
         int q=rand()%3;
         key[0]=rooms[q].x+rand()%(rooms[q].width-2)+1;
