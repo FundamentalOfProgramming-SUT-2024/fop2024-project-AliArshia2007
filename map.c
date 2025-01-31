@@ -106,10 +106,8 @@ void soton(Room room) {
         y1++;
     x1 = room.x + x1 + 1; 
     y1 = room.y + y1 + 1 ;
-    for(int i=0 ; i<num_weapon ; i++){
-        if((x1==weapon_position[i][0] || (x1-1)==weapon_position[i][0]) && y1==weapon_position[i][1]){
-            x1 += 2;
-        }
+    if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
+        x1 += 2;
     }
     soton_position[num_soton][0] = x1;
     soton_position[num_soton][1] = y1;
@@ -123,6 +121,9 @@ void soton(Room room) {
         y2++;
     x2 = room.x + x2+1; 
     y2 = room.y + y2+1;
+    if((x2==(room.x+1)|| (x2)==room.x+2) && y2==(room.y+room.height-1)){
+        x2 += 2;
+    }
     soton_position[num_soton][0] = x2;
     soton_position[num_soton][1] = y2;
     soton_position[num_soton][2]=0;
@@ -160,19 +161,17 @@ int num_gold=0;
 int g=0;
 void gold(Room room){
         int x1,y1,x2,y2,price1,price2;
-        x1 = (rand() % (room.width-1));
-        y1 = (rand() % (room.height-1));
+        x1 = (rand() % (room.width-4));
+        y1 = (rand() % (room.height-4));
         price1=(rand()%5)+1;
         if(x1==0)
-            x2++;
+            x1++;
         if(y1==0)
-            y2++;
+            y1++;
         x1 = room.x + x1 +1; 
         y1 = room.y + y1 +1;
-        for(int i=0 ; i<num_weapon ; i++){
-            if((x1==weapon_position[i][0] || (x1-1)==weapon_position[i][0]) && y1==weapon_position[i][1]){
-                x1 += 2;
-            }
+        if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
+        x1 += 2;
         }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
@@ -193,8 +192,11 @@ void gold(Room room){
             y2++;
         x2 = room.x + x2 +1 ; 
         y2 = room.y + y2 +1;
+        if((x2==(room.x+1)|| (x2)==room.x+2) && y2==(room.y+room.height-1)){
+            x2 += 2;
+        }
         for(int i=0 ; i<num_soton ; i++){
-            if((x1==weapon_position[i][0] || (x1-1)==weapon_position[i][0]) && soton_position[i][1]==y2){
+            if(soton_position[i][0]==x2 && soton_position[i][1]==y2){
                 x2 ++ ;
             }
         }
@@ -216,10 +218,8 @@ void tale(Room room){
             y1=1;
         x1 = room.x + x1+1; 
         y1 = room.y + y1+1;
-        for(int i=0 ; i<num_weapon ; i++){
-            if(x1==weapon_position[i][0] && y1==weapon_position[i][1]){
-                x1 += 2;
-            }
+        if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
+            x1 += 2;
         }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
@@ -241,18 +241,16 @@ int num_food=0;
 int nf=0;
 void food(Room room){
     int x1,y1;
-        x1 = (rand() % (room.width-2));
-        y1 = (rand() % (room.height-2));
+        x1 = (rand() % (room.width-3));
+        y1 = (rand() % (room.height-3));
         if (x1 <= 0)
             x1=1;
         if (y1 <= 0)
             y1=1;
         x1 = room.x + x1+1; 
         y1 = room.y + y1+1;
-        for(int i=0 ; i<num_weapon ; i++){
-            if((x1==weapon_position[i][0] || (x1-1)==weapon_position[i][0]) && y1==weapon_position[i][1]){
-                x1 += 2;
-            }
+        if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
+            x1 += 2;
         }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
@@ -279,12 +277,14 @@ void telesm(Room room , int num){
     int x1,y1;
         x1 = (rand() % (room.width-3));
         y1 = (rand() % (room.height-3));
+        if(x1<=0)
+            x1=1;
+        if(y1<=0)
+            y1=1;
         x1 = room.x + x1 +1; 
         y1 = room.y + y1 +1;
-        for(int i=0 ; i<num_weapon ; i++){
-            if((x1==weapon_position[i][0] || (x1-1)==weapon_position[i][0]) && y1==weapon_position[i][1]){
-                x1 += 2;
-            }
+        if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
+            x1 += 2;
         }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
