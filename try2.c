@@ -15,7 +15,7 @@ void safhe();
 void find_pas();
 void login();
 void new_user();
-void entery();
+int entery();
 void table(); 
 void sort();
 void new_game();
@@ -484,7 +484,7 @@ void menu(const char*name){
                 move(18,62);
                 clear();
                 attron(COLOR_PAIR(2));
-                mvprintw(25, 75, "I hope you enjoy the game.");
+                mvprintw(15, 15, "I hope you enjoy the game.");
                 refresh();
                 attroff(COLOR_PAIR(2));
                 getch();
@@ -619,9 +619,8 @@ void new_user(){
     attroff(COLOR_PAIR(7));
     getch();
     clear();
-    entery();
 }
-void entery(){
+int entery(){
     safhe();
     attron(COLOR_PAIR(1));
     move(6,22);
@@ -656,15 +655,15 @@ void entery(){
     case 1:
         move(10,22);
         clear();
-        login();
+        return 1;
         break;
     case 2:
         move(10,22);
         clear();
-        new_user();
+        return 2;
     case 3:
         move(14,22);
-        menu("gust");
+        return 3;
         break;
     case 4:
         move(18,22);
@@ -689,7 +688,20 @@ int main() {
     init_pair(5, COLOR_BLACK, COLOR_YELLOW);
     init_pair(6, COLOR_YELLOW, COLOR_BLACK);
     init_pair(7,COLOR_CYAN,COLOR_BLACK);
-    entery();
+    switch(entery()){
+        case 1:
+            login();
+            break;
+        case 2:
+            new_user();
+            login();
+            break;
+        case 3:
+            login("guset");
+            break;
+        case 4:
+            break;
+    }
     refresh();             
     getch();           
     stop_music();  
