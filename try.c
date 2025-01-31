@@ -2026,8 +2026,8 @@ void table(const char* filename,const char*name){
     fclose(file);
     sort(users, count);
     attron(COLOR_PAIR(2));
-    mvprintw(3, 20, "Rank     username"); mvprintw(3,40,"score  gold  number_of_games  first_Game_Time");
-    for(int i=0; i<69 ; i++){
+    mvprintw(3, 20, "Rank     username"); mvprintw(3,40,"score     gold     number_of_games      first_Game_Time");
+    for(int i=0; i<75 ; i++){
         mvprintw(4,20+i,"-");
     }
     attroff(COLOR_PAIR(2));
@@ -2035,34 +2035,37 @@ void table(const char* filename,const char*name){
         time_t currentTime = time(NULL);
         double experience = difftime(currentTime, users[i].first_Game_Time) / (60 * 60);
         if(i==0){
+            mvprintw(i+5,15,"\U0001F947");
             attron(COLOR_PAIR(6) | A_BOLD);
             mvprintw(i+5,20,"Goat      %s",users[i].name);
-            mvprintw(i+5,43,"%d    %d",users[i].score,users[i].gold);
-            mvprintw(i+5,60,"%d",users[i].number_of_games);
-            mvprintw(i+5,73,"%.2f hour",experience);
+            mvprintw(i+5,41,"%d       %d",users[i].score,users[i].gold);
+            mvprintw(i+5,66,"%d",users[i].number_of_games);
+            mvprintw(i+5,83,"%.2f hour",experience);
             attroff(COLOR_PAIR(6) | A_BOLD);
         }
         else if(i==1){
+            mvprintw(i+5,15,"\U0001F948");
             attron(COLOR_PAIR(6) | A_BOLD);
             mvprintw(i+5,20,"Legend    %s",users[i].name);
-            mvprintw(i+5,43,"%d    %d",users[i].score,users[i].gold);
-            mvprintw(i+5,60,"%d",users[i].number_of_games);
-            mvprintw(i+5,73,"%.2f hour",experience);
+            mvprintw(i+5,41,"%d       %d",users[i].score,users[i].gold);
+            mvprintw(i+5,66,"%d",users[i].number_of_games);
+            mvprintw(i+5,83,"%.2f hour",experience);
             attroff(COLOR_PAIR(6) | A_BOLD);
         }
         else if(i==2){
+            mvprintw(i+5,15,"\U0001F949");
             attron(COLOR_PAIR(6) | A_BOLD);
             mvprintw(i+5,20,"Silver    %s",users[i].name);
-            mvprintw(i+5,43,"%d    %d",users[i].score,users[i].gold);
-            mvprintw(i+5,60,"%d",users[i].number_of_games);
-            mvprintw(i+5,73,"%.2f hour",experience);
+            mvprintw(i+5,41,"%d        %d",users[i].score,users[i].gold);
+            mvprintw(i+5,66,"%d",users[i].number_of_games);
+            mvprintw(i+5,83,"%.2f hour",experience);
             attroff(COLOR_PAIR(6) | A_BOLD);
         }
         else{
             mvprintw(i+5,20," %d        %s",i+1,users[i].name);
-            mvprintw(i+5,43,"%d    %d",users[i].score,users[i].gold);
-            mvprintw(i+5,60,"%d",users[i].number_of_games);
-            mvprintw(i+5,73,"%.2f hour",experience);
+            mvprintw(i+5,41,"%d        %d",users[i].score,users[i].gold);
+            mvprintw(i+5,66,"%d",users[i].number_of_games);
+            mvprintw(i+5,83,"%.2f hour",experience);
         }
         if(strcmp(users[i].name,name)==0){
             mvprintw(i+5,12,"---->");
