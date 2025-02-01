@@ -368,6 +368,83 @@ void telesm(Room room , int num){
         telesm_position[num_tel][3]=0;
         num_tel++;
 }
+int enemy_position[5][4],num_enemy=0;
+void enemy(Room room , int num){
+    int x1 , y1;
+    x1 = (rand() % (room.width-2));
+    y1 = (rand() % (room.height-2));
+    if (x1 <= 0)
+        x1=1;
+    if (y1 <= 0)
+        y1=1;
+    x1 = room.x + x1+1; 
+    y1 = room.y + y1+1;
+    if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
+            x1 += 2;
+        }
+        for(int i=0 ; i<num_soton ; i++){
+            if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
+            }
+        }  
+        for(int i=0 ; i<num_gold ; i++){
+            if(gold_position[i][0]==x1 && gold_position[i][1]==y1){
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
+            }
+        }
+        for(int i=0 ; i<num_tale ; i++){
+            if(tale_position[i][0]==x1 && tale_position[i][1]==y1){
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
+            }
+        }
+        for(int i=0 ; i<num_food ; i++){
+            if(food_position[i][0]==x1 && food_position[i][1]==y1){
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
+            }
+        }
+        enemy_position[num_enemy][0] = x1;
+        enemy_position[num_enemy][1] = y1;
+        enemy_position[num_enemy][2]=0;
+        switch (num)
+        {
+        case 1:
+            enemy_position[num-1][3]=5;
+            break;
+        case 2:
+            enemy_position[num-1][3]=10;
+            break;
+        case 3:
+            enemy_position[num-1][3]=15;
+            break;
+        case 4:
+            enemy_position[num-1][3]=20;
+            break;    
+        case 5:
+            enemy_position[num-1][3]=30;
+            break;
+        }
+        num_enemy++;
+}
 int tal[5][3],num_tal;
 int gol[8][4],num_gol;
 void gold_gold(Room room){
@@ -522,6 +599,36 @@ void draw_room(Room room ,int num) {
         mvprintw(food_position[num][1],food_position[num][0],"\u03C6");
         refresh();
         attroff(COLOR_PAIR(7));
+        if(num>0){
+            switch (num)
+            {
+            case 1:
+                attron(COLOR_PAIR(2));
+                mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"D");
+                attroff(COLOR_PAIR(2));
+                break;
+            case 2:
+                attron(COLOR_PAIR(2));
+                mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"F");
+                attroff(COLOR_PAIR(2));
+                break;
+            case 3:
+                attron(COLOR_PAIR(2));
+                mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"G");
+                attroff(COLOR_PAIR(2));
+                break;
+            case 4:
+                attron(COLOR_PAIR(2));
+                mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"S");
+                attroff(COLOR_PAIR(2));
+                break;
+            case 5:
+                attron(COLOR_PAIR(2));
+                mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"U");
+                attroff(COLOR_PAIR(2));
+                break;
+        }
+        }
         switch (fl)
         {
         case 0:
@@ -2175,6 +2282,9 @@ int main() {
                     telesm(rooms[j],j);
                 }
             }
+        }
+        for(int j=1 ; j<6 ; j++){
+            enemy(rooms[j] , j);
         }
         int q=rand()%3;
         key[0]=rooms[q].x+rand()%(rooms[q].width-2)+1;
