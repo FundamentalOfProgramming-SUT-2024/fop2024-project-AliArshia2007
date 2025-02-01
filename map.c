@@ -9,7 +9,7 @@
 int password[1][2];
 int key[4];
 int num_key=0;
-int fl,color=3,dif=1,num_game=0;
+int fl,color=3,dif=1,num_game=0,dif2;
 typedef struct {
     int x;
     int y;
@@ -62,6 +62,7 @@ void dar(Room room,int t1) {
     }
 }
 int weapon_position[5][5],num_weapon=1,wea=0;
+int current_weapon[2];
 void weapon(Room room , int num){
     int x1,y1;
     x1 = room.x + 1; 
@@ -72,24 +73,24 @@ void weapon(Room room , int num){
     switch (num_weapon)
     {
     case 0:
-        weapon_position[num_weapon][3]=5;
-        weapon_position[num_weapon][4]=5;
+        weapon_position[num_weapon][3]=4;
+        weapon_position[num_weapon][4]=1;
         break;
     case 1:
         weapon_position[num_weapon][3]=12;
-        weapon_position[num_weapon][4]=10;
+        weapon_position[num_weapon][4]=0;
         break;
     case 2:
         weapon_position[num_weapon][3]=15;
-        weapon_position[num_weapon][4]=8;
+        weapon_position[num_weapon][4]=0;
         break; 
     case 3:
         weapon_position[num_weapon][3]=5;
-        weapon_position[num_weapon][4]=20;
+        weapon_position[num_weapon][4]=0;
         break; 
     case 4:
         weapon_position[num_weapon][3]=10;
-        weapon_position[num_weapon][4]=1;
+        weapon_position[num_weapon][4]=0;
         break;
     }
     num_weapon++;
@@ -217,7 +218,7 @@ void gold(Room room){
         num_gold++;
 }
 int tale_position[6][3];
-int num_tale=0;
+int num_tale=0,speed_tel=0,health_tel=0,strangh_tel=0;
 void tale(Room room){
         int x1,y1;
         x1 = (rand() % (room.width-3));
@@ -281,7 +282,7 @@ void food(Room room){
                     x1--;
                 }
             }
-        }
+        }  
         for(int i=0 ; i<num_gold ; i++){
             if(gold_position[i][0]==x1 && gold_position[i][1]==y1){
                 if(x1 < (room.x+room.width-2)){
@@ -967,10 +968,27 @@ void draw_page(){
     mvprintw(35,40,"food: %d",nf);
     attroff(COLOR_PAIR(7));
     attron(COLOR_PAIR(2));
-    mvprintw(35,55,"weapon: %d",wea);
+    switch (current_weapon[0])
+    {
+    case 4:
+        mvprintw(35,55,"weapon: Mace %d",current_weapon[1]);
+        break;
+    case 5:
+        mvprintw(35,55,"weapon: Arrow %d",current_weapon[1]);
+        break;    
+    case 12:
+        mvprintw(35,55,"weapon: Dagger %d",current_weapon[1]);
+        break;
+    case 15:
+        mvprintw(35,55,"weapon: Majic Wand %d",current_weapon[1]);
+        break;
+    case 10:
+        mvprintw(35,55,"weapon: Sword %d",current_weapon[1]);
+        break;
+    }
     attroff(COLOR_PAIR(2));
     attron(COLOR_PAIR(6));
-    mvprintw(35,70,"talisman %d:" , tel);
+    mvprintw(35,75,"talisman %d:" , tel);
     attroff(COLOR_PAIR(6));
     move(2,0);
     clrtoeol();
@@ -1042,6 +1060,7 @@ int check_move(int x, int y, Room room[6]) {
                             clrtoeol();
                             refresh();
                             num_key--;  
+                            ramz=0;
                             return 1;
                         }
                     }
@@ -1059,6 +1078,7 @@ int check_move(int x, int y, Room room[6]) {
                         refresh();
                         move(10,79);
                         clrtoeol();
+                        ramz=0;
                         return 1;
                     }
                     else{
@@ -1238,7 +1258,7 @@ int move_character(Room room[6], int *x, int *y) {
                     attroff(COLOR_PAIR(1));
                 }
             }
-            mvprintw(newy,newx,"I");
+            mvprintw(newy,newx,"\u03BB");
             break;
         case 's':
             clear();
@@ -1301,7 +1321,7 @@ int move_character(Room room[6], int *x, int *y) {
                     attroff(COLOR_PAIR(1));
                 }
             }
-            mvprintw(newy,newx,"I");
+            mvprintw(newy,newx,"\u03BB");
             break;
         case 'f':
             int c=getch();
@@ -1388,16 +1408,38 @@ int move_character(Room room[6], int *x, int *y) {
                     refresh();
                 }
                 mvprintw(30,80,"press 10 to return the game.");
-                mvprintw(31,80,"enter your choise:");
+                mvprintw(31,80,"    enter your choise:");
                 refresh();
-                move(31,99);
+                move(31,103);
                 clrtoeol();
                 int d;
-                move(31,100);
-                scanw("%d",&d);
-                mvprintw(31,100,"%d",d);
-                if(d==10)
+                while (1)
+                {
+                    move(31,105);
+                    scanw("%d",&d);
+                    mvprintw(31,105,"%d",d);
+                    if((d>0 && d<=nf) || d==10){
+                        break;
+                    }
+                    else{
+                        move(10,79);clrtoeol();
+                        move(31,103);clrtoeol();
+                        mvprintw(10,80,"Choose correct food!");
+                        refresh();
+                    }
+                }
+                move(10,79);
+                clrtoeol();
+                if(d==10){
                     break;
+                }
+                else if(nf==0){
+                    mvprintw(10,80,"You don't have food.");
+                    sleep(1);
+                    move(10,70);
+                    clrtoeol();
+                    break;
+                }
                 refresh();
                 srand(time(0));
                 int h=rand()%4;
@@ -1430,7 +1472,7 @@ int move_character(Room room[6], int *x, int *y) {
                         return 0;
                     }
                 }
-                move(15,139);
+                move(10,79);
                 clrtoeol();
                 for(int i=0 ; i<=6 ; i++){
                     move(25+i,79);
@@ -1449,6 +1491,211 @@ int move_character(Room room[6], int *x, int *y) {
             move(31,79);
             clrtoeol();
             return 1;
+        case 'r':
+            int d;
+            while(1){
+                for(int i=27 ; i<32 ; i++){
+                    move(i,79);
+                    clrtoeol();
+                }
+                attron(COLOR_PAIR(7));
+                mvprintw(27,80,"1. %d of health Talisman.",health_tel);
+                mvprintw(28,80,"2. %d of speed Talisman.",speed_tel);
+                mvprintw(29,80,"3. %d of strength Talisman.",strangh_tel);
+                mvprintw(30,80,"   choose your talisman.");
+                mvprintw(31,80," press 10 to return the game.");
+                refresh();
+                attroff(COLOR_PAIR(7));
+                scanw("%d",&d);
+                if(d==10){
+                    for(int i=27 ; i<32 ; i++){
+                        move(i,79);
+                        clrtoeol();
+                    }
+                    break;
+                }
+                if(d==1){
+                    if(health_tel>0){
+                        attron(COLOR_PAIR(1));
+                        mvprintw(10,80,"You use health Talisman.");
+                        attroff(COLOR_PAIR(1));
+                        health_tel --;
+                        refresh();
+                        tel --;
+                        break;
+                    }
+                    else{
+                        attron(COLOR_PAIR(2));
+                        mvprintw(10,80,"You don't have health Talisman.");
+                        attroff(COLOR_PAIR(2));
+                    }
+                }
+                if(d==2){
+                    if(speed_tel>0){
+                        attron(COLOR_PAIR(1));
+                        mvprintw(10,80,"You use speed Talisman.");
+                        attroff(COLOR_PAIR(1));
+                        speed_tel --;
+                        refresh();
+                        tel --;
+                        break;
+                    }
+                    else{
+                        attron(COLOR_PAIR(2));
+                        mvprintw(10,80,"You don't have speed Talisman.");
+                        attroff(COLOR_PAIR(2));
+                    }
+                }
+                if(d==3){
+                    if(health_tel>0){
+                        attron(COLOR_PAIR(1));
+                        mvprintw(10,80,"You use strength Talisman.");
+                        attroff(COLOR_PAIR(1));
+                        strangh_tel --;
+                        refresh();
+                        tel --;
+                        break;
+                    }
+                    else{
+                        attron(COLOR_PAIR(2));
+                        mvprintw(10,80,"You don't have strength Talisman.");
+                        attroff(COLOR_PAIR(2));
+                    }
+                }
+                if(d>3){
+                    attron(COLOR_PAIR(2));
+                    mvprintw(10,80,"Choose correct!.");
+                    attroff(COLOR_PAIR(2));
+                }
+                refresh();
+                draw_page();
+                sleep(1);
+                move(10,79);
+                clrtoeol();
+            }
+            attron(COLOR_PAIR(7));
+            mvprintw(27,80,"1. %d of health Talisman.",health_tel);
+            mvprintw(28,80,"2. %d of speed Talisman.",speed_tel);
+            mvprintw(29,80,"3. %d of strength Talisman.",strangh_tel);
+            mvprintw(30,80,"   choose your talisman.");
+            mvprintw(31,80," press 10 to return the game.");
+            refresh();
+            attroff(COLOR_PAIR(7));
+            break;
+        case 'i':
+            clear();
+            mvprintw(5,5,"1.Mace  : power=4   short_rang     number: %d",weapon_position[0][4]);
+            mvprintw(7,5,"2.Sword : power=10  short_rang     number: %d",weapon_position[4][4]);
+            mvprintw(5,60,"3.Dagger     : power=12  long_rang   number: %d",weapon_position[1][4]);
+            mvprintw(7,60,"4.Magic Wand : power=15  long_rang   number: %d",weapon_position[2][4]);
+            mvprintw(9,60,"5.Arrow      : power=5   long_rang   number: %d",weapon_position[3][4]);
+            mvprintw(15,30,"press 10 to back the game.");
+            mvprintw(16,30,"     Your choose:");
+            refresh();
+            int ch;
+            while(1){
+                move(13,29);
+                clrtoeol();
+                echo();
+                move(16,50);
+                clrtoeol();
+                scanw("%d",&ch);
+                noecho();
+                if(ch==10){
+                    break;
+                }
+                switch (ch)
+                {
+                case 1:
+                    current_weapon[0]=4;
+                    current_weapon[1]=1;
+                    attron(COLOR_PAIR(1));
+                    mvprintw(2,30,"your current weapon change to Mace.");
+                    attroff(COLOR_PAIR(1));
+                    break;
+                case 2:
+                    if(weapon_position[4][4]!=0){
+                        current_weapon[0]=10;
+                        current_weapon[1]=1;
+                        attron(COLOR_PAIR(1));
+                        mvprintw(2,30,"your current weapon change to Sword.");
+                        attroff(COLOR_PAIR(1));
+                    }
+                    else{
+                        attron(COLOR_PAIR(2));
+                        mvprintw(13,30,"You don't have this weapon.");
+                        attroff(COLOR_PAIR(2));
+                        refresh();
+                    }
+                    break;
+                case 3:
+                    if(weapon_position[1][4]!=0){
+                        current_weapon[0]=12;
+                        current_weapon[1]=weapon_position[1][4];
+                        attron(COLOR_PAIR(1));
+                        mvprintw(2,30,"your current weapon change to Dagger.");
+                        attroff(COLOR_PAIR(1));
+                    }
+                    else{
+                        attron(COLOR_PAIR(2));
+                        mvprintw(13,30,"You don't have this weapon.");
+                        attroff(COLOR_PAIR(2));
+                        refresh();
+                    }
+                    break;
+                case 4:
+                    if(weapon_position[2][4]!=0){
+                        current_weapon[0]=15;
+                        current_weapon[1]=weapon_position[2][4];
+                        attron(COLOR_PAIR(1));
+                        mvprintw(2,30,"your current weapon change to Majic Wand.");
+                        attroff(COLOR_PAIR(1));
+                    }
+                    else{
+                        attron(COLOR_PAIR(2));
+                        mvprintw(13,30,"You don't have this weapon.");
+                        refresh();
+                        attroff(COLOR_PAIR(2));
+                    }
+                    break;
+                case 5:
+                    if(weapon_position[3][4]!=0){
+                        current_weapon[0]=5;
+                        current_weapon[1]=weapon_position[3][4];
+                        attron(COLOR_PAIR(1));
+                        mvprintw(2,30,"your current weapon change to Arrow.");
+                        attroff(COLOR_PAIR(1));
+                    }
+                    else{
+                        attron(COLOR_PAIR(2));
+                        mvprintw(13,30,"You don't have this weapon.");
+                        attroff(COLOR_PAIR(2));
+                        refresh();
+                    }
+                    break;
+                default:
+                    move(13,29);
+                    clrtoeol();
+                    mvprintw(13,30,"Invalid choise.");
+                    break;
+                }
+                sleep(1);
+            }
+            clear();
+            for(int i=0 ; i<6 ; i++){
+                if(room[i].hide==1){
+                    draw_room(room[i],i);
+                }
+            }
+            for(int i=0 ; i<num_path ; i++){
+                if(path_position[i][2]==1){
+                    attron(COLOR_PAIR(1));
+                    mvprintw(path_position[i][1],path_position[i][0],"#");
+                    attroff(COLOR_PAIR(1));
+                }
+                refresh();
+            }
+            break;
         case 'q':
             clear();
             attron(COLOR_PAIR(7));
@@ -1461,31 +1708,42 @@ int move_character(Room room[6], int *x, int *y) {
             refresh();
             attroff(COLOR_PAIR(7));
             FILE *file = fopen(name,"w");
+            fprintf(file,"%d\n",fl);
             for(int i=0 ; i<6 ; i++){
                 fprintf(file,"%d %d %d %d %d\n",room[i].x,room[i].y,room[i].width,room[i].height,room[i].hide);
             }
+            fprintf(file,"%d\n",num_dar);
             for(int i=0 ; i<num_dar ; i++){
                 fprintf(file,"%d %d %d\n",dar_positions[i][0],dar_positions[i][1],dar_positions[i][2]);
             }
+            fprintf(file,"%d\n",num_soton);
             for(int i=0 ; i<num_soton ; i++){
                 fprintf(file,"%d %d %d\n",soton_position[i][0],soton_position[i][1],soton_position[i][2]);
             }
+            fprintf(file,"%d\n",num_gold);
             for(int i=0 ; i<num_gold ; i++){
                 fprintf(file,"%d %d %d %d\n",gold_position[i][0],gold_position[i][1],gold_position[i][2],gold_position[i][3]);
             }
+            fprintf(file,"%d\n",num_tale);
             for(int i=0 ; i<num_tale ; i++){
-                fprintf(file,"%d %d %d %d\n",tale_position[i][0],tale_position[i][1],tale_position[i][2],tale_position[i][3]);
+                fprintf(file,"%d %d %d\n",tale_position[i][0],tale_position[i][1],tale_position[i][2]);
             }
+            fprintf(file,"%d\n",num_food);
             for(int i=0 ; i<num_food ; i++){
                 fprintf(file,"%d %d %d\n",food_position[i][0],food_position[i][1],food_position[i][2]);
             }
+            fprintf(file,"%d\n",num_path);
             for(int i=0 ; i<num_path ; i++){
-                fprintf(file,"%d %d %d %d\n",path_position[i][0],path_position[i][1],path_position[i][2],path_position[i][3]);
+                fprintf(file,"%d %d %d\n",path_position[i][0],path_position[i][1],path_position[i][2]);
             }
+            fprintf(file,"%d\n",num_tel);
             for(int i=0 ; i<num_tel ; i++){
                 fprintf(file,"%d %d %d %d\n",telesm_position[i][0],telesm_position[i][1],telesm_position[i][2],telesm_position[i][3]);
             }
-            fprintf(file,"%d %d %d %d %d %d %d\n",fl,g,nf,health,tel,*x,*y);
+            fprintf(file,"%d %d %d %d %d\n",weapon_position[fl][0],weapon_position[fl][1],weapon_position[fl][2],weapon_position[fl][3],weapon_position[fl][4]);
+            fprintf(file,"%d %d %d %d\n",key[0],key[1],key[2],key[3]);
+            fprintf(file,"%d %d %d %d %d %d %d %d\n",num_key ,g,nf,health,tel,wea,*x,*y);
+            fprintf(file,"%d %d %d\n",health_tel,speed_tel,strangh_tel);
             fclose(file);
             getchar();
             return 0;
@@ -1643,11 +1901,6 @@ int move_character(Room room[6], int *x, int *y) {
                     move(10,79);
                     clrtoeol();
                     refresh();
-                    attron(COLOR_PAIR(2));
-                    mvprintw(*y, *x, "\u0454");
-                    attroff(COLOR_PAIR(2));
-                    *x = newx;
-                    *y = newy;
                 }
                 else{
                     attron(COLOR_PAIR(6));
@@ -1659,13 +1912,13 @@ int move_character(Room room[6], int *x, int *y) {
                     move(10,79);
                     clrtoeol();
                     refresh();
-                    attron(COLOR_PAIR(2));
-                    mvprintw(*y, *x, "\u0454");
-                    attroff(COLOR_PAIR(2));
-                    *x = newx;
-                    *y = newy;
-                    g += gol[i][3];
                 }
+                attron(COLOR_PAIR(2));
+                mvprintw(*y, *x, "\u0454");
+                attroff(COLOR_PAIR(2));
+                *x = newx;
+                *y = newy;
+                g += gol[i][3];
             }
         }
         for(int i=0 ; i<num_tel ; i++){
@@ -1686,18 +1939,21 @@ int move_character(Room room[6], int *x, int *y) {
                     case 0:
                         attron(COLOR_PAIR(6));
                         mvprintw(10,80,"You take the health Talisman.");
+                        health_tel ++;
                         attroff(COLOR_PAIR(6));
                         refresh();
                         break;
                     case 4:
                         attron(COLOR_PAIR(6));
                         mvprintw(10,80,"You take the strength Talisman.");
+                        strangh_tel++;
                         attroff(COLOR_PAIR(6));
                         refresh();
                         break;
                     default:
                         attron(COLOR_PAIR(6));
                         mvprintw(10,80,"You take the speed Talisman.");
+                        speed_tel++;
                         attroff(COLOR_PAIR(6));
                         refresh();
                         break;
@@ -1708,6 +1964,7 @@ int move_character(Room room[6], int *x, int *y) {
                     move(10,79);
                     clrtoeol();
                     refresh();
+                    tel ++;
                 }
                 switch (i)
                     {
@@ -1732,7 +1989,6 @@ int move_character(Room room[6], int *x, int *y) {
                     }
                 *x = newx;
                 *y = newy;
-                tel ++;
             }
         }
         for(int i=0 ; i<num_tale ; i++){
@@ -1774,6 +2030,7 @@ int move_character(Room room[6], int *x, int *y) {
                         sleep(2);
                         move(10,79);
                         clrtoeol();
+                        weapon_position[i][4]=10;
                         break;
                     case 15:
                         attron(COLOR_PAIR(7));
@@ -1783,6 +2040,7 @@ int move_character(Room room[6], int *x, int *y) {
                         sleep(2);
                         move(10,79);
                         clrtoeol();
+                        weapon_position[i][4]=8;
                         break;    
                     case 5:
                         attron(COLOR_PAIR(7));
@@ -1792,6 +2050,7 @@ int move_character(Room room[6], int *x, int *y) {
                         sleep(2);
                         move(10,79);
                         clrtoeol();
+                        weapon_position[i][4]=20;
                         break;    
                     case 10:
                         attron(COLOR_PAIR(7));
@@ -1801,6 +2060,7 @@ int move_character(Room room[6], int *x, int *y) {
                         sleep(2);
                         move(10,79);
                         clrtoeol();
+                        weapon_position[i][4]=1;
                         break;    
                     }
                 }
@@ -1930,13 +2190,15 @@ int main() {
         int y = rooms[0].y + 1;
         path(rooms);
         refresh();
+        current_weapon[0]=4;
+        current_weapon[1]=1;
         mvprintw(y, x, "\u2735");
         refresh();
         time(&startTime);
         while (health > 0) {
             time(&currentTime);
             if(dif==1){
-                if (difftime(currentTime, startTime) >= 50) {
+                if (difftime(currentTime, startTime) >= 15) {
                     healthy();
                     time(&startTime);
                 }
