@@ -1095,7 +1095,7 @@ void draw_page(){
     }
     attroff(COLOR_PAIR(2));
     attron(COLOR_PAIR(6));
-    mvprintw(35,75,"talisman %d:" , tel);
+    mvprintw(35,78,"talisman %d:" , tel);
     attroff(COLOR_PAIR(6));
     move(2,0);
     clrtoeol();
@@ -1609,11 +1609,14 @@ int move_character(Room room[6], int *x, int *y) {
                 mvprintw(27,80,"1. %d of health Talisman.",health_tel);
                 mvprintw(28,80,"2. %d of speed Talisman.",speed_tel);
                 mvprintw(29,80,"3. %d of strength Talisman.",strangh_tel);
-                mvprintw(30,80,"   choose your talisman.");
+                mvprintw(30,80,"   choose your talisman:");
                 mvprintw(31,80," press 10 to return the game.");
                 refresh();
                 attroff(COLOR_PAIR(7));
+                move(30,105);
+                echo();
                 scanw("%d",&d);
+                noecho();
                 if(d==10){
                     for(int i=27 ; i<32 ; i++){
                         move(i,79);
@@ -1629,7 +1632,6 @@ int move_character(Room room[6], int *x, int *y) {
                         health_tel --;
                         refresh();
                         tel --;
-                        break;
                     }
                     else{
                         attron(COLOR_PAIR(2));
@@ -1645,7 +1647,6 @@ int move_character(Room room[6], int *x, int *y) {
                         speed_tel --;
                         refresh();
                         tel --;
-                        break;
                     }
                     else{
                         attron(COLOR_PAIR(2));
@@ -1654,14 +1655,13 @@ int move_character(Room room[6], int *x, int *y) {
                     }
                 }
                 if(d==3){
-                    if(health_tel>0){
+                    if(strangh_tel>0){
                         attron(COLOR_PAIR(1));
                         mvprintw(10,80,"You use strength Talisman.");
                         attroff(COLOR_PAIR(1));
                         strangh_tel --;
                         refresh();
                         tel --;
-                        break;
                     }
                     else{
                         attron(COLOR_PAIR(2));
@@ -1680,14 +1680,13 @@ int move_character(Room room[6], int *x, int *y) {
                 move(10,79);
                 clrtoeol();
             }
-            attron(COLOR_PAIR(7));
-            mvprintw(27,80,"1. %d of health Talisman.",health_tel);
-            mvprintw(28,80,"2. %d of speed Talisman.",speed_tel);
-            mvprintw(29,80,"3. %d of strength Talisman.",strangh_tel);
-            mvprintw(30,80,"   choose your talisman.");
-            mvprintw(31,80," press 10 to return the game.");
+            move(10,79);
+            clrtoeol();
+            for(int i=27 ; i<32 ; i++){
+                move(i,79);
+                clrtoeol();
+            }
             refresh();
-            attroff(COLOR_PAIR(7));
             break;
         case 'i':
             clear();
@@ -1847,10 +1846,15 @@ int move_character(Room room[6], int *x, int *y) {
             for(int i=0 ; i<num_tel ; i++){
                 fprintf(file,"%d %d %d %d\n",telesm_position[i][0],telesm_position[i][1],telesm_position[i][2],telesm_position[i][3]);
             }
+            fprintf(file,"%d\n",num_enemy);
+            for(int i=0 ; i<num_enemy ; i++){
+                fprintf(file,"%d %d %d %d\n",enemy_position[i][0],enemy_position[i][1],enemy_position[i][2],enemy_position[i][3]);
+            }
             fprintf(file,"%d %d %d %d %d\n",weapon_position[fl][0],weapon_position[fl][1],weapon_position[fl][2],weapon_position[fl][3],weapon_position[fl][4]);
             fprintf(file,"%d %d %d %d\n",key[0],key[1],key[2],key[3]);
             fprintf(file,"%d %d %d %d %d %d %d %d\n",num_key ,g,nf,health,tel,wea,*x,*y);
             fprintf(file,"%d %d %d\n",health_tel,speed_tel,strangh_tel);
+            fprintf(file,"%d %d\n",current_weapon[0],current_weapon[1]);
             fclose(file);
             getchar();
             return 0;
@@ -2368,8 +2372,11 @@ int main() {
         for(int j=0 ; j<num_food ; j++){
             food_position[j][0]=food_position[j][1]=food_position[j][2]=0;
         }
+        for(int j=0 ; j<num_enemy ; j++){
+            enemy_position[j][0]=enemy_position[j][1]=enemy_position[j][2]=enemy_position[j][3]=0;
+        }
         key[0]=key[1]=key[2]=key[3]=0;
-        num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=0;
+        num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=0;
         sleep(2);
         }
         attron(COLOR_PAIR(6));
