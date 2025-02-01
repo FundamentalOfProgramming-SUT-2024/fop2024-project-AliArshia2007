@@ -1511,7 +1511,7 @@ int move_character(Room room[6], int *x, int *y) {
             for(int i=0 ; i<num_tel ; i++){
                 fprintf(file,"%d %d %d %d\n",telesm_position[i][0],telesm_position[i][1],telesm_position[i][2],telesm_position[i][3]);
             }
-            fprintf(file,"%d %d %d %d %d\n",weapon_position[fl+1][0],weapon_position[fl+1][1],weapon_position[fl+1][2],weapon_position[fl+1][3],weapon_position[fl+1][4]);
+            fprintf(file,"%d %d %d %d %d\n",weapon_position[fl][0],weapon_position[fl][1],weapon_position[fl][2],weapon_position[fl][3],weapon_position[fl][4]);
             fprintf(file,"%d %d %d %d\n",key[0],key[1],key[2],key[3]);
             fprintf(file,"%d %d %d %d %d %d %d %d\n",num_key ,g,nf,health,tel,wea,*x,*y);
             fclose(file);
@@ -2088,7 +2088,7 @@ void table(const char* filename,const char*name){
             mvprintw(i+5,83,"%.2f hour",experience);
         }
         if(strcmp(users[i].name,name)==0){
-            mvprintw(i+5,12,"---->");
+            mvprintw(i+5,5,"---->");
         }
         
     }
@@ -2125,13 +2125,13 @@ void update(const char*filename ,const char *name){
 }
 void new_game(const char*filename ,const char *name){
     int qu=0;
+    fl=0;
     for(int i=0 ; i<4 ; i++){
         keypad(stdscr, TRUE);
         noecho();
         if(qu!=0){
             break;
         }
-        fl=i;
         clear();
         srand(time(0));
         int num_rooms = 6 ;
@@ -2220,6 +2220,7 @@ void new_game(const char*filename ,const char *name){
             }
             refresh();
             if(x==dar_positions[10][0]&& y==dar_positions[10][1]){
+                fl++;
                 break;
             }
         }
@@ -2336,13 +2337,15 @@ void load_game(const char*filename , const char*game_name , const char* name){
     for(int i=0 ; i<num_tel ; i++){
         fscanf(file,"%d %d %d %d",&telesm_position[i][0],&telesm_position[i][1],&telesm_position[i][2],&telesm_position[i][3]);
     }
-    fscanf(file,"%d %d %d %d %d",&weapon_position[fl+1][0],&weapon_position[fl+1][1],&weapon_position[fl+1][2],&weapon_position[fl+1][3],&weapon_position[fl+1][4]);
+    fscanf(file,"%d %d %d %d %d",&weapon_position[fl][0],&weapon_position[fl][1],&weapon_position[fl][2],&weapon_position[fl][3],&weapon_position[fl][4]);
     fscanf(file,"%d %d %d %d",&key[0],&key[1],&key[2],&key[3]);
     fscanf(file," %d %d %d %d %d %d %d %d",&num_key ,&g,&nf,&health,&tel,&wea,&x,&y);
     fclose(file);
+    numroom=-1;
     for(int i=0 ; i<6 ; i++){
         if(rooms[i].hide ==1)
             draw_room(rooms[i],i);
+            numroom++;
         refresh();
     }
     for(int i=0 ; i<num_path ; i++){
@@ -2412,9 +2415,8 @@ void load_game(const char*filename , const char*game_name , const char* name){
     for(int j=0 ; j<num_food ; j++){
         food_position[j][0]=food_position[j][1]=food_position[j][2]=0;
     }
-    key[0]=key[1]=key[2]=key[3]=0;
-    weapon_position[fl][0]=weapon_position[fl][1]=weapon_position[fl][2]=weapon_position[fl][3]=weapon_position[fl][4]=0;
-    num_dar=num_path=fl=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=0;
+    key[0]=key[1]=key[2]=key[3]=0;;
+    num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=0;
     if(qu==0){
         for(fl ; fl<4 ; fl++){
             if(qu!=0){
