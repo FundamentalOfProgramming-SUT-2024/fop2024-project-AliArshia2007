@@ -2806,7 +2806,7 @@ void set_hero_color(const char* name) {
     getch();
     settings_menu(name);
 }
-void menu(const char*name){
+int menu(const char*name){
     echo();
     clear();
     attron(COLOR_PAIR(1));
@@ -2835,7 +2835,7 @@ void menu(const char*name){
         switch (choice) {
             case 1:
                 new_game("users.txt",name);
-                break;
+                return 1;
             case 2:
                 clear();
                 attron(COLOR_PAIR(7));
@@ -2846,13 +2846,13 @@ void menu(const char*name){
                 attroff(COLOR_PAIR(7));
                 getchar();
                 load_game("users.txt",s,name);
-                break;
+                return 2;
             case 3:
                 table("users.txt",name);
-                break;
+                return 3;
             case 4:
                 settings_menu(name);
-                break;
+                return 4;
             case 5:
                 move(18,62);
                 clear();
@@ -2861,7 +2861,8 @@ void menu(const char*name){
                 refresh();
                 attroff(COLOR_PAIR(2));
                 getch();
-                break;
+                endwin();
+                return 0;
             default:
                 attron(COLOR_PAIR(2));
                 mvprintw(17, 10, "Invalid choice! Please try again.");
