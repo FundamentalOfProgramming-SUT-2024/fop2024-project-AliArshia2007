@@ -1755,6 +1755,7 @@ int move_character(Room room[6], int *x, int *y) {
                     move(10,79);
                     clrtoeol();
                     refresh();
+                    tel ++;
                 }
                 switch (i)
                     {
@@ -1779,7 +1780,6 @@ int move_character(Room room[6], int *x, int *y) {
                     }
                 *x = newx;
                 *y = newy;
-                tel ++;
             }
         }
         for(int i=0 ; i<num_tale ; i++){
