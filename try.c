@@ -1479,31 +1479,41 @@ int move_character(Room room[6], int *x, int *y) {
             refresh();
             attroff(COLOR_PAIR(7));
             FILE *file = fopen(name,"w");
+            fprintf(file,"%d\n",fl);
             for(int i=0 ; i<6 ; i++){
                 fprintf(file,"%d %d %d %d %d\n",room[i].x,room[i].y,room[i].width,room[i].height,room[i].hide);
             }
+            fprintf(file,"%d\n",num_dar);
             for(int i=0 ; i<num_dar ; i++){
                 fprintf(file,"%d %d %d\n",dar_positions[i][0],dar_positions[i][1],dar_positions[i][2]);
             }
+            fprintf(file,"%d\n",num_soton);
             for(int i=0 ; i<num_soton ; i++){
                 fprintf(file,"%d %d %d\n",soton_position[i][0],soton_position[i][1],soton_position[i][2]);
             }
+            fprintf(file,"%d\n",num_gold);
             for(int i=0 ; i<num_gold ; i++){
                 fprintf(file,"%d %d %d %d\n",gold_position[i][0],gold_position[i][1],gold_position[i][2],gold_position[i][3]);
             }
+            fprintf(file,"%d\n",num_tale);
             for(int i=0 ; i<num_tale ; i++){
-                fprintf(file,"%d %d %d %d\n",tale_position[i][0],tale_position[i][1],tale_position[i][2],tale_position[i][3]);
+                fprintf(file,"%d %d %d\n",tale_position[i][0],tale_position[i][1],tale_position[i][2]);
             }
+            fprintf(file,"%d\n",num_food);
             for(int i=0 ; i<num_food ; i++){
                 fprintf(file,"%d %d %d\n",food_position[i][0],food_position[i][1],food_position[i][2]);
             }
+            fprintf(file,"%d\n",num_path);
             for(int i=0 ; i<num_path ; i++){
-                fprintf(file,"%d %d %d %d\n",path_position[i][0],path_position[i][1],path_position[i][2],path_position[i][3]);
+                fprintf(file,"%d %d %d\n",path_position[i][0],path_position[i][1],path_position[i][2]);
             }
+            fprintf(file,"%d\n",num_tel);
             for(int i=0 ; i<num_tel ; i++){
                 fprintf(file,"%d %d %d %d\n",telesm_position[i][0],telesm_position[i][1],telesm_position[i][2],telesm_position[i][3]);
             }
-            fprintf(file,"%d %d %d %d %d %d %d\n",fl,g,nf,health,tel,*x,*y);
+            fprintf(file,"%d %d %d %d %d\n",weapon_position[fl+1][0],weapon_position[fl+1][1],weapon_position[fl+1][2],weapon_position[fl+1][3],weapon_position[fl+1][4]);
+            fprintf(file,"%d %d %d %d\n",key[0],key[1],key[2],key[3]);
+            fprintf(file,"%d %d %d %d %d %d %d %d\n",num_key ,g,nf,health,tel,wea,*x,*y);
             fclose(file);
             getchar();
             return 0;
@@ -2244,7 +2254,6 @@ void new_game(const char*filename ,const char *name){
             getchar();
             break;
         }
-        sleep(2);
         }
         for(int j=0 ; j<num_dar ; j++){
             dar_positions[j][0]=dar_positions[j][1]=dar_positions[j][2]=0;
@@ -2273,7 +2282,7 @@ void new_game(const char*filename ,const char *name){
         clear();
         if(qu==0){
             mvprintw(10,50,"You won.");
-            mvprintw(11,40,"Gold: %d score: %d",g,g*3);
+            mvprintw(11,45,"Gold: %d score: %d",g,g*3);
             num_game++;
         }
         qu=0;
@@ -2287,7 +2296,296 @@ void new_game(const char*filename ,const char *name){
     menu(name);
 }
 void load_game(const char*filename , const char*game_name , const char* name){
+    keypad(stdscr, TRUE);
+    noecho();
     clear();
+    int x;
+    int y;
+    int qu=0;
+    FILE *file=fopen(game_name,"r");
+    Room rooms[6];
+    fscanf(file,"%d",&fl);
+    for(int i=0 ; i<6 ; i++){
+        fscanf(file,"%d %d %d %d %d",&rooms[i].x,&rooms[i].y,&rooms[i].width,&rooms[i].height,&rooms[i].hide);
+    }
+    fscanf(file,"%d",&num_dar);
+    for(int i=0 ; i<num_dar ; i++){
+        fscanf(file,"%d %d %d",&dar_positions[i][0],&dar_positions[i][1],&dar_positions[i][2]);
+    }
+    fscanf(file,"%d",&num_soton);
+    for(int i=0 ; i<num_soton ; i++){
+        fscanf(file,"%d %d %d",&soton_position[i][0],&soton_position[i][1],&soton_position[i][2]);
+    }
+    fscanf(file,"%d",&num_gold);
+    for(int i=0 ; i<num_gold; i++){
+        fscanf(file,"%d %d %d %d",&gold_position[i][0],&gold_position[i][1],&gold_position[i][2],&gold_position[i][3]);
+    }
+    fscanf(file,"%d",&num_tale);
+    for(int i=0 ; i<num_tale ; i++){
+        fscanf(file,"%d %d %d",&tale_position[i][0],&tale_position[i][1],&tale_position[i][2]);
+    }
+    fscanf(file,"%d",&num_food);
+    for(int i=0 ; i<num_food ; i++){
+        fscanf(file,"%d %d %d",&food_position[i][0],&food_position[i][1],&food_position[i][2]);
+    }
+    fscanf(file,"%d",&num_path);
+    for(int i=0 ; i<num_path; i++){
+        fscanf(file,"%d %d %d",&path_position[i][0],&path_position[i][1],&path_position[i][2]);
+    }
+    fscanf(file,"%d",&num_tel);
+    for(int i=0 ; i<num_tel ; i++){
+        fscanf(file,"%d %d %d %d",&telesm_position[i][0],&telesm_position[i][1],&telesm_position[i][2],&telesm_position[i][3]);
+    }
+    fscanf(file,"%d %d %d %d %d",&weapon_position[fl+1][0],&weapon_position[fl+1][1],&weapon_position[fl+1][2],&weapon_position[fl+1][3],&weapon_position[fl+1][4]);
+    fscanf(file,"%d %d %d %d",&key[0],&key[1],&key[2],&key[3]);
+    fscanf(file," %d %d %d %d %d %d %d %d",&num_key ,&g,&nf,&health,&tel,&wea,&x,&y);
+    fclose(file);
+    for(int i=0 ; i<6 ; i++){
+        if(rooms[i].hide ==1)
+            draw_room(rooms[i],i);
+        refresh();
+    }
+    for(int i=0 ; i<num_path ; i++){
+        if(path_position[i][2]==1){
+            attron(COLOR_PAIR(1));
+            mvprintw(path_position[i][1],path_position[i][0],"#");
+            attroff(COLOR_PAIR(1));
+            refresh();
+        }
+    }
+    draw_page();
+    refresh();
+    mvprintw(y,x,"\u2735");
+    refresh();
+    time(&startTime);
+    while (health > 0) {
+        time(&currentTime);
+        if(dif==1){
+            if (difftime(currentTime, startTime) >= 50) {
+                healthy();
+                time(&startTime);
+            }
+        }
+        if(dif==2){
+            if (difftime(currentTime, startTime) >= 10) {
+                healthy();
+                time(&startTime);
+            }
+        }
+        if(dif==3){
+            if (difftime(currentTime, startTime) >= 7) {
+                healthy();
+                time(&startTime);
+            }
+        }
+        if (move_character(rooms, &x, &y) == 0) {
+            clear();
+            mvprintw(20,20,"I hope enjoy the game.");
+            refresh();
+            qu++;
+            break;
+        }
+        refresh();
+        if(x==dar_positions[10][0]&& y==dar_positions[10][1]){
+            fl++;
+            break;
+        }
+    }
+    for(int j=0 ; j<num_dar ; j++){
+        dar_positions[j][0]=dar_positions[j][1]=dar_positions[j][2]=0;
+    }
+    for(int j=0 ; j<num_path ; j++){
+        path_position[j][0]=path_position[j][1]=path_position[j][2]=0;
+    }
+    for(int j=0 ; j<num_soton ; j++){
+        soton_position[j][0]=soton_position[j][1]=soton_position[j][2]=0;
+    }
+    for(int j=0 ; j<num_gold ; j++){
+        gold_position[j][0]=gold_position[j][1]=gold_position[j][2]=gold_position[j][3]=0;
+    }
+    for(int j=0 ; j<num_tale ; j++){
+        tale_position[j][0]=tale_position[j][1]=tale_position[j][2]=tale_position[j][3]=0;
+    }
+    for(int j=0 ; j<num_tel ; j++){
+        telesm_position[j][0]=telesm_position[j][1]=telesm_position[j][2]=telesm_position[j][3]=0;
+    }
+    for(int j=0 ; j<num_food ; j++){
+        food_position[j][0]=food_position[j][1]=food_position[j][2]=0;
+    }
+    key[0]=key[1]=key[2]=key[3]=0;
+    weapon_position[fl][0]=weapon_position[fl][1]=weapon_position[fl][2]=weapon_position[fl][3]=weapon_position[fl][4]=0;
+    num_dar=num_path=fl=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=0;
+    if(qu==0){
+        for(fl ; fl<4 ; fl++){
+            if(qu!=0){
+                break;
+            }
+            clear();
+            srand(time(0));
+            int num_rooms = 6 ;
+            Room rooms[num_rooms];
+            int x1 = rand()%5;
+            int y1 = rand()%5;
+            create_random_rooms(rooms,0,5+y1,10+x1);
+            x1 = rand()%5;
+            y1 = rand()%5;
+            create_random_rooms(rooms,1,5+y1,35+x1);
+            x1 = rand()%5;
+            y1 = rand()%5;
+            create_random_rooms(rooms,2,5+y1,60+x1);
+            x1 = rand()%5;
+            y1 = rand()%5;
+            create_random_rooms(rooms,3,20+y1,60+x1);
+            x1 = rand()%5;
+            y1 = rand()%5;
+            create_random_rooms(rooms,4,20+y1,35+x1);
+            x1 = rand()%5;
+            y1 = rand()%5;
+            create_random_rooms(rooms,5,20+y1,10+x1);
+            for(int j=0 ; j<6 ; j++){
+                if(fl==3 && j==5){
+                    draw_dar(rooms[j],j);
+                    gold_gold(rooms[j]);
+                    tal_gold(rooms[j]);
+                }
+                else{
+                    if(j==0){
+                    weapon(rooms[j],j);
+                    }
+                    draw_dar(rooms[j],j);
+                    soton(rooms[j]);
+                    gold(rooms[j]);
+                    tale(rooms[j]);
+                    food(rooms[j]);
+                    if(j%2 ==0){
+                        telesm(rooms[j],j);
+                    }
+                }
+            }
+            int q=rand()%3;
+            key[0]=rooms[q].x+rand()%(rooms[q].width-2)+1;
+            key[1]=rooms[q].y+rand()%(rooms[q].height-2)+1;
+            key[2]=q; key[3]=0;
+            int t=2*(rand()%2);
+            dar_positions[t][2]=2;
+            dar_positions[t+6][2]=3;
+            draw_room(rooms[0],0);
+            rooms[0].hide=1;
+            draw_page();
+            int x = rooms[0].x + 1;
+            int y = rooms[0].y + 1;
+            path(rooms);
+            refresh();
+            mvprintw(y, x, "\u2735");
+            refresh();
+            time(&startTime);
+            while (health > 0) {
+                time(&currentTime);
+                if(dif==1){
+                    if (difftime(currentTime, startTime) >= 50) {
+                        healthy();
+                        time(&startTime);
+                    }
+                }
+                if(dif==2){
+                    if (difftime(currentTime, startTime) >= 10) {
+                        healthy();
+                        time(&startTime);
+                    }
+                }
+                if(dif==3){
+                    if (difftime(currentTime, startTime) >= 7) {
+                        healthy();
+                        time(&startTime);
+                    }
+                }
+                if (move_character(rooms, &x, &y) == 0) {
+                    clear();
+                    mvprintw(20,20,"I hope enjoy the game.");
+                    refresh();
+                    qu++;
+                    break;
+                }
+                refresh();
+                if(x==dar_positions[10][0]&& y==dar_positions[10][1]){
+                    break;
+                }
+            }
+            for(int j=0 ; j<num_dar ; j++){
+                dar_positions[j][0]=dar_positions[j][1]=dar_positions[j][2]=0;
+            }
+            for(int j=0 ; j<num_path ; j++){
+                path_position[j][0]=path_position[j][1]=path_position[j][2]=0;
+            }
+            for(int j=0 ; j<num_soton ; j++){
+                soton_position[j][0]=soton_position[j][1]=soton_position[j][2]=0;
+            }
+            for(int j=0 ; j<num_gold ; j++){
+                gold_position[j][0]=gold_position[j][1]=gold_position[j][2]=gold_position[j][3]=0;
+            }
+            for(int j=0 ; j<num_tale ; j++){
+                tale_position[j][0]=tale_position[j][1]=tale_position[j][2]=tale_position[j][3]=0;
+            }
+            for(int j=0 ; j<num_tel ; j++){
+                telesm_position[j][0]=telesm_position[j][1]=telesm_position[j][2]=telesm_position[j][3]=0;
+            }
+            for(int j=0 ; j<num_food ; j++){
+                food_position[j][0]=food_position[j][1]=food_position[j][2]=0;
+            }
+            key[0]=key[1]=key[2]=key[3]=0;
+            num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=0;
+            if(health==0){
+                attron(COLOR_PAIR(2));
+                mvprintw(20,140,"You are Lost.");
+                refresh();
+                attroff(COLOR_PAIR(2));
+                getchar();
+                break;
+            }
+            sleep(2);
+            }
+            for(int j=0 ; j<num_dar ; j++){
+                dar_positions[j][0]=dar_positions[j][1]=dar_positions[j][2]=0;
+            }
+            for(int j=0 ; j<num_path ; j++){
+                path_position[j][0]=path_position[j][1]=path_position[j][2]=0;
+            }
+            for(int j=0 ; j<num_soton ; j++){
+                soton_position[j][0]=soton_position[j][1]=soton_position[j][2]=0;
+            }
+            for(int j=0 ; j<num_gold ; j++){
+                gold_position[j][0]=gold_position[j][1]=gold_position[j][2]=gold_position[j][3]=0;
+            }
+            for(int j=0 ; j<num_tale ; j++){
+                tale_position[j][0]=tale_position[j][1]=tale_position[j][2]=tale_position[j][3]=0;
+            }
+            for(int j=0 ; j<num_tel ; j++){
+                telesm_position[j][0]=telesm_position[j][1]=telesm_position[j][2]=telesm_position[j][3]=0;
+            }
+            for(int j=0 ; j<num_food ; j++){
+                food_position[j][0]=food_position[j][1]=food_position[j][2]=0;
+            }
+            key[0]=key[1]=key[2]=key[3]=0;
+            num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=0;
+            attron(COLOR_PAIR(6));
+            clear();
+            if(qu==0){
+                mvprintw(10,50,"You won.");
+                mvprintw(11,45,"Gold: %d score: %d",g,g*3);
+                num_game++;
+            }
+            qu=0;
+            refresh();
+            attroff(COLOR_PAIR(6));
+            getchar();
+            update(filename,name);
+            g=0;
+            num_game=0;
+        clear();
+        menu(name);
+    }
+    clear();
+    menu(name);
 }
 void settings_menu(const char* name){
     int choice;
@@ -2513,13 +2811,14 @@ void menu(const char*name){
                 new_game("users.txt",name);
                 break;
             case 2:
+                clear();
                 attron(COLOR_PAIR(7));
                 mvprintw(8,10,"write your game name.");
                 char s[20];
                 scanw("%s",s);
-                mvprintw(8,35,"%s",s);
                 refresh();
                 attroff(COLOR_PAIR(7));
+                getchar();
                 load_game("users.txt",s,name);
                 break;
             case 3:
