@@ -1060,6 +1060,7 @@ int check_move(int x, int y, Room room[6]) {
                             clrtoeol();
                             refresh();
                             num_key--;  
+                            ramz=0;
                             return 1;
                         }
                     }
@@ -1077,6 +1078,7 @@ int check_move(int x, int y, Room room[6]) {
                         refresh();
                         move(10,79);
                         clrtoeol();
+                        ramz=0;
                         return 1;
                     }
                     else{
@@ -1256,7 +1258,7 @@ int move_character(Room room[6], int *x, int *y) {
                     attroff(COLOR_PAIR(1));
                 }
             }
-            mvprintw(newy,newx,"I");
+            mvprintw(newy,newx,"\u03BB");
             break;
         case 's':
             clear();
@@ -1319,7 +1321,7 @@ int move_character(Room room[6], int *x, int *y) {
                     attroff(COLOR_PAIR(1));
                 }
             }
-            mvprintw(newy,newx,"I");
+            mvprintw(newy,newx,"\u03BB");
             break;
         case 'f':
             int c=getch();
@@ -1406,16 +1408,38 @@ int move_character(Room room[6], int *x, int *y) {
                     refresh();
                 }
                 mvprintw(30,80,"press 10 to return the game.");
-                mvprintw(31,80,"enter your choise:");
+                mvprintw(31,80,"    enter your choise:");
                 refresh();
-                move(31,99);
+                move(31,103);
                 clrtoeol();
                 int d;
-                move(31,100);
-                scanw("%d",&d);
-                mvprintw(31,100,"%d",d);
-                if(d==10)
+                while (1)
+                {
+                    move(31,105);
+                    scanw("%d",&d);
+                    mvprintw(31,105,"%d",d);
+                    if((d>0 && d<=nf) || d==10){
+                        break;
+                    }
+                    else{
+                        move(10,79);clrtoeol();
+                        move(31,103);clrtoeol();
+                        mvprintw(10,80,"Choose correct food!");
+                        refresh();
+                    }
+                }
+                move(10,79);
+                clrtoeol();
+                if(d==10){
                     break;
+                }
+                else if(nf==0){
+                    mvprintw(10,80,"You don't have food.");
+                    sleep(1);
+                    move(10,70);
+                    clrtoeol();
+                    break;
+                }
                 refresh();
                 srand(time(0));
                 int h=rand()%4;
@@ -1448,7 +1472,7 @@ int move_character(Room room[6], int *x, int *y) {
                         return 0;
                     }
                 }
-                move(15,139);
+                move(10,79);
                 clrtoeol();
                 for(int i=0 ; i<=6 ; i++){
                     move(25+i,79);
