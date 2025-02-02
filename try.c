@@ -3288,12 +3288,24 @@ int move_character(Room room[6], int *x, int *y) {
                 switch (lost_weapon[i][4])
                 {
                 case 0:
+                    mvprintw(10,80,"You pick up one Dagger.");
+                    refresh();
+                    sleep(1);
+                    move(10,79);clrtoeol();
                     weapon_position[0][4]++;
                     break;
                 case 1:
+                    mvprintw(10,80,"You pick up one Majic Wand.");
+                    refresh();
+                    sleep(1);
+                    move(10,79);clrtoeol();
                     weapon_position[1][4]++;
                     break;
                 case 2:
+                    mvprintw(10,80,"You pick up one Arrow.");
+                    refresh();
+                    sleep(1);
+                    move(10,79);clrtoeol();
                     weapon_position[2][4]++;
                     break;
                 }
@@ -4064,7 +4076,7 @@ void new_game(const char*filename ,const char *name){
         if(qu==0){
             mvprintw(10,50,"You won.");
             mvprintw(11,45,"Gold: %d score: %d",g,g*3);
-            num_game++;
+            num_game=1;
         }
         qu=0;
         refresh();
@@ -4426,7 +4438,7 @@ void load_game(const char*filename , const char*game_name , const char* name){
             if(qu==0){
                 mvprintw(10,50,"You won.");
                 mvprintw(11,45,"Gold: %d score: %d",g,g*3);
-                num_game++;
+                num_game=1;
             }
             qu=0;
             refresh();
