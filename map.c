@@ -1329,6 +1329,19 @@ int check_move(int x, int y, Room room[6]) {
     }
     return 0;
 }
+int check(int x , int y, Room room[6]){
+    for(int i=0 ; i<6 ; i++){
+        if (x > room[i].x && x < (room[i].x + room[i].width) && y > room[i].y && y < (room[i].y + room[i].height)) {
+        for (int i = 0; i < num_soton; i++) {
+            if (x == soton_position[i][0] && y == soton_position[i][1]) {
+                return 0;
+            }
+        }
+        return 1;
+        }
+    }
+    return 0;
+}
 void check_enemy(int x , int y){
     for(int i=0 ; i<num_enemy ; i++){
             if(enemy_position[i][2]!=2){
@@ -1576,14 +1589,18 @@ void check_enemy(int x , int y){
 }
 int lost_weapon[50][4], num_lost = 0;
 
-void check_enemy2(int x , int y , int distance){
-    int t = 0;
-    int ch = getch();
+void check_enemy2(int x , int y , int distance ,Room room[6]){
+    int t = 0 ,ch;
+    int c = getch();
     refresh();
-    switch (ch)
+    switch (c)
     {
     case 'l':
         for(int i=1; i<=distance; i++){
+            if(check(x+i , y , room)==0){
+                distance=i-1;
+                break;
+            }
             for(int j=0; j<num_enemy; j++){
                 if((x+i) == enemy_position[j][0] && (y) == enemy_position[j][1] && enemy_position[j][2] != 2){
                     t++;
@@ -1693,6 +1710,10 @@ void check_enemy2(int x , int y , int distance){
         break;
     case 'k':
         for(int i=1; i<=distance; i++){
+            if(check(x , y+i , room)==0){
+                distance=i-1;
+                break;
+            }
             for(int j=0; j<num_enemy; j++){
                 if((x) == enemy_position[j][0] && (y+i) == enemy_position[j][1] && enemy_position[j][2] != 2){
                     t++;
@@ -1802,6 +1823,10 @@ void check_enemy2(int x , int y , int distance){
         break;
         case 'j':
         for(int i=1; i<=distance; i++){
+            if(check(x , y-i , room)==0){
+                distance=i-1;
+                break;
+            }
             for(int j=0; j<num_enemy; j++){
                 if((x) == enemy_position[j][0] && (y-i) == enemy_position[j][1] && enemy_position[j][2] != 2){
                     t++;
@@ -1911,6 +1936,10 @@ void check_enemy2(int x , int y , int distance){
         break;
     case 'h':
         for(int i=1; i<=distance; i++){
+            if(check(x-i , y , room)==0){
+                distance=i-1;
+                break;
+            }
             for(int j=0; j<num_enemy; j++){
                 if((x-i) == enemy_position[j][0] && (y) == enemy_position[j][1] && enemy_position[j][2] != 2){
                     t++;
@@ -2020,6 +2049,10 @@ void check_enemy2(int x , int y , int distance){
         break;
     case 'y':
         for(int i=1; i<=distance; i++){
+            if(check(x-i , y-i , room)==0){
+                distance=i-1;
+                break;
+            }
             for(int j=0; j<num_enemy; j++){
                 if((x-i) == enemy_position[j][0] && (y-i) == enemy_position[j][1] && enemy_position[j][2] != 2){
                     t++;
@@ -2129,6 +2162,10 @@ void check_enemy2(int x , int y , int distance){
         break;
     case 'u':
         for(int i=1; i<=distance; i++){
+            if(check(x+i , y-i , room)==0){
+                distance=i-1;
+                break;
+            }
             for(int j=0; j<num_enemy; j++){
                 if((x+i) == enemy_position[j][0] && (y-i) == enemy_position[j][1] && enemy_position[j][2] != 2){
                     t++;
@@ -2238,6 +2275,10 @@ void check_enemy2(int x , int y , int distance){
         break;
     case 'b':
         for(int i=1; i<=distance; i++){
+            if(check(x-i , y+i , room)==0){
+                distance=i-1;
+                break;
+            }
             for(int j=0; j<num_enemy; j++){
                 if((x-i) == enemy_position[j][0] && (y+i) == enemy_position[j][1] && enemy_position[j][2] != 2){
                     t++;
@@ -2347,6 +2388,10 @@ void check_enemy2(int x , int y , int distance){
         break;
     case 'n':
         for(int i=1; i<=distance; i++){
+            if(check(x+i , y+i , room)==0){
+                distance=i-1;
+                break;
+            }
             for(int j=0; j<num_enemy; j++){
                 if((x+i) == enemy_position[j][0] && (y+i) == enemy_position[j][1] && enemy_position[j][2] != 2){
                     t++;
@@ -2974,21 +3019,21 @@ int move_character(Room room[6], int *x, int *y) {
                     mvprintw(10,80,"You don't have enough weapon!");
                     break;
                 }
-                check_enemy2(*x , *y , 5);
+                check_enemy2(*x , *y , 5 , room);
             break;
             case 15:
                 if(current_weapon[1]==0){
                     mvprintw(10,80,"You don't have enough weapon!");
                     break;
                 }
-                check_enemy2(*x , *y , 10);
+                check_enemy2(*x , *y , 10 , room);
             break;
             case 5:
                 if(current_weapon[1]==0){
                     mvprintw(10,80,"You don't have enough weapon!");
                     break;
                 }
-                check_enemy2(*x , *y , 5);
+                check_enemy2(*x , *y , 5 , room);
             break;
             }
             break;
