@@ -1576,72 +1576,75 @@ void check_enemy(int x , int y){
 }
 int lost_weapon[50][4], num_lost = 0;
 
-void check_enemy2(int x, int y, int distance){
+void check_enemy2(int x , int y , int distance){
     int t = 0;
-    bool enemy_found = false;
     int ch = getch();
     refresh();
-    switch (ch) {
+    switch (ch)
+    {
     case 'l':
-        for (int i = 1; i <= distance; i++) {
-            for (int j = 0; j < num_enemy; j++) {
-                if ((x + i) == enemy_position[j][0] && (y) == enemy_position[j][1] && enemy_position[j][2] != 2) {
-                    enemy_found = true;
+        for(int i=1; i<=distance; i++){
+            for(int j=0; j<num_enemy; j++){
+                if((x+i) == enemy_position[j][0] && (y) == enemy_position[j][1] && enemy_position[j][2] != 2){
+                    t++;
                     enemy_position[j][3] -= current_weapon[0];
-                    if (enemy_position[j][3] < 0)
+                    if(enemy_position[j][3] < 0)
                         enemy_position[j][3] = 0;
-                    switch (enemy_position[j][4]) {
+                    switch (enemy_position[j][4])
+                    {
                     case 0:
-                        mvprintw(10, 80, "You beat deamon, health: %d", enemy_position[j][3]);
+                        mvprintw(10,80,"You beat deamon, health: %d", enemy_position[j][3]);
                         break;
                     case 1:
-                        mvprintw(10, 80, "You beat Fire breathing Monster, health: %d", enemy_position[j][3]);
+                        mvprintw(10,80,"You beat Fire breathing Monster, health: %d", enemy_position[j][3]);
                         break;
                     case 2:
-                        mvprintw(10, 80, "You beat one Giant, health: %d", enemy_position[j][3]);
+                        mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
                         break;
                     case 3:
-                        mvprintw(10, 80, "You beat Snake, health: %d", enemy_position[j][3]);
+                        mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
                         break;
                     case 4:
-                        mvprintw(10, 80, "You beat Undead, health: %d", enemy_position[j][3]);
+                        mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
                         break;
                     }
                     refresh();
                     sleep(1.5);
-                    move(10, 79); clrtoeol();
-                    if (enemy_position[j][3] < 1) {
+                    move(10,79); clrtoeol();
+                    if(enemy_position[j][3] < 1){
                         enemy_position[j][2] = 2;
                         attron(COLOR_PAIR(3));
                         mvprintw(enemy_position[j][1], enemy_position[j][0], ".");
                         attroff(COLOR_PAIR(3));
-                        switch (enemy_position[j][4]) {
+                        switch (enemy_position[j][4])
+                        {
                         case 0:
-                            mvprintw(10, 80, "You kill deamon.");
+                            mvprintw(10,80,"You kill deamon.");
                             break;
                         case 1:
-                            mvprintw(10, 80, "You kill Fire breathing Monster.");
+                            mvprintw(10,80,"You kill Fire breathing Monster.");
                             break;
                         case 2:
-                            mvprintw(10, 80, "You kill one Giant.");
+                            mvprintw(10,80,"You kill one Giant.");
                             break;
                         case 3:
-                            mvprintw(10, 80, "You kill Snake.");
+                            mvprintw(10,80,"You kill Snake.");
                             break;
                         case 4:
-                            mvprintw(10, 80, "You kill Undead.");
+                            mvprintw(10,80,"You kill Undead.");
                             break;
                         }
                         refresh();
                         sleep(1);
-                        move(10, 79); clrtoeol();
+                        move(10,79); clrtoeol();
                         health += 5;
-                        if (health > 20) {
+                        if(health > 20){
                             health = 20;
                         }
                     }
                     current_weapon[1]--;
-                    switch (current_weapon[0]) {
+                    switch (current_weapon[0])
+                    {
                     case 12:
                         weapon_position[0][4]--;
                         break;
@@ -1654,17 +1657,25 @@ void check_enemy2(int x, int y, int distance){
                     }
                     break;
                 }
+                if(t>0)
+                    break;
             }
-            if (enemy_found) {
+            if(t>0)
                 break;
-            } else {
-                mvprintw(10, 80, "you miss.");
+        }
+        if(t > 0){
+                t = 0;
+                break;
+            }
+            else {
+                mvprintw(10,80,"you miss.");
                 refresh();
                 sleep(1.5);
-                move(10, 79); clrtoeol();
+                move(10,79); clrtoeol();
                 lost_weapon[num_lost][0] = (x + distance);
                 lost_weapon[num_lost][1] = (y);
-                switch (current_weapon[0]) {
+                switch (current_weapon[0])
+                {
                 case 12:
                     lost_weapon[num_lost][3] = 0;
                     break;
@@ -1679,7 +1690,6 @@ void check_enemy2(int x, int y, int distance){
                 refresh();
                 num_lost++;
             }
-        }
         break;
     default:
         break;
