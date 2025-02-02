@@ -9,7 +9,7 @@
 int password[1][2];
 int key[4];
 int num_key=0;
-int fl,color=3,dif=1,num_game=0,dif2;
+int fl,color=3,dif=1,num_game=0,dif2,numroom=0;
 typedef struct {
     int x;
     int y;
@@ -599,26 +599,56 @@ void draw_room(Room room ,int num) {
             switch (num)
             {
             case 1:
+                if(enemy_position[num-1][2]==2){
+                   attron(COLOR_PAIR(2));
+                    mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],".");
+                    attroff(COLOR_PAIR(2)); 
+                    break;
+                }
                 attron(COLOR_PAIR(2));
                 mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"D");
                 attroff(COLOR_PAIR(2));
                 break;
             case 2:
+                if(enemy_position[num-1][2]==2){
+                   attron(COLOR_PAIR(2));
+                    mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],".");
+                    attroff(COLOR_PAIR(2)); 
+                    break;
+                }
                 attron(COLOR_PAIR(2));
                 mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"F");
                 attroff(COLOR_PAIR(2));
                 break;
             case 3:
+                if(enemy_position[num-1][2]==2){
+                   attron(COLOR_PAIR(2));
+                    mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],".");
+                    attroff(COLOR_PAIR(2)); 
+                    break;
+                }
                 attron(COLOR_PAIR(2));
                 mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"G");
                 attroff(COLOR_PAIR(2));
                 break;
             case 4:
+                if(enemy_position[num-1][2]==2){
+                   attron(COLOR_PAIR(2));
+                    mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],".");
+                    attroff(COLOR_PAIR(2)); 
+                    break;
+                }
                 attron(COLOR_PAIR(2));
                 mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"S");
                 attroff(COLOR_PAIR(2));
                 break;
             case 5:
+                if(enemy_position[num-1][2]==2){
+                   attron(COLOR_PAIR(2));
+                    mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],".");
+                    attroff(COLOR_PAIR(2)); 
+                    break;
+                }
                 attron(COLOR_PAIR(2));
                 mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"U");
                 attroff(COLOR_PAIR(2));
@@ -1060,6 +1090,7 @@ void healthy(){
     --health;
 }
 void draw_page(){
+    move(35,9); clrtoeol();
     attron(COLOR_PAIR(6));
     mvprintw(35,10,"gold: %d",g);
     attroff(COLOR_PAIR(6));
@@ -1293,7 +1324,67 @@ int check_move(int x, int y, Room room[6]) {
     }
     return 0;
 }
-int numroom=0;
+void check_enemy(int x , int y){
+    for(int i=0 ; i<num_enemy ; i++){
+            if(enemy_position[i][2]!=2){
+                if((x+1)==enemy_position[i][0] && y==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                }
+                else if((x+1)==enemy_position[i][0] && (y+1)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                }
+                else if((x+1)==enemy_position[i][0] && (y-1)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                }
+                else if((x)==enemy_position[i][0] && (y+1)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                }
+                else if((x)==enemy_position[i][0] && (y-1)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                }
+                else if((x-1)==enemy_position[i][0] && (y+1)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                }
+                else if((x-1)==enemy_position[i][0] && (y-1)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                }
+                else if((x-1)==enemy_position[i][0] && (y)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                }
+                if(enemy_position[i][3]<1){
+                    enemy_position[i][2]=2;
+                    attron(COLOR_PAIR(3));
+                    mvprintw(enemy_position[i][1],enemy_position[i][0],".");
+                    attroff(COLOR_PAIR(3));
+                    switch (numroom)
+                    {
+                    case 1:
+                        mvprintw(10,80,"You kill deamon.");
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You kill Fire breathing Monster.");
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You kill one Giant.");
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You kill Snake.");
+                        break;
+                    case 5:
+                        mvprintw(10,80,"You kill Undeed.");
+                        break;
+                    }
+                    refresh();
+                    sleep(1);
+                    move(10,79); clrtoeol();
+                    health +=5;
+                    if(health>20){
+                        health=20;
+                    }
+                }
+            }
+    }
+}
 int move_character(Room room[6], int *x, int *y) {
     int newx = *x;
     int newy = *y;
@@ -1389,7 +1480,7 @@ int move_character(Room room[6], int *x, int *y) {
                 }
                 }
             }
-            for(int i=0 ; i<=(numroom+1) ; i++){
+            for(int i=0 ; i<(numroom+1) ; i++){
                 if(dar_positions[i][2]==2){
                     attron(COLOR_PAIR(4));
                     mvprintw(dar_positions[i][1],dar_positions[i][0],"?");
@@ -1688,9 +1779,9 @@ int move_character(Room room[6], int *x, int *y) {
             clear();
             mvprintw(5,5,"1.Mace  : power=4   short_rang     number: 1");
             mvprintw(7,5,"2.Sword : power=10  short_rang     number: %d",weapon_position[3][4]);
-            mvprintw(5,60,"3.Dagger     : power=12  long_rang   number: %d",weapon_position[0][4]);
-            mvprintw(7,60,"4.Magic Wand : power=15  long_rang   number: %d",weapon_position[1][4]);
-            mvprintw(9,60,"5.Arrow      : power=5   long_rang   number: %d",weapon_position[2][4]);
+            mvprintw(5,60,"3.Dagger     : power=12  long_rang(5)   number: %d",weapon_position[0][4]);
+            mvprintw(7,60,"4.Magic Wand : power=15  long_rang(10)   number: %d",weapon_position[1][4]);
+            mvprintw(9,60,"5.Arrow      : power=5   long_rang(5)   number: %d",weapon_position[2][4]);
             mvprintw(15,30,"press 10 to back the game.");
             mvprintw(16,30,"     Your choose:");
             refresh();
@@ -1762,7 +1853,7 @@ int move_character(Room room[6], int *x, int *y) {
                     break;
                 case 5:
                     if(weapon_position[2][4]!=0){
-                        current_weapon[0]=5;
+                        current_weapon[0]=10;
                         current_weapon[1]=weapon_position[2][4];
                         attron(COLOR_PAIR(1));
                         mvprintw(2,30,"your current weapon change to Arrow.");
@@ -1796,6 +1887,67 @@ int move_character(Room room[6], int *x, int *y) {
                     attroff(COLOR_PAIR(1));
                 }
                 refresh();
+            }
+            break;
+        case ' ':
+            switch (current_weapon[0])
+            {
+            case 4:
+            for(int i=0 ; i<num_enemy ; i++){
+                check_enemy(*x , *y);
+            }
+                break;
+            case 10:
+                check_enemy(*x , *y);
+                break;
+            case 12:
+                int ch=getch();
+                switch (ch)
+                {
+                case 'l':
+                    int x2=newx, y2=newy , t=0;
+                    for(int i=1 ; i<=5 ; i++){
+                        if(t != 0){
+                            break;
+                        }
+                        for(int j=0 ; j<num_enemy ; j++){
+                            if(enemy_position[j][2]!=2){
+                                if((x2+i)==enemy_position[j][0] && (y2)==enemy_position[j][1]){
+                                    enemy_position[j][3] = enemy_position[j][3] - weapon_position[0][3];
+                                    current_weapon[1]--;
+                                    weapon_position[0][4]--;
+                                    t++;
+                                    break;
+                                    if(enemy_position[j][3]<=0){
+                                        enemy_position[j][2]=2;
+                                        attron(COLOR_PAIR(3));
+                                        mvprintw(enemy_position[j][1],enemy_position[j][0],".");
+                                        attroff(COLOR_PAIR(3));
+                                        mvprintw(10,80,"You kill one enemy");
+                                        refresh();
+                                        sleep(1);
+                                        move(10,79); clrtoeol();
+                                        health +=5;
+                                        if(health>20){
+                                            health=20;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(t==0){
+                        mvprintw(10,80,"You miss one Dagger.");
+                        current_weapon[1]--;
+                        weapon_position[0][4]--;
+                        refresh();
+                        sleep(1);
+                        move(10,79); clrtoeol();
+                    }
+                    t=0;
+                default:
+                    break;
+                }
             }
             break;
         case 'q':
@@ -1893,7 +2045,7 @@ int move_character(Room room[6], int *x, int *y) {
         }
         for(int i=0 ; i<num_dar ; i++){
             if(dar_positions[i][0]==*x && dar_positions[i][1]==*y){
-                if(i%2==1 && numroom<4){
+                if(i%2==1 && numroom<=4){
                     numroom ++;
                 }
                 if(dar_positions[i][2]==4){
