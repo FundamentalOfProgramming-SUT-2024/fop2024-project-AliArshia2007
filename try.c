@@ -88,7 +88,7 @@ void weapon(Room room , int num){
     weapon_position[num_weapon][0] = x1;
     weapon_position[num_weapon][1] = y1;
     weapon_position[num_weapon][2]=0;
-    switch (num_weapon)
+    switch (fl)
     {
     case 0:
         weapon_position[num_weapon][3]=12;
@@ -1844,9 +1844,17 @@ int move_character(Room room[6], int *x, int *y) {
             for(int i=0 ; i<num_gold ; i++){
                 fprintf(file,"%d %d %d %d\n",gold_position[i][0],gold_position[i][1],gold_position[i][2],gold_position[i][3]);
             }
+            fprintf(file,"%d\n",num_gol);
+            for(int i=0 ; i<num_gol ; i++){
+                fprintf(file,"%d %d %d %d\n",gol[i][0],gol[i][1],gol[i][2],gol[i][3]);
+            }
             fprintf(file,"%d\n",num_tale);
             for(int i=0 ; i<num_tale ; i++){
                 fprintf(file,"%d %d %d\n",tale_position[i][0],tale_position[i][1],tale_position[i][2]);
+            }
+            fprintf(file,"%d\n",num_tal);
+            for(int i=0 ; i<num_tal ; i++){
+                fprintf(file,"%d %d %d\n",tal[i][0],tal[i][1],tal[i][2]);
             }
             fprintf(file,"%d\n",num_food);
             for(int i=0 ; i<num_food ; i++){
@@ -2636,11 +2644,17 @@ void new_game(const char*filename ,const char *name){
         for(int j=0 ; j<num_soton ; j++){
             soton_position[j][0]=soton_position[j][1]=soton_position[j][2]=0;
         }
+        for(int j=0 ; j<num_gol ; j++){
+            gol[j][0]=gol[j][1]=gol[j][2]=gol[j][3]=0;
+        }
         for(int j=0 ; j<num_gold ; j++){
             gold_position[j][0]=gold_position[j][1]=gold_position[j][2]=gold_position[j][3]=0;
         }
         for(int j=0 ; j<num_tale ; j++){
             tale_position[j][0]=tale_position[j][1]=tale_position[j][2]=tale_position[j][3]=0;
+        }
+        for(int j=0 ; j<num_tal ; j++){
+            tal[j][0]=tal[j][1]=tal[j][2]=tal[j][3]=0;
         }
         for(int j=0 ; j<num_tel ; j++){
             telesm_position[j][0]=telesm_position[j][1]=telesm_position[j][2]=telesm_position[j][3]=0;
@@ -2655,7 +2669,7 @@ void new_game(const char*filename ,const char *name){
             weapon_position[i][0]=weapon_position[i][1]=weapon_position[i][2]=weapon_position[i][3]=weapon_position[i][4]=0;
         }
         key[0]=key[1]=key[2]=key[3]=0;
-        num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_weapon=0;
+        num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_weapon=num_gol=num_tal=0;
         current_weapon[0]=4;
         current_weapon[1]=1;
         attron(COLOR_PAIR(6));
@@ -2700,9 +2714,17 @@ void load_game(const char*filename , const char*game_name , const char* name){
     for(int i=0 ; i<num_gold; i++){
         fscanf(file,"%d %d %d %d",&gold_position[i][0],&gold_position[i][1],&gold_position[i][2],&gold_position[i][3]);
     }
+    fscanf(file,"%d",&num_gol);
+    for(int i=0 ; i<num_gol; i++){
+        fscanf(file,"%d %d %d %d",&gol[i][0],&gol[i][1],&gol[i][2],&gol[i][3]);
+    }
     fscanf(file,"%d",&num_tale);
     for(int i=0 ; i<num_tale ; i++){
         fscanf(file,"%d %d %d",&tale_position[i][0],&tale_position[i][1],&tale_position[i][2]);
+    }
+    fscanf(file,"%d",&num_tal);
+    for(int i=0 ; i<num_tal ; i++){
+        fscanf(file,"%d %d %d",&tal[i][0],&tal[i][1],&tal[i][2]);
     }
     fscanf(file,"%d",&num_food);
     for(int i=0 ; i<num_food ; i++){
@@ -2799,8 +2821,14 @@ void load_game(const char*filename , const char*game_name , const char* name){
     for(int j=0 ; j<num_gold ; j++){
         gold_position[j][0]=gold_position[j][1]=gold_position[j][2]=gold_position[j][3]=0;
     }
+    for(int j=0 ; j<num_gol ; j++){
+        gol[j][0]=gol[j][1]=gol[j][2]=gol[j][3]=0;
+    }
     for(int j=0 ; j<num_tale ; j++){
         tale_position[j][0]=tale_position[j][1]=tale_position[j][2]=tale_position[j][3]=0;
+    }
+    for(int j=0 ; j<num_tal ; j++){
+        tal[j][0]=tal[j][1]=tal[j][2]=tal[j][3]=0;
     }
     for(int j=0 ; j<num_tel ; j++){
         telesm_position[j][0]=telesm_position[j][1]=telesm_position[j][2]=telesm_position[j][3]=0;
@@ -2812,7 +2840,7 @@ void load_game(const char*filename , const char*game_name , const char* name){
         enemy_position[j][0]=enemy_position[j][1]=enemy_position[j][2]=enemy_position[j][3]=0;
     }
     key[0]=key[1]=key[2]=key[3]=0;
-    num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=0;
+    num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_tal=num_gol=0;
     if(qu==0){
         for(fl ; fl<4 ; fl++){
             if(qu!=0){
@@ -2924,8 +2952,14 @@ void load_game(const char*filename , const char*game_name , const char* name){
             for(int j=0 ; j<num_gold ; j++){
                 gold_position[j][0]=gold_position[j][1]=gold_position[j][2]=gold_position[j][3]=0;
             }
+            for(int j=0 ; j<num_gol ; j++){
+                gol[j][0]=gol[j][1]=gol[j][2]=gol[j][3]=0;
+            }
             for(int j=0 ; j<num_tale ; j++){
                 tale_position[j][0]=tale_position[j][1]=tale_position[j][2]=tale_position[j][3]=0;
+            }
+            for(int j=0 ; j<num_tal ; j++){
+                tal[j][0]=tal[j][1]=tal[j][2]=tal[j][3]=0;
             }
             for(int j=0 ; j<num_tel ; j++){
                 telesm_position[j][0]=telesm_position[j][1]=telesm_position[j][2]=telesm_position[j][3]=0;
@@ -2937,7 +2971,7 @@ void load_game(const char*filename , const char*game_name , const char* name){
                 enemy_position[j][0]=enemy_position[j][1]=enemy_position[j][2]=enemy_position[j][3]=0;
             }
             key[0]=key[1]=key[2]=key[3]=0;
-            num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy;
+            num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_tal=num_gol=0;
             if(health==0){
                 attron(COLOR_PAIR(2));
                 mvprintw(20,140,"You are Lost.");
@@ -2960,8 +2994,14 @@ void load_game(const char*filename , const char*game_name , const char* name){
             for(int j=0 ; j<num_gold ; j++){
                 gold_position[j][0]=gold_position[j][1]=gold_position[j][2]=gold_position[j][3]=0;
             }
+            for(int j=0 ; j<num_gol ; j++){
+                gol[j][0]=gol[j][1]=gol[j][2]=gol[j][3]=0;
+            }
             for(int j=0 ; j<num_tale ; j++){
                 tale_position[j][0]=tale_position[j][1]=tale_position[j][2]=tale_position[j][3]=0;
+            }
+            for(int j=0 ; j<num_tal ; j++){
+                tal[j][0]=tal[j][1]=tal[j][2]=tal[j][3]=0;
             }
             for(int j=0 ; j<num_tel ; j++){
                 telesm_position[j][0]=telesm_position[j][1]=telesm_position[j][2]=telesm_position[j][3]=0;
@@ -2976,7 +3016,7 @@ void load_game(const char*filename , const char*game_name , const char* name){
                 weapon_position[i][0]=weapon_position[i][1]=weapon_position[i][2]=weapon_position[i][3]=weapon_position[i][4]=0;
             }
             key[0]=key[1]=key[2]=key[3]=0;
-            num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_weapon=0;
+            num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_weapon=num_tal=num_gol=0;
             current_weapon[0]=4;
             current_weapon[1]=1;
             attron(COLOR_PAIR(6));
