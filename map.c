@@ -3067,7 +3067,7 @@ int move_character(Room room[6], int *x, int *y) {
                     break;
                 case 5:
                     if(weapon_position[2][4]!=0){
-                        current_weapon[0]=10;
+                        current_weapon[0]=5;
                         current_weapon[1]=weapon_position[2][4];
                         attron(COLOR_PAIR(1));
                         mvprintw(2,30,"your current weapon change to Arrow.");
@@ -3195,6 +3195,10 @@ int move_character(Room room[6], int *x, int *y) {
             for(int i=0 ; i<num_weapon ; i++){
                 fprintf(file,"%d %d %d %d %d\n",weapon_position[i][0],weapon_position[i][1],weapon_position[i][2],weapon_position[i][3],weapon_position[i][4]);
             }
+            fprintf(file,"%d\n",num_lost);
+            for(int i=0 ; i<num_lost ; i++){
+                fprintf(file,"%d %d %d %d\n",lost_weapon[i][0],lost_weapon[i][1],lost_weapon[i][2],lost_weapon[i][3]);
+            }
             fprintf(file,"%d %d %d %d\n",key[0],key[1],key[2],key[3]);
             fprintf(file,"%d %d %d %d %d %d %d %d %d\n",num_key ,g,nf,health,tel,wea,*x,*y,numroom);
             fprintf(file,"%d %d %d\n",health_tel,speed_tel,strangh_tel);
@@ -3253,10 +3257,42 @@ int move_character(Room room[6], int *x, int *y) {
                 }
                 draw_room(room[(i+1)/2],(i+1)/2);
                 room[(i+1)/2].hide=1;
+                attron(COLOR_PAIR(3));
+                mvprintw(*y,*x,".");
+                attroff(COLOR_PAIR(3));
                 *x = newx;
                 *y = newy;
             }
-        }for(int i=0 ; i<num_food ; i++){
+        }
+        for(int i=0 ; i<num_lost ; i++){
+            if(lost_weapon[i][0]==*x && lost_weapon[i][1]==*y && lost_weapon[i][2]!=1){
+                lost_weapon[i][2]=1;
+                switch (lost_weapon[i][4])
+                {
+                case 0:
+                    weapon_position[0][4]++;
+                    break;
+                case 1:
+                    weapon_position[1][4]++;
+                    break;
+                case 2:
+                    weapon_position[2][4]++;
+                    break;
+                }
+                if(lost_weapon[i][3]==0 && current_weapon[0]==12){
+                    current_weapon[1]++;
+                }
+                else if(lost_weapon[i][3]==1 && current_weapon[0]==15){
+                    current_weapon[1]++;
+                }
+                else if(lost_weapon[i][3]==2 && current_weapon[0]==5){
+                    current_weapon[1]++;
+                }
+                newx= *x;
+                newy= *y;
+            }
+        }
+        for(int i=0 ; i<num_food ; i++){
             if(food_position[i][0]==*x && food_position[i][1]==*y){
                 if(nf>=5){
                     attron(COLOR_PAIR(2));
