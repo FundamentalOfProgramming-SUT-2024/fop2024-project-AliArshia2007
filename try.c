@@ -1873,7 +1873,9 @@ int move_character(Room room[6], int *x, int *y) {
                 fprintf(file,"%d %d %d %d\n",enemy_position[i][0],enemy_position[i][1],enemy_position[i][2],enemy_position[i][3]);
             }
             fprintf(file,"%d\n",num_weapon);
-            fprintf(file,"%d %d %d %d %d\n",weapon_position[fl][0],weapon_position[fl][1],weapon_position[fl][2],weapon_position[fl][3],weapon_position[fl][4]);
+            for(int i=0 ; i<num_weapon ; i++){
+                fprintf(file,"%d %d %d %d %d\n",weapon_position[i][0],weapon_position[i][1],weapon_position[i][2],weapon_position[i][3],weapon_position[i][4]);
+            }
             fprintf(file,"%d %d %d %d\n",key[0],key[1],key[2],key[3]);
             fprintf(file,"%d %d %d %d %d %d %d %d %d\n",num_key ,g,nf,health,tel,wea,*x,*y,numroom);
             fprintf(file,"%d %d %d\n",health_tel,speed_tel,strangh_tel);
@@ -2609,11 +2611,17 @@ void new_game(const char*filename ,const char *name){
         for(int j=0 ; j<num_soton ; j++){
             soton_position[j][0]=soton_position[j][1]=soton_position[j][2]=0;
         }
+        for(int j=0 ; j<num_gol ; j++){
+            gol[j][0]=gol[j][1]=gol[j][2]=gol[j][3]=0;
+        }
         for(int j=0 ; j<num_gold ; j++){
             gold_position[j][0]=gold_position[j][1]=gold_position[j][2]=gold_position[j][3]=0;
         }
         for(int j=0 ; j<num_tale ; j++){
             tale_position[j][0]=tale_position[j][1]=tale_position[j][2]=tale_position[j][3]=0;
+        }
+        for(int j=0 ; j<num_tal ; j++){
+            tal[j][0]=tal[j][1]=tal[j][2]=tal[j][3]=0;
         }
         for(int j=0 ; j<num_tel ; j++){
             telesm_position[j][0]=telesm_position[j][1]=telesm_position[j][2]=telesm_position[j][3]=0;
@@ -2625,7 +2633,7 @@ void new_game(const char*filename ,const char *name){
             enemy_position[j][0]=enemy_position[j][1]=enemy_position[j][2]=enemy_position[j][3]=0;
         }
         key[0]=key[1]=key[2]=key[3]=0;
-        num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=0;
+        num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_gol=num_tal=0;
         if(health==0){
             attron(COLOR_PAIR(2));
             mvprintw(20,140,"You are Lost.");
@@ -2743,7 +2751,9 @@ void load_game(const char*filename , const char*game_name , const char* name){
         fscanf(file,"%d %d %d %d",&enemy_position[i][0],&enemy_position[i][1],&enemy_position[i][2],&enemy_position[i][3]);
     }
     fscanf(file,"%d",&num_weapon);
-    fscanf(file,"%d %d %d %d %d",&weapon_position[fl][0],&weapon_position[fl][1],&weapon_position[fl][2],&weapon_position[fl][3],&weapon_position[fl][4]);
+    for(int i=0 ; i<num_weapon ; i++){
+        fscanf(file,"%d %d %d %d %d",&weapon_position[i][0],&weapon_position[i][1],&weapon_position[i][2],&weapon_position[i][3],&weapon_position[i][4]);
+    }
     fscanf(file,"%d %d %d %d",&key[0],&key[1],&key[2],&key[3]);
     fscanf(file," %d %d %d %d %d %d %d %d %d",&num_key ,&g,&nf,&health,&tel,&wea,&x,&y,&numroom);
     fscanf(file,"%d %d %d",&health_tel,&speed_tel,&strangh_tel);
