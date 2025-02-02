@@ -2689,12 +2689,18 @@ int move_character(Room room[6], int *x, int *y) {
         case 's':
             clear();
             for(int i=0 ; i<=(numroom+1) ; i++){
+                if(i==6){
+                    break;
+                }
                 draw_room(room[i],i);
                 refresh();
             }
             draw_page();
             refresh();
             for(int i=0 ; i<=(numroom+1) ; i++){
+                if(i==6){
+                    break;
+                }
                 if(tale_position[i][2]==0){
                     attron(COLOR_PAIR(2));
                     mvprintw(tale_position[i][1],tale_position[i][0],"^");
@@ -2702,7 +2708,7 @@ int move_character(Room room[6], int *x, int *y) {
                     attroff(COLOR_PAIR(2));
                 }
             }
-            if(numroom==4){
+            if(numroom==5){
                 for(int i=0 ; i<num_tal ; i++){
                     if(tal[i][2]==0){
                     attron(COLOR_PAIR(2));
@@ -2951,6 +2957,7 @@ int move_character(Room room[6], int *x, int *y) {
                         health_tel --;
                         refresh();
                         tel --;
+                        health=20;
                     }
                     else{
                         attron(COLOR_PAIR(2));
@@ -2981,6 +2988,20 @@ int move_character(Room room[6], int *x, int *y) {
                         strangh_tel --;
                         refresh();
                         tel --;
+                        current_weapon[1]=current_weapon[1]*2;
+                        switch (current_weapon[0])
+                        {
+                        case 12:
+                            weapon_position[0][4] *=2;
+                            break;
+                        
+                        case 15:
+                            weapon_position[1][4] *=2;
+                            break;
+                        case 5:
+                            weapon_position[2][4] *=2;
+                            break;
+                        }
                     }
                     else{
                         attron(COLOR_PAIR(2));
@@ -3275,9 +3296,6 @@ int move_character(Room room[6], int *x, int *y) {
                 }
                 draw_room(room[(i+1)/2],(i+1)/2);
                 room[(i+1)/2].hide=1;
-                attron(COLOR_PAIR(3));
-                mvprintw(*y,*x,".");
-                attroff(COLOR_PAIR(3));
                 *x = newx;
                 *y = newy;
             }
@@ -3285,7 +3303,7 @@ int move_character(Room room[6], int *x, int *y) {
         for(int i=0 ; i<num_lost ; i++){
             if(lost_weapon[i][0]==*x && lost_weapon[i][1]==*y && lost_weapon[i][2]!=1){
                 lost_weapon[i][2]=1;
-                switch (lost_weapon[i][4])
+                switch (lost_weapon[i][3])
                 {
                 case 0:
                     mvprintw(10,80,"You pick up one Dagger.");
@@ -3318,6 +3336,9 @@ int move_character(Room room[6], int *x, int *y) {
                 else if(lost_weapon[i][3]==2 && current_weapon[0]==5){
                     current_weapon[1]++;
                 }
+                attron(COLOR_PAIR(3));
+                mvprintw(*y,*x,".");
+                attroff(COLOR_PAIR(3));
                 newx= *x;
                 newy= *y;
             }
@@ -3816,7 +3837,8 @@ void table(const char* filename,const char*name){
             mvprintw(i+5,15,"\U0001F947");
             attron(COLOR_PAIR(6) | A_BOLD);
             mvprintw(i+5,20,"Goat      %s",users[i].name);
-            mvprintw(i+5,41,"%d       %d",users[i].score,users[i].gold);
+            mvprintw(i+5,41,"%d",users[i].score);
+            mvprintw(i+5,50,"%d",users[i].gold);
             mvprintw(i+5,66,"%d",users[i].number_of_games);
             mvprintw(i+5,83,"%.2f hour",experience);
             attroff(COLOR_PAIR(6) | A_BOLD);
@@ -3825,7 +3847,8 @@ void table(const char* filename,const char*name){
             mvprintw(i+5,15,"\U0001F948");
             attron(COLOR_PAIR(6) | A_BOLD);
             mvprintw(i+5,20,"Legend    %s",users[i].name);
-            mvprintw(i+5,41,"%d       %d",users[i].score,users[i].gold);
+            mvprintw(i+5,41,"%d",users[i].score);
+            mvprintw(i+5,50,"%d",users[i].gold);
             mvprintw(i+5,66,"%d",users[i].number_of_games);
             mvprintw(i+5,83,"%.2f hour",experience);
             attroff(COLOR_PAIR(6) | A_BOLD);
@@ -3834,14 +3857,16 @@ void table(const char* filename,const char*name){
             mvprintw(i+5,15,"\U0001F949");
             attron(COLOR_PAIR(6) | A_BOLD);
             mvprintw(i+5,20,"Silver    %s",users[i].name);
-            mvprintw(i+5,41,"%d        %d",users[i].score,users[i].gold);
+            mvprintw(i+5,41,"%d",users[i].score);
+            mvprintw(i+5,50,"%d",users[i].gold);
             mvprintw(i+5,66,"%d",users[i].number_of_games);
             mvprintw(i+5,83,"%.2f hour",experience);
             attroff(COLOR_PAIR(6) | A_BOLD);
         }
         else{
             mvprintw(i+5,20," %d        %s",i+1,users[i].name);
-            mvprintw(i+5,41,"%d        %d",users[i].score,users[i].gold);
+            mvprintw(i+5,41,"%d",users[i].score);
+            mvprintw(i+5,50,"%d",users[i].gold);
             mvprintw(i+5,66,"%d",users[i].number_of_games);
             mvprintw(i+5,83,"%.2f hour",experience);
         }
@@ -3884,6 +3909,7 @@ void update(const char*filename ,const char *name){
 void new_game(const char*filename ,const char *name){
     int qu=0;
     fl=0;
+    health=20;
     for(int i=0 ; i<4 ; i++){
         keypad(stdscr, TRUE);
         noecho();
@@ -3949,8 +3975,10 @@ void new_game(const char*filename ,const char *name){
         int y = rooms[0].y + 1;
         path(rooms);
         refresh();
-        current_weapon[0]=4;
-        current_weapon[1]=1;
+        if(fl==0){
+            current_weapon[0]=4;
+            current_weapon[1]=1;
+        }
         mvprintw(y, x, "\u2735");
         refresh();
         time(&startTime);
@@ -4702,7 +4730,6 @@ int menu(const char*name){
                 attroff(COLOR_PAIR(2));
                 getch();
                 endwin();
-                return 0;
                 exit(0);
             default:
                 attron(COLOR_PAIR(2));
