@@ -25,9 +25,10 @@ void set_hero_color();
 void play_music();
 void choose_music();
 int password[1][2];
+int lost_weapon[50][4], num_lost = 0;
 int key[4];
 int num_key=0;
-int fl,color=3,dif=1,num_game=0,dif2;
+int fl,color=3,dif=1,num_game=0,dif2,numroom=0;
 typedef struct {
     int x;
     int y;
@@ -382,7 +383,7 @@ void telesm(Room room , int num){
         telesm_position[num_tel][3]=0;
         num_tel++;
 }
-int enemy_position[5][4],num_enemy=0;
+int enemy_position[5][5],num_enemy=0;
 void enemy(Room room , int num){
     int x1 , y1;
     x1 = (rand() % (room.width-2));
@@ -442,19 +443,24 @@ void enemy(Room room , int num){
         switch (num)
         {
         case 1:
-            enemy_position[num-1][3]=5;
+            enemy_position[num_enemy][3]=5;
+            enemy_position[num_enemy][4]=0;
             break;
         case 2:
-            enemy_position[num-1][3]=10;
+            enemy_position[num_enemy][3]=10;
+            enemy_position[num_enemy][4]=1;
             break;
         case 3:
-            enemy_position[num-1][3]=15;
+            enemy_position[num_enemy][3]=15;
+            enemy_position[num_enemy][4]=2;
             break;
         case 4:
-            enemy_position[num-1][3]=20;
+            enemy_position[num_enemy][3]=20;
+            enemy_position[num_enemy][4]=3;
             break;    
         case 5:
-            enemy_position[num-1][3]=30;
+            enemy_position[num_enemy][3]=30;
+            enemy_position[num_enemy][4]=4;
             break;
         }
         num_enemy++;
@@ -613,30 +619,82 @@ void draw_room(Room room ,int num) {
         mvprintw(food_position[num][1],food_position[num][0],"\u03C6");
         refresh();
         attroff(COLOR_PAIR(7));
+        for(int i=0 ; i<num_lost ; i++){
+            attron(COLOR_PAIR(3));
+            if(lost_weapon[i][2]==1){
+                mvprintw(lost_weapon[i][1],lost_weapon[i][0],".");
+                refresh();
+            }
+            else{
+                switch (lost_weapon[i][3])
+                {
+                case 0:
+                    mvprintw(lost_weapon[i][1],lost_weapon[i][0],"\U0001F5E1");
+                    break;
+                case 1:
+                    mvprintw(lost_weapon[i][1],lost_weapon[i][0],"\u16E3");
+                    break;
+                case 2:
+                    mvprintw(lost_weapon[i][1],lost_weapon[i][0],"\u27B3");
+                    break;
+                }
+            }
+            attroff(COLOR_PAIR(3));
+        }
         if(num>0){
             switch (num)
             {
             case 1:
+                if(enemy_position[num-1][2]==2){
+                   attron(COLOR_PAIR(2));
+                    mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],".");
+                    attroff(COLOR_PAIR(2)); 
+                    break;
+                }
                 attron(COLOR_PAIR(2));
                 mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"D");
                 attroff(COLOR_PAIR(2));
                 break;
             case 2:
+                if(enemy_position[num-1][2]==2){
+                   attron(COLOR_PAIR(2));
+                    mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],".");
+                    attroff(COLOR_PAIR(2)); 
+                    break;
+                }
                 attron(COLOR_PAIR(2));
                 mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"F");
                 attroff(COLOR_PAIR(2));
                 break;
             case 3:
+                if(enemy_position[num-1][2]==2){
+                   attron(COLOR_PAIR(2));
+                    mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],".");
+                    attroff(COLOR_PAIR(2)); 
+                    break;
+                }
                 attron(COLOR_PAIR(2));
                 mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"G");
                 attroff(COLOR_PAIR(2));
                 break;
             case 4:
+                if(enemy_position[num-1][2]==2){
+                   attron(COLOR_PAIR(2));
+                    mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],".");
+                    attroff(COLOR_PAIR(2)); 
+                    break;
+                }
                 attron(COLOR_PAIR(2));
                 mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"S");
                 attroff(COLOR_PAIR(2));
                 break;
             case 5:
+                if(enemy_position[num-1][2]==2){
+                   attron(COLOR_PAIR(2));
+                    mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],".");
+                    attroff(COLOR_PAIR(2)); 
+                    break;
+                }
                 attron(COLOR_PAIR(2));
                 mvprintw(enemy_position[num-1][1],enemy_position[num-1][0],"U");
                 attroff(COLOR_PAIR(2));
@@ -1078,6 +1136,7 @@ void healthy(){
     --health;
 }
 void draw_page(){
+    move(35,9); clrtoeol();
     attron(COLOR_PAIR(6));
     mvprintw(35,10,"gold: %d",g);
     attroff(COLOR_PAIR(6));
@@ -1138,7 +1197,7 @@ int check_move(int x, int y, Room room[6]) {
             attroff(COLOR_PAIR(2));
             refresh();
             sleep(10);
-            move(10,59);
+            move(10,79);
             clrtoeol();
     }
     if(key[0]==x && key[1]==y){
@@ -1311,7 +1370,1253 @@ int check_move(int x, int y, Room room[6]) {
     }
     return 0;
 }
-int numroom=0;
+int check(int x , int y, Room room[6]){
+    for(int i=0 ; i<6 ; i++){
+        if (x > room[i].x && x < (room[i].x + room[i].width) && y > room[i].y && y < (room[i].y + room[i].height)) {
+        for (int i = 0; i < num_soton; i++) {
+            if (x == soton_position[i][0] && y == soton_position[i][1]) {
+                return 0;
+            }
+        }
+        return 1;
+        }
+    }
+    return 0;
+}
+void check_enemy(int x , int y){
+    for(int i=0 ; i<num_enemy ; i++){
+            if(enemy_position[i][2]!=2){
+                if((x+1)==enemy_position[i][0] && y==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
+                }
+                else if((x+1)==enemy_position[i][0] && (y+1)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] - current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
+                }
+                else if((x+1)==enemy_position[i][0] && (y-1)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
+                }
+                else if((x)==enemy_position[i][0] && (y+1)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
+                }
+                else if((x)==enemy_position[i][0] && (y-1)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
+                }
+                else if((x-1)==enemy_position[i][0] && (y+1)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
+                }
+                else if((x-1)==enemy_position[i][0] && (y-1)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
+                }
+                else if((x-1)==enemy_position[i][0] && (y)==enemy_position[i][1]){
+                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
+                }
+                if(enemy_position[i][3]<1){
+                    enemy_position[i][2]=2;
+                    attron(COLOR_PAIR(3));
+                    mvprintw(enemy_position[i][1],enemy_position[i][0],".");
+                    attroff(COLOR_PAIR(3));
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You kill deamon.");
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You kill Fire breathing Monster.");
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You kill one Giant.");
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You kill Snake.");
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You kill Undeed.");
+                        break;
+                    }
+                    refresh();
+                    sleep(1);
+                    move(10,79); clrtoeol();
+                    health +=5;
+                    if(health>20){
+                        health=20;
+                    }
+                }
+            }
+    }
+}
+void check_enemy2(int x , int y , int distance ,Room room[6]){
+    int t = 0 ,ch;
+    int c = getch();
+    refresh();
+    switch (c)
+    {
+    case 'l':
+        for(int i=1; i<=distance; i++){
+            if(check(x+i , y , room)==0){
+                distance=i-1;
+                break;
+            }
+            for(int j=0; j<num_enemy; j++){
+                if((x+i) == enemy_position[j][0] && (y) == enemy_position[j][1] && enemy_position[j][2] != 2){
+                    t++;
+                    enemy_position[j][3] -= current_weapon[0];
+                    if(enemy_position[j][3] < 0)
+                        enemy_position[j][3] = 0;
+                    switch (enemy_position[j][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d", enemy_position[j][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster, health: %d", enemy_position[j][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79); clrtoeol();
+                    if(enemy_position[j][3] < 1){
+                        enemy_position[j][2] = 2;
+                        attron(COLOR_PAIR(3));
+                        mvprintw(enemy_position[j][1], enemy_position[j][0], ".");
+                        attroff(COLOR_PAIR(3));
+                        switch (enemy_position[j][4])
+                        {
+                        case 0:
+                            mvprintw(10,80,"You kill deamon.");
+                            break;
+                        case 1:
+                            mvprintw(10,80,"You kill Fire breathing Monster.");
+                            break;
+                        case 2:
+                            mvprintw(10,80,"You kill one Giant.");
+                            break;
+                        case 3:
+                            mvprintw(10,80,"You kill Snake.");
+                            break;
+                        case 4:
+                            mvprintw(10,80,"You kill Undead.");
+                            break;
+                        }
+                        refresh();
+                        sleep(1);
+                        move(10,79); clrtoeol();
+                        health += 5;
+                        if(health > 20){
+                            health = 20;
+                        }
+                    }
+                    current_weapon[1]--;
+                    switch (current_weapon[0])
+                    {
+                    case 12:
+                        weapon_position[0][4]--;
+                        break;
+                    case 15:
+                        weapon_position[1][4]--;
+                        break;
+                    case 5:
+                        weapon_position[2][4]--;
+                        break;
+                    }
+                    break;
+                }
+                if(t>0)
+                    break;
+            }
+            if(t>0)
+                break;
+        }
+        if(t > 0){
+                t = 0;
+                break;
+            }
+            else {
+                mvprintw(10,80,"you miss.");
+                refresh();
+                sleep(1.5);
+                move(10,79); clrtoeol();
+                lost_weapon[num_lost][0] = (x + distance);
+                lost_weapon[num_lost][1] = (y);
+                attron(COLOR_PAIR(3));
+                switch (current_weapon[0])
+                {
+                case 12:
+                    lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
+                    break;
+                case 15:
+                    lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
+                    break;
+                case 5:
+                    lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
+                    break;
+                }
+                attroff(COLOR_PAIR(3));
+                refresh();
+                num_lost++;
+            }
+        break;
+    case 'k':
+        for(int i=1; i<=distance; i++){
+            if(check(x , y+i , room)==0){
+                distance=i-1;
+                break;
+            }
+            for(int j=0; j<num_enemy; j++){
+                if((x) == enemy_position[j][0] && (y+i) == enemy_position[j][1] && enemy_position[j][2] != 2){
+                    t++;
+                    enemy_position[j][3] -= current_weapon[0];
+                    if(enemy_position[j][3] < 0)
+                        enemy_position[j][3] = 0;
+                    switch (enemy_position[j][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d", enemy_position[j][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster, health: %d", enemy_position[j][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79); clrtoeol();
+                    if(enemy_position[j][3] < 1){
+                        enemy_position[j][2] = 2;
+                        attron(COLOR_PAIR(3));
+                        mvprintw(enemy_position[j][1], enemy_position[j][0], ".");
+                        attroff(COLOR_PAIR(3));
+                        switch (enemy_position[j][4])
+                        {
+                        case 0:
+                            mvprintw(10,80,"You kill deamon.");
+                            break;
+                        case 1:
+                            mvprintw(10,80,"You kill Fire breathing Monster.");
+                            break;
+                        case 2:
+                            mvprintw(10,80,"You kill one Giant.");
+                            break;
+                        case 3:
+                            mvprintw(10,80,"You kill Snake.");
+                            break;
+                        case 4:
+                            mvprintw(10,80,"You kill Undead.");
+                            break;
+                        }
+                        refresh();
+                        sleep(1);
+                        move(10,79); clrtoeol();
+                        health += 5;
+                        if(health > 20){
+                            health = 20;
+                        }
+                    }
+                    current_weapon[1]--;
+                    switch (current_weapon[0])
+                    {
+                    case 12:
+                        weapon_position[0][4]--;
+                        break;
+                    case 15:
+                        weapon_position[1][4]--;
+                        break;
+                    case 5:
+                        weapon_position[2][4]--;
+                        break;
+                    }
+                    break;
+                }
+                if(t>0)
+                    break;
+            }
+            if(t>0)
+                break;
+        }
+        if(t > 0){
+                t = 0;
+                break;
+            }
+            else {
+                mvprintw(10,80,"you miss.");
+                refresh();
+                sleep(1.5);
+                move(10,79); clrtoeol();
+                lost_weapon[num_lost][0] = (x);
+                lost_weapon[num_lost][1] = (y + distance);
+                attron(COLOR_PAIR(3));
+                switch (current_weapon[0])
+                {
+                case 12:
+                    lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
+                    break;
+                case 15:
+                    lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
+                    break;
+                case 5:
+                    lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
+                    break;
+                }
+                attroff(COLOR_PAIR(3));
+                refresh();
+                num_lost++;
+            }
+        break;
+        case 'j':
+        for(int i=1; i<=distance; i++){
+            if(check(x , y-i , room)==0){
+                distance=i-1;
+                break;
+            }
+            for(int j=0; j<num_enemy; j++){
+                if((x) == enemy_position[j][0] && (y-i) == enemy_position[j][1] && enemy_position[j][2] != 2){
+                    t++;
+                    enemy_position[j][3] -= current_weapon[0];
+                    if(enemy_position[j][3] < 0)
+                        enemy_position[j][3] = 0;
+                    switch (enemy_position[j][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d", enemy_position[j][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster, health: %d", enemy_position[j][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79); clrtoeol();
+                    if(enemy_position[j][3] < 1){
+                        enemy_position[j][2] = 2;
+                        attron(COLOR_PAIR(3));
+                        mvprintw(enemy_position[j][1], enemy_position[j][0], ".");
+                        attroff(COLOR_PAIR(3));
+                        switch (enemy_position[j][4])
+                        {
+                        case 0:
+                            mvprintw(10,80,"You kill deamon.");
+                            break;
+                        case 1:
+                            mvprintw(10,80,"You kill Fire breathing Monster.");
+                            break;
+                        case 2:
+                            mvprintw(10,80,"You kill one Giant.");
+                            break;
+                        case 3:
+                            mvprintw(10,80,"You kill Snake.");
+                            break;
+                        case 4:
+                            mvprintw(10,80,"You kill Undead.");
+                            break;
+                        }
+                        refresh();
+                        sleep(1);
+                        move(10,79); clrtoeol();
+                        health += 5;
+                        if(health > 20){
+                            health = 20;
+                        }
+                    }
+                    current_weapon[1]--;
+                    switch (current_weapon[0])
+                    {
+                    case 12:
+                        weapon_position[0][4]--;
+                        break;
+                    case 15:
+                        weapon_position[1][4]--;
+                        break;
+                    case 5:
+                        weapon_position[2][4]--;
+                        break;
+                    }
+                    break;
+                }
+                if(t>0)
+                    break;
+            }
+            if(t>0)
+                break;
+        }
+        if(t > 0){
+                t = 0;
+                break;
+            }
+            else {
+                mvprintw(10,80,"you miss.");
+                refresh();
+                sleep(1.5);
+                move(10,79); clrtoeol();
+                lost_weapon[num_lost][0] = (x);
+                lost_weapon[num_lost][1] = (y -distance);
+                attron(COLOR_PAIR(3));
+                switch (current_weapon[0])
+                {
+                case 12:
+                    lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
+                    break;
+                case 15:
+                    lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
+                    break;
+                case 5:
+                    lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
+                    break;
+                }
+                attroff(COLOR_PAIR(3));
+                refresh();
+                num_lost++;
+            }
+        break;
+    case 'h':
+        for(int i=1; i<=distance; i++){
+            if(check(x-i , y , room)==0){
+                distance=i-1;
+                break;
+            }
+            for(int j=0; j<num_enemy; j++){
+                if((x-i) == enemy_position[j][0] && (y) == enemy_position[j][1] && enemy_position[j][2] != 2){
+                    t++;
+                    enemy_position[j][3] -= current_weapon[0];
+                    if(enemy_position[j][3] < 0)
+                        enemy_position[j][3] = 0;
+                    switch (enemy_position[j][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d", enemy_position[j][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster, health: %d", enemy_position[j][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79); clrtoeol();
+                    if(enemy_position[j][3] < 1){
+                        enemy_position[j][2] = 2;
+                        attron(COLOR_PAIR(3));
+                        mvprintw(enemy_position[j][1], enemy_position[j][0], ".");
+                        attroff(COLOR_PAIR(3));
+                        switch (enemy_position[j][4])
+                        {
+                        case 0:
+                            mvprintw(10,80,"You kill deamon.");
+                            break;
+                        case 1:
+                            mvprintw(10,80,"You kill Fire breathing Monster.");
+                            break;
+                        case 2:
+                            mvprintw(10,80,"You kill one Giant.");
+                            break;
+                        case 3:
+                            mvprintw(10,80,"You kill Snake.");
+                            break;
+                        case 4:
+                            mvprintw(10,80,"You kill Undead.");
+                            break;
+                        }
+                        refresh();
+                        sleep(1);
+                        move(10,79); clrtoeol();
+                        health += 5;
+                        if(health > 20){
+                            health = 20;
+                        }
+                    }
+                    current_weapon[1]--;
+                    switch (current_weapon[0])
+                    {
+                    case 12:
+                        weapon_position[0][4]--;
+                        break;
+                    case 15:
+                        weapon_position[1][4]--;
+                        break;
+                    case 5:
+                        weapon_position[2][4]--;
+                        break;
+                    }
+                    break;
+                }
+                if(t>0)
+                    break;
+            }
+            if(t>0)
+                break;
+        }
+        if(t > 0){
+                t = 0;
+                break;
+            }
+            else {
+                mvprintw(10,80,"you miss.");
+                refresh();
+                sleep(1.5);
+                move(10,79); clrtoeol();
+                lost_weapon[num_lost][0] = (x - distance);
+                lost_weapon[num_lost][1] = (y);
+                attron(COLOR_PAIR(3));
+                switch (current_weapon[0])
+                {
+                case 12:
+                    lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
+                    break;
+                case 15:
+                    lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
+                    break;
+                case 5:
+                    lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
+                    break;
+                }
+                attroff(COLOR_PAIR(3));
+                refresh();
+                num_lost++;
+            }
+        break;
+    case 'y':
+        for(int i=1; i<=distance; i++){
+            if(check(x-i , y-i , room)==0){
+                distance=i-1;
+                break;
+            }
+            for(int j=0; j<num_enemy; j++){
+                if((x-i) == enemy_position[j][0] && (y-i) == enemy_position[j][1] && enemy_position[j][2] != 2){
+                    t++;
+                    enemy_position[j][3] -= current_weapon[0];
+                    if(enemy_position[j][3] < 0)
+                        enemy_position[j][3] = 0;
+                    switch (enemy_position[j][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d", enemy_position[j][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster, health: %d", enemy_position[j][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79); clrtoeol();
+                    if(enemy_position[j][3] < 1){
+                        enemy_position[j][2] = 2;
+                        attron(COLOR_PAIR(3));
+                        mvprintw(enemy_position[j][1], enemy_position[j][0], ".");
+                        attroff(COLOR_PAIR(3));
+                        switch (enemy_position[j][4])
+                        {
+                        case 0:
+                            mvprintw(10,80,"You kill deamon.");
+                            break;
+                        case 1:
+                            mvprintw(10,80,"You kill Fire breathing Monster.");
+                            break;
+                        case 2:
+                            mvprintw(10,80,"You kill one Giant.");
+                            break;
+                        case 3:
+                            mvprintw(10,80,"You kill Snake.");
+                            break;
+                        case 4:
+                            mvprintw(10,80,"You kill Undead.");
+                            break;
+                        }
+                        refresh();
+                        sleep(1);
+                        move(10,79); clrtoeol();
+                        health += 5;
+                        if(health > 20){
+                            health = 20;
+                        }
+                    }
+                    current_weapon[1]--;
+                    switch (current_weapon[0])
+                    {
+                    case 12:
+                        weapon_position[0][4]--;
+                        break;
+                    case 15:
+                        weapon_position[1][4]--;
+                        break;
+                    case 5:
+                        weapon_position[2][4]--;
+                        break;
+                    }
+                    break;
+                }
+                if(t>0)
+                    break;
+            }
+            if(t>0)
+                break;
+        }
+        if(t > 0){
+                t = 0;
+                break;
+            }
+            else {
+                mvprintw(10,80,"you miss.");
+                refresh();
+                sleep(1.5);
+                move(10,79); clrtoeol();
+                lost_weapon[num_lost][0] = (x - distance);
+                lost_weapon[num_lost][1] = (y - distance);
+                attron(COLOR_PAIR(3));
+                switch (current_weapon[0])
+                {
+                case 12:
+                    lost_weapon[num_lost][3] = 0;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
+                    break;
+                case 15:
+                    lost_weapon[num_lost][3] = 1;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
+                    break;
+                case 5:
+                    lost_weapon[num_lost][3] = 2;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
+                    break;
+                }
+                attroff(COLOR_PAIR(3));
+                refresh();
+                num_lost++;
+            }
+        break;
+    case 'u':
+        for(int i=1; i<=distance; i++){
+            if(check(x+i , y-i , room)==0){
+                distance=i-1;
+                break;
+            }
+            for(int j=0; j<num_enemy; j++){
+                if((x+i) == enemy_position[j][0] && (y-i) == enemy_position[j][1] && enemy_position[j][2] != 2){
+                    t++;
+                    enemy_position[j][3] -= current_weapon[0];
+                    if(enemy_position[j][3] < 0)
+                        enemy_position[j][3] = 0;
+                    switch (current_weapon[0])
+                {
+                case 12:
+                    lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
+                    break;
+                case 15:
+                    lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
+                    break;
+                case 5:
+                    lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
+                    break;
+                }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79); clrtoeol();
+                    if(enemy_position[j][3] < 1){
+                        enemy_position[j][2] = 2;
+                        attron(COLOR_PAIR(3));
+                        mvprintw(enemy_position[j][1], enemy_position[j][0], ".");
+                        attroff(COLOR_PAIR(3));
+                        switch (enemy_position[j][4])
+                        {
+                        case 0:
+                            mvprintw(10,80,"You kill deamon.");
+                            break;
+                        case 1:
+                            mvprintw(10,80,"You kill Fire breathing Monster.");
+                            break;
+                        case 2:
+                            mvprintw(10,80,"You kill one Giant.");
+                            break;
+                        case 3:
+                            mvprintw(10,80,"You kill Snake.");
+                            break;
+                        case 4:
+                            mvprintw(10,80,"You kill Undead.");
+                            break;
+                        }
+                        refresh();
+                        sleep(1);
+                        move(10,79); clrtoeol();
+                        health += 5;
+                        if(health > 20){
+                            health = 20;
+                        }
+                    }
+                    current_weapon[1]--;
+                    switch (current_weapon[0])
+                    {
+                    case 12:
+                        weapon_position[0][4]--;
+                        break;
+                    case 15:
+                        weapon_position[1][4]--;
+                        break;
+                    case 5:
+                        weapon_position[2][4]--;
+                        break;
+                    }
+                    break;
+                }
+                if(t>0)
+                    break;
+            }
+            if(t>0)
+                break;
+        }
+        if(t > 0){
+                t = 0;
+                break;
+            }
+            else {
+                mvprintw(10,80,"you miss.");
+                refresh();
+                sleep(1.5);
+                move(10,79); clrtoeol();
+                lost_weapon[num_lost][0] = (x + distance);
+                lost_weapon[num_lost][1] = (y - distance);
+                attron(COLOR_PAIR(3));
+                switch (current_weapon[0])
+                {
+                case 12:
+                    lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
+                    break;
+                case 15:
+                    lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
+                    break;
+                case 5:
+                    lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
+                    break;
+                }
+                attroff(COLOR_PAIR(3));
+                refresh();
+                num_lost++;
+            }
+        break;
+    case 'b':
+        for(int i=1; i<=distance; i++){
+            if(check(x-i , y+i , room)==0){
+                distance=i-1;
+                break;
+            }
+            for(int j=0; j<num_enemy; j++){
+                if((x-i) == enemy_position[j][0] && (y+i) == enemy_position[j][1] && enemy_position[j][2] != 2){
+                    t++;
+                    enemy_position[j][3] -= current_weapon[0];
+                    if(enemy_position[j][3] < 0)
+                        enemy_position[j][3] = 0;
+                    switch (enemy_position[j][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d", enemy_position[j][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster, health: %d", enemy_position[j][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79); clrtoeol();
+                    if(enemy_position[j][3] < 1){
+                        enemy_position[j][2] = 2;
+                        attron(COLOR_PAIR(3));
+                        mvprintw(enemy_position[j][1], enemy_position[j][0], ".");
+                        attroff(COLOR_PAIR(3));
+                        switch (enemy_position[j][4])
+                        {
+                        case 0:
+                            mvprintw(10,80,"You kill deamon.");
+                            break;
+                        case 1:
+                            mvprintw(10,80,"You kill Fire breathing Monster.");
+                            break;
+                        case 2:
+                            mvprintw(10,80,"You kill one Giant.");
+                            break;
+                        case 3:
+                            mvprintw(10,80,"You kill Snake.");
+                            break;
+                        case 4:
+                            mvprintw(10,80,"You kill Undead.");
+                            break;
+                        }
+                        refresh();
+                        sleep(1);
+                        move(10,79); clrtoeol();
+                        health += 5;
+                        if(health > 20){
+                            health = 20;
+                        }
+                    }
+                    current_weapon[1]--;
+                    switch (current_weapon[0])
+                    {
+                    case 12:
+                        weapon_position[0][4]--;
+                        break;
+                    case 15:
+                        weapon_position[1][4]--;
+                        break;
+                    case 5:
+                        weapon_position[2][4]--;
+                        break;
+                    }
+                    break;
+                }
+                if(t>0)
+                    break;
+            }
+            if(t>0)
+                break;
+        }
+        if(t > 0){
+                t = 0;
+                break;
+            }
+            else {
+                mvprintw(10,80,"you miss.");
+                refresh();
+                sleep(1.5);
+                move(10,79); clrtoeol();
+                lost_weapon[num_lost][0] = (x - distance);
+                lost_weapon[num_lost][1] = (y + distance);
+                attron(COLOR_PAIR(3));
+                switch (current_weapon[0])
+                {
+                case 12:
+                    lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
+                    break;
+                case 15:
+                    lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
+                    break;
+                case 5:
+                    lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
+                    break;
+                }
+                attroff(COLOR_PAIR(3));
+                refresh();
+                num_lost++;
+            }
+        break;
+    case 'n':
+        for(int i=1; i<=distance; i++){
+            if(check(x+i , y+i , room)==0){
+                distance=i-1;
+                break;
+            }
+            for(int j=0; j<num_enemy; j++){
+                if((x+i) == enemy_position[j][0] && (y+i) == enemy_position[j][1] && enemy_position[j][2] != 2){
+                    t++;
+                    enemy_position[j][3] -= current_weapon[0];
+                    if(enemy_position[j][3] < 0)
+                        enemy_position[j][3] = 0;
+                    switch (enemy_position[j][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d", enemy_position[j][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster, health: %d", enemy_position[j][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79); clrtoeol();
+                    if(enemy_position[j][3] < 1){
+                        enemy_position[j][2] = 2;
+                        attron(COLOR_PAIR(3));
+                        mvprintw(enemy_position[j][1], enemy_position[j][0], ".");
+                        attroff(COLOR_PAIR(3));
+                        switch (enemy_position[j][4])
+                        {
+                        case 0:
+                            mvprintw(10,80,"You kill deamon.");
+                            break;
+                        case 1:
+                            mvprintw(10,80,"You kill Fire breathing Monster.");
+                            break;
+                        case 2:
+                            mvprintw(10,80,"You kill one Giant.");
+                            break;
+                        case 3:
+                            mvprintw(10,80,"You kill Snake.");
+                            break;
+                        case 4:
+                            mvprintw(10,80,"You kill Undead.");
+                            break;
+                        }
+                        refresh();
+                        sleep(1);
+                        move(10,79); clrtoeol();
+                        health += 5;
+                        if(health > 20){
+                            health = 20;
+                        }
+                    }
+                    current_weapon[1]--;
+                    switch (current_weapon[0])
+                    {
+                    case 12:
+                        weapon_position[0][4]--;
+                        break;
+                    case 15:
+                        weapon_position[1][4]--;
+                        break;
+                    case 5:
+                        weapon_position[2][4]--;
+                        break;
+                    }
+                    break;
+                }
+                if(t>0)
+                    break;
+            }
+            if(t>0)
+                break;
+        }
+        if(t > 0){
+                t = 0;
+                break;
+            }
+            else {
+                mvprintw(10,80,"you miss.");
+                refresh();
+                sleep(1.5);
+                move(10,79); clrtoeol();
+                lost_weapon[num_lost][0] = (x + distance);
+                lost_weapon[num_lost][1] = (y + distance);
+                attron(COLOR_PAIR(3));
+                switch (current_weapon[0])
+                {
+                case 12:
+                    lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
+                    break;
+                case 15:
+                    lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
+                    break;
+                case 5:
+                    lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
+                    break;
+                }
+                attroff(COLOR_PAIR(3));
+                refresh();
+                num_lost++;
+            }
+        break;
+    }
+}
 int move_character(Room room[6], int *x, int *y) {
     int newx = *x;
     int newy = *y;
@@ -1407,7 +2712,7 @@ int move_character(Room room[6], int *x, int *y) {
                 }
                 }
             }
-            for(int i=0 ; i<=(numroom+1) ; i++){
+            for(int i=0 ; i<(numroom+1) ; i++){
                 if(dar_positions[i][2]==2){
                     attron(COLOR_PAIR(4));
                     mvprintw(dar_positions[i][1],dar_positions[i][0],"?");
@@ -1706,9 +3011,9 @@ int move_character(Room room[6], int *x, int *y) {
             clear();
             mvprintw(5,5,"1.Mace  : power=4   short_rang     number: 1");
             mvprintw(7,5,"2.Sword : power=10  short_rang     number: %d",weapon_position[3][4]);
-            mvprintw(5,60,"3.Dagger     : power=12  long_rang   number: %d",weapon_position[0][4]);
-            mvprintw(7,60,"4.Magic Wand : power=15  long_rang   number: %d",weapon_position[1][4]);
-            mvprintw(9,60,"5.Arrow      : power=5   long_rang   number: %d",weapon_position[2][4]);
+            mvprintw(5,60,"3.Dagger     : power=12  long_rang(5)   number: %d",weapon_position[0][4]);
+            mvprintw(7,60,"4.Magic Wand : power=15  long_rang(10)   number: %d",weapon_position[1][4]);
+            mvprintw(9,60,"5.Arrow      : power=5   long_rang(5)   number: %d",weapon_position[2][4]);
             mvprintw(15,30,"press 10 to back the game.");
             mvprintw(16,30,"     Your choose:");
             refresh();
@@ -1816,6 +3121,38 @@ int move_character(Room room[6], int *x, int *y) {
                 refresh();
             }
             break;
+        case ' ':
+            switch (current_weapon[0])
+            {
+            case 4:
+                check_enemy(*x , *y);
+                break;
+            case 10:
+                check_enemy(*x , *y);
+                break;
+            case 12:
+                if(current_weapon[1]==0){
+                    mvprintw(10,80,"You don't have enough weapon!");
+                    break;
+                }
+                check_enemy2(*x , *y , 5 , room);
+            break;
+            case 15:
+                if(current_weapon[1]==0){
+                    mvprintw(10,80,"You don't have enough weapon!");
+                    break;
+                }
+                check_enemy2(*x , *y , 10 , room);
+            break;
+            case 5:
+                if(current_weapon[1]==0){
+                    mvprintw(10,80,"You don't have enough weapon!");
+                    break;
+                }
+                check_enemy2(*x , *y , 5 , room);
+            break;
+            }
+            break;
         case 'q':
             clear();
             attron(COLOR_PAIR(7));
@@ -1876,6 +3213,10 @@ int move_character(Room room[6], int *x, int *y) {
             for(int i=0 ; i<num_weapon ; i++){
                 fprintf(file,"%d %d %d %d %d\n",weapon_position[i][0],weapon_position[i][1],weapon_position[i][2],weapon_position[i][3],weapon_position[i][4]);
             }
+            fprintf(file,"%d\n",num_lost);
+            for(int i=0 ; i<num_lost ; i++){
+                fprintf(file,"%d %d %d %d\n",lost_weapon[i][0],lost_weapon[i][1],lost_weapon[i][2],lost_weapon[i][3]);
+            }
             fprintf(file,"%d %d %d %d\n",key[0],key[1],key[2],key[3]);
             fprintf(file,"%d %d %d %d %d %d %d %d %d\n",num_key ,g,nf,health,tel,wea,*x,*y,numroom);
             fprintf(file,"%d %d %d\n",health_tel,speed_tel,strangh_tel);
@@ -1911,7 +3252,7 @@ int move_character(Room room[6], int *x, int *y) {
         }
         for(int i=0 ; i<num_dar ; i++){
             if(dar_positions[i][0]==*x && dar_positions[i][1]==*y){
-                if(i%2==1 && numroom<4){
+                if(i%2==1 && numroom<=4){
                     numroom ++;
                 }
                 if(dar_positions[i][2]==4){
@@ -1934,10 +3275,42 @@ int move_character(Room room[6], int *x, int *y) {
                 }
                 draw_room(room[(i+1)/2],(i+1)/2);
                 room[(i+1)/2].hide=1;
+                attron(COLOR_PAIR(3));
+                mvprintw(*y,*x,".");
+                attroff(COLOR_PAIR(3));
                 *x = newx;
                 *y = newy;
             }
-        }for(int i=0 ; i<num_food ; i++){
+        }
+        for(int i=0 ; i<num_lost ; i++){
+            if(lost_weapon[i][0]==*x && lost_weapon[i][1]==*y && lost_weapon[i][2]!=1){
+                lost_weapon[i][2]=1;
+                switch (lost_weapon[i][4])
+                {
+                case 0:
+                    weapon_position[0][4]++;
+                    break;
+                case 1:
+                    weapon_position[1][4]++;
+                    break;
+                case 2:
+                    weapon_position[2][4]++;
+                    break;
+                }
+                if(lost_weapon[i][3]==0 && current_weapon[0]==12){
+                    current_weapon[1]++;
+                }
+                else if(lost_weapon[i][3]==1 && current_weapon[0]==15){
+                    current_weapon[1]++;
+                }
+                else if(lost_weapon[i][3]==2 && current_weapon[0]==5){
+                    current_weapon[1]++;
+                }
+                newx= *x;
+                newy= *y;
+            }
+        }
+        for(int i=0 ; i<num_food ; i++){
             if(food_position[i][0]==*x && food_position[i][1]==*y){
                 if(nf>=5){
                     attron(COLOR_PAIR(2));
@@ -2632,8 +4005,11 @@ void new_game(const char*filename ,const char *name){
         for(int j=0 ; j<num_enemy ; j++){
             enemy_position[j][0]=enemy_position[j][1]=enemy_position[j][2]=enemy_position[j][3]=0;
         }
+        for(int j=0 ; j<num_lost ; j++){
+            lost_weapon[j][0]=lost_weapon[j][1]=lost_weapon[j][2]=lost_weapon[j][3]=0;
+        }
         key[0]=key[1]=key[2]=key[3]=0;
-        num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_gol=num_tal=0;
+        num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_gol=num_tal=num_lost=0;
         if(health==0){
             attron(COLOR_PAIR(2));
             mvprintw(20,140,"You are Lost.");
@@ -2676,8 +4052,11 @@ void new_game(const char*filename ,const char *name){
         for(int i=0 ; i++ ; i<num_weapon){
             weapon_position[i][0]=weapon_position[i][1]=weapon_position[i][2]=weapon_position[i][3]=weapon_position[i][4]=0;
         }
+        for(int j=0 ; j<num_lost ; j++){
+            lost_weapon[j][0]=lost_weapon[j][1]=lost_weapon[j][2]=lost_weapon[j][3]=0;
+        }
         key[0]=key[1]=key[2]=key[3]=0;
-        num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_weapon=num_gol=num_tal=0;
+        num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_weapon=num_gol=num_tal=num_lost=0;
         current_weapon[0]=4;
         current_weapon[1]=1;
         attron(COLOR_PAIR(6));
@@ -2753,6 +4132,10 @@ void load_game(const char*filename , const char*game_name , const char* name){
     fscanf(file,"%d",&num_weapon);
     for(int i=0 ; i<num_weapon ; i++){
         fscanf(file,"%d %d %d %d %d",&weapon_position[i][0],&weapon_position[i][1],&weapon_position[i][2],&weapon_position[i][3],&weapon_position[i][4]);
+    }
+    fscanf(file,"%d",&num_lost);
+    for(int i=0 ; i<num_lost ; i++){
+        fscanf(file,"%d %d %d %d %d",&lost_weapon[i][0],&lost_weapon[i][1],&lost_weapon[i][2],&lost_weapon[i][3],&lost_weapon[i][4]);
     }
     fscanf(file,"%d %d %d %d",&key[0],&key[1],&key[2],&key[3]);
     fscanf(file," %d %d %d %d %d %d %d %d %d",&num_key ,&g,&nf,&health,&tel,&wea,&x,&y,&numroom);
@@ -2849,8 +4232,11 @@ void load_game(const char*filename , const char*game_name , const char* name){
     for(int j=0 ; j<num_enemy ; j++){
         enemy_position[j][0]=enemy_position[j][1]=enemy_position[j][2]=enemy_position[j][3]=0;
     }
+    for(int i=0 ; i<num_lost ; i++){
+        lost_weapon[i][0]=lost_weapon[i][1]=lost_weapon[i][2]=lost_weapon[i][3]=0;
+    }
     key[0]=key[1]=key[2]=key[3]=0;
-    num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_tal=num_gol=0;
+    num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_tal=num_gol=num_lost=0;
     if(qu==0){
         for(fl ; fl<4 ; fl++){
             if(qu!=0){
@@ -2980,8 +4366,11 @@ void load_game(const char*filename , const char*game_name , const char* name){
             for(int j=0 ; j<num_enemy ; j++){
                 enemy_position[j][0]=enemy_position[j][1]=enemy_position[j][2]=enemy_position[j][3]=0;
             }
+            for(int i=0 ; i<num_lost ; i++){
+                lost_weapon[i][0]=lost_weapon[i][1]=lost_weapon[i][2]=lost_weapon[i][3]=0;
+            }
             key[0]=key[1]=key[2]=key[3]=0;
-            num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_tal=num_gol=0;
+            num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_tal=num_gol=num_lost=0;
             if(health==0){
                 attron(COLOR_PAIR(2));
                 mvprintw(20,140,"You are Lost.");
@@ -3025,8 +4414,11 @@ void load_game(const char*filename , const char*game_name , const char* name){
             for(int i=0 ; i<num_weapon ; i++){
                 weapon_position[i][0]=weapon_position[i][1]=weapon_position[i][2]=weapon_position[i][3]=weapon_position[i][4]=0;
             }
+            for(int i=0 ; i<num_lost ; i++){
+                lost_weapon[i][0]=lost_weapon[i][1]=lost_weapon[i][2]=lost_weapon[i][3]=0;
+            }
             key[0]=key[1]=key[2]=key[3]=0;
-            num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_weapon=num_tal=num_gol=0;
+            num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_weapon=num_tal=num_gol=num_lost=0;
             current_weapon[0]=4;
             current_weapon[1]=1;
             attron(COLOR_PAIR(6));
