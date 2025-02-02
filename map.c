@@ -364,7 +364,7 @@ void telesm(Room room , int num){
         telesm_position[num_tel][3]=0;
         num_tel++;
 }
-int enemy_position[5][4],num_enemy=0;
+int enemy_position[5][5],num_enemy=0;
 void enemy(Room room , int num){
     int x1 , y1;
     x1 = (rand() % (room.width-2));
@@ -424,19 +424,24 @@ void enemy(Room room , int num){
         switch (num)
         {
         case 1:
-            enemy_position[num-1][3]=5;
+            enemy_position[num_enemy][3]=5;
+            enemy_position[num_enemy][4]=0;
             break;
         case 2:
-            enemy_position[num-1][3]=10;
+            enemy_position[num_enemy][3]=10;
+            enemy_position[num_enemy][4]=1;
             break;
         case 3:
-            enemy_position[num-1][3]=15;
+            enemy_position[num_enemy][3]=15;
+            enemy_position[num_enemy][4]=2;
             break;
         case 4:
-            enemy_position[num-1][3]=20;
+            enemy_position[num_enemy][3]=20;
+            enemy_position[num_enemy][4]=3;
             break;    
         case 5:
-            enemy_position[num-1][3]=30;
+            enemy_position[num_enemy][3]=30;
+            enemy_position[num_enemy][4]=4;
             break;
         }
         num_enemy++;
@@ -1151,7 +1156,7 @@ int check_move(int x, int y, Room room[6]) {
             attroff(COLOR_PAIR(2));
             refresh();
             sleep(10);
-            move(10,59);
+            move(10,79);
             clrtoeol();
     }
     if(key[0]==x && key[1]==y){
@@ -1329,48 +1334,232 @@ void check_enemy(int x , int y){
             if(enemy_position[i][2]!=2){
                 if((x+1)==enemy_position[i][0] && y==enemy_position[i][1]){
                     enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
                 }
                 else if((x+1)==enemy_position[i][0] && (y+1)==enemy_position[i][1]){
-                    enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    enemy_position[i][3] = enemy_position[i][3] - current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
                 }
                 else if((x+1)==enemy_position[i][0] && (y-1)==enemy_position[i][1]){
                     enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
                 }
                 else if((x)==enemy_position[i][0] && (y+1)==enemy_position[i][1]){
                     enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
                 }
                 else if((x)==enemy_position[i][0] && (y-1)==enemy_position[i][1]){
                     enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
                 }
                 else if((x-1)==enemy_position[i][0] && (y+1)==enemy_position[i][1]){
                     enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
                 }
                 else if((x-1)==enemy_position[i][0] && (y-1)==enemy_position[i][1]){
                     enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
                 }
                 else if((x-1)==enemy_position[i][0] && (y)==enemy_position[i][1]){
                     enemy_position[i][3] = enemy_position[i][3] -current_weapon[0];
+                    if(enemy_position[i][3]<0)
+                        enemy_position[i][3]=0;
+                    switch (enemy_position[i][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d",enemy_position[i][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster,health: %d",enemy_position[i][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant,health: %d",enemy_position[i][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
+                        break;
+                    }
+                    refresh();
+                    sleep(1.5);
+                    move(10,79);clrtoeol();
                 }
                 if(enemy_position[i][3]<1){
                     enemy_position[i][2]=2;
                     attron(COLOR_PAIR(3));
                     mvprintw(enemy_position[i][1],enemy_position[i][0],".");
                     attroff(COLOR_PAIR(3));
-                    switch (numroom)
+                    switch (enemy_position[i][4])
                     {
-                    case 1:
+                    case 0:
                         mvprintw(10,80,"You kill deamon.");
                         break;
-                    case 2:
+                    case 1:
                         mvprintw(10,80,"You kill Fire breathing Monster.");
                         break;
-                    case 3:
+                    case 2:
                         mvprintw(10,80,"You kill one Giant.");
                         break;
-                    case 4:
+                    case 3:
                         mvprintw(10,80,"You kill Snake.");
                         break;
-                    case 5:
+                    case 4:
                         mvprintw(10,80,"You kill Undeed.");
                         break;
                     }
@@ -1893,9 +2082,7 @@ int move_character(Room room[6], int *x, int *y) {
             switch (current_weapon[0])
             {
             case 4:
-            for(int i=0 ; i<num_enemy ; i++){
                 check_enemy(*x , *y);
-            }
                 break;
             case 10:
                 check_enemy(*x , *y);
