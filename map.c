@@ -7,6 +7,7 @@
 #include <locale.h>
 #include <wchar.h>
 int password[1][2];
+int lost_weapon[50][4], num_lost = 0;
 int key[4];
 int num_key=0;
 int fl,color=3,dif=1,num_game=0,dif2,numroom=0;
@@ -600,6 +601,28 @@ void draw_room(Room room ,int num) {
         mvprintw(food_position[num][1],food_position[num][0],"\u03C6");
         refresh();
         attroff(COLOR_PAIR(7));
+        for(int i=0 ; i<num_lost ; i++){
+            attron(COLOR_PAIR(3));
+            if(lost_weapon[i][2]==1){
+                mvprintw(lost_weapon[i][1],lost_weapon[i][0],".");
+                refresh();
+            }
+            else{
+                switch (lost_weapon[i][3])
+                {
+                case 0:
+                    mvprintw(lost_weapon[i][1],lost_weapon[i][0],"\U0001F5E1");
+                    break;
+                case 1:
+                    mvprintw(lost_weapon[i][1],lost_weapon[i][0],"\u16E3");
+                    break;
+                case 2:
+                    mvprintw(lost_weapon[i][1],lost_weapon[i][0],"\u27B3");
+                    break;
+                }
+            }
+            attroff(COLOR_PAIR(3));
+        }
         if(num>0){
             switch (num)
             {
@@ -1587,8 +1610,6 @@ void check_enemy(int x , int y){
             }
     }
 }
-int lost_weapon[50][4], num_lost = 0;
-
 void check_enemy2(int x , int y , int distance ,Room room[6]){
     int t = 0 ,ch;
     int c = getch();
@@ -1691,19 +1712,29 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                 move(10,79); clrtoeol();
                 lost_weapon[num_lost][0] = (x + distance);
                 lost_weapon[num_lost][1] = (y);
+                attron(COLOR_PAIR(3));
                 switch (current_weapon[0])
                 {
                 case 12:
                     lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
                     break;
                 case 15:
                     lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
                     break;
                 case 5:
                     lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
                     break;
                 }
-                mvprintw(lost_weapon[num_lost][1], lost_weapon[num_lost][0], "I");
+                attroff(COLOR_PAIR(3));
                 refresh();
                 num_lost++;
             }
@@ -1804,19 +1835,29 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                 move(10,79); clrtoeol();
                 lost_weapon[num_lost][0] = (x);
                 lost_weapon[num_lost][1] = (y + distance);
+                attron(COLOR_PAIR(3));
                 switch (current_weapon[0])
                 {
                 case 12:
                     lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
                     break;
                 case 15:
                     lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
                     break;
                 case 5:
                     lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
                     break;
                 }
-                mvprintw(lost_weapon[num_lost][1], lost_weapon[num_lost][0], "I");
+                attroff(COLOR_PAIR(3));
                 refresh();
                 num_lost++;
             }
@@ -1917,19 +1958,29 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                 move(10,79); clrtoeol();
                 lost_weapon[num_lost][0] = (x);
                 lost_weapon[num_lost][1] = (y -distance);
+                attron(COLOR_PAIR(3));
                 switch (current_weapon[0])
                 {
                 case 12:
                     lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
                     break;
                 case 15:
                     lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
                     break;
                 case 5:
                     lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
                     break;
                 }
-                mvprintw(lost_weapon[num_lost][1], lost_weapon[num_lost][0], "I");
+                attroff(COLOR_PAIR(3));
                 refresh();
                 num_lost++;
             }
@@ -2030,19 +2081,29 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                 move(10,79); clrtoeol();
                 lost_weapon[num_lost][0] = (x - distance);
                 lost_weapon[num_lost][1] = (y);
+                attron(COLOR_PAIR(3));
                 switch (current_weapon[0])
                 {
                 case 12:
                     lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
                     break;
                 case 15:
                     lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
                     break;
                 case 5:
                     lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
                     break;
                 }
-                mvprintw(lost_weapon[num_lost][1], lost_weapon[num_lost][0], "I");
+                attroff(COLOR_PAIR(3));
                 refresh();
                 num_lost++;
             }
@@ -2143,19 +2204,23 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                 move(10,79); clrtoeol();
                 lost_weapon[num_lost][0] = (x - distance);
                 lost_weapon[num_lost][1] = (y - distance);
+                attron(COLOR_PAIR(3));
                 switch (current_weapon[0])
                 {
                 case 12:
                     lost_weapon[num_lost][3] = 0;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
                     break;
                 case 15:
                     lost_weapon[num_lost][3] = 1;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
                     break;
                 case 5:
                     lost_weapon[num_lost][3] = 2;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
                     break;
                 }
-                mvprintw(lost_weapon[num_lost][1], lost_weapon[num_lost][0], "I");
+                attroff(COLOR_PAIR(3));
                 refresh();
                 num_lost++;
             }
@@ -2172,24 +2237,27 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                     enemy_position[j][3] -= current_weapon[0];
                     if(enemy_position[j][3] < 0)
                         enemy_position[j][3] = 0;
-                    switch (enemy_position[j][4])
-                    {
-                    case 0:
-                        mvprintw(10,80,"You beat deamon, health: %d", enemy_position[j][3]);
-                        break;
-                    case 1:
-                        mvprintw(10,80,"You beat Fire breathing Monster, health: %d", enemy_position[j][3]);
-                        break;
-                    case 2:
-                        mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
-                        break;
-                    case 3:
-                        mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
-                        break;
-                    case 4:
-                        mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
-                        break;
-                    }
+                    switch (current_weapon[0])
+                {
+                case 12:
+                    lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
+                    break;
+                case 15:
+                    lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
+                    break;
+                case 5:
+                    lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
+                    break;
+                }
                     refresh();
                     sleep(1.5);
                     move(10,79); clrtoeol();
@@ -2256,19 +2324,29 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                 move(10,79); clrtoeol();
                 lost_weapon[num_lost][0] = (x + distance);
                 lost_weapon[num_lost][1] = (y - distance);
+                attron(COLOR_PAIR(3));
                 switch (current_weapon[0])
                 {
                 case 12:
                     lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
                     break;
                 case 15:
                     lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
                     break;
                 case 5:
                     lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
                     break;
                 }
-                mvprintw(lost_weapon[num_lost][1], lost_weapon[num_lost][0], "I");
+                attroff(COLOR_PAIR(3));
                 refresh();
                 num_lost++;
             }
@@ -2369,19 +2447,29 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                 move(10,79); clrtoeol();
                 lost_weapon[num_lost][0] = (x - distance);
                 lost_weapon[num_lost][1] = (y + distance);
+                attron(COLOR_PAIR(3));
                 switch (current_weapon[0])
                 {
                 case 12:
                     lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
                     break;
                 case 15:
                     lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
                     break;
                 case 5:
                     lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
                     break;
                 }
-                mvprintw(lost_weapon[num_lost][1], lost_weapon[num_lost][0], "I");
+                attroff(COLOR_PAIR(3));
                 refresh();
                 num_lost++;
             }
@@ -2482,19 +2570,29 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                 move(10,79); clrtoeol();
                 lost_weapon[num_lost][0] = (x + distance);
                 lost_weapon[num_lost][1] = (y + distance);
+                attron(COLOR_PAIR(3));
                 switch (current_weapon[0])
                 {
                 case 12:
                     lost_weapon[num_lost][3] = 0;
+                    current_weapon[1]--;
+                    weapon_position[0][4]--;
+                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
                     break;
                 case 15:
                     lost_weapon[num_lost][3] = 1;
+                    current_weapon[1]--;
+                    weapon_position[1][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
                     break;
                 case 5:
                     lost_weapon[num_lost][3] = 2;
+                    current_weapon[1]--;
+                    weapon_position[2][4]--;
+                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
                     break;
                 }
-                mvprintw(lost_weapon[num_lost][1], lost_weapon[num_lost][0], "I");
+                attroff(COLOR_PAIR(3));
                 refresh();
                 num_lost++;
             }
@@ -3627,8 +3725,11 @@ int main() {
         for(int j=0 ; j<num_enemy ; j++){
             enemy_position[j][0]=enemy_position[j][1]=enemy_position[j][2]=enemy_position[j][3]=0;
         }
+        for(int j=0 ; j<num_lost ; j++){
+            lost_weapon[j][0]=lost_weapon[j][1]=lost_weapon[j][2]=lost_weapon[j][3]=0;
+        }
         key[0]=key[1]=key[2]=key[3]=0;
-        num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_gol=num_tal=0;
+        num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_gol=num_tal=num_lost=0;
         sleep(2);
         }
         attron(COLOR_PAIR(6));
