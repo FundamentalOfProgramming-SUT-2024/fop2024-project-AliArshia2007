@@ -170,7 +170,7 @@ void soton(Room room) {
     for(int i=0 ; i<num_enemy ; i++){
         if(x1==enemy_position[i][0] && y1==enemy_position[i][1]){
             if(x1 < (room.x+room.width-2)){
-                    x1 ++;
+                x1 ++;
             }
             else{
                 x1--;
@@ -191,6 +191,16 @@ void soton(Room room) {
     y2 = room.y + y2+1;
     if((x2==(room.x+1)|| (x2)==room.x+2) && y2==(room.y+room.height-1)){
         x2 += 2;
+    }
+    for(int i=0 ; i<num_enemy ; i++){
+        if(x1==enemy_position[i][0] && y1==enemy_position[i][1]){
+            if(x1 < (room.x+room.width-2)){
+                x1 ++;
+            }
+            else{
+                x1--;
+            }
+        }
     }
     soton_position[num_soton][0] = x2;
     soton_position[num_soton][1] = y2;
@@ -244,7 +254,7 @@ void gold(Room room){
         for(int i=0 ; i<num_enemy ; i++){
             if(x1==enemy_position[i][0] && y1==enemy_position[i][1]){
                 if(x1 < (room.x+room.width-2)){
-                        x1 ++;
+                    x1 ++;
                 }
                 else{
                     x1--;
@@ -277,6 +287,16 @@ void gold(Room room){
         y2 = room.y + y2 +1;
         if((x2==(room.x+1)|| (x2)==room.x+2) && y2==(room.y+room.height-1)){
             x2 += 2;
+        }
+        for(int i=0 ; i<num_enemy ; i++){
+            if(x1==enemy_position[i][0] && y1==enemy_position[i][1]){
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
+            }
         }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x2 && soton_position[i][1]==y2){
@@ -418,6 +438,16 @@ void telesm(Room room , int num){
         y1 = room.y + y1 +1;
         if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
             x1 += 2;
+        }
+        for(int i=0 ; i<num_enemy ; i++){
+            if(x1==enemy_position[i][0] && y1==enemy_position[i][1]){
+                if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+                }
+                else{
+                    x1--;
+                }
+            }
         }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
@@ -1184,14 +1214,14 @@ void draw_page(){
 }
 int ramz;
 int check_move(int x, int y, Room room[6]) {
-    for (int i = 0; i <num_gold; i++) {
-        if (x == gold_position[i][0] && y == gold_position[i][1]) {
-            return 1;
-        }
-    }
     for(int i=0 ; i<num_enemy ; i++){
         if(x==enemy_position[i][0] && y==enemy_position[i][1] && enemy_position[i][3]!=0){
             return 0;
+        }
+    }
+    for (int i = 0; i <num_gold; i++) {
+        if (x == gold_position[i][0] && y == gold_position[i][1]) {
+            return 1;
         }
     }
     if(x==password[0][0] && y==password[0][1]){
@@ -2260,27 +2290,24 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                     enemy_position[j][3] -= current_weapon[0];
                     if(enemy_position[j][3] < 0)
                         enemy_position[j][3] = 0;
-                    switch (current_weapon[0])
-                {
-                case 12:
-                    lost_weapon[num_lost][3] = 0;
-                    current_weapon[1]--;
-                    weapon_position[0][4]--;
-                     mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\U0001F5E1");
-                    break;
-                case 15:
-                    lost_weapon[num_lost][3] = 1;
-                    current_weapon[1]--;
-                    weapon_position[1][4]--;
-                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u16E3");
-                    break;
-                case 5:
-                    lost_weapon[num_lost][3] = 2;
-                    current_weapon[1]--;
-                    weapon_position[2][4]--;
-                    mvprintw(lost_weapon[num_lost][1],lost_weapon[num_lost][0],"\u27B3");
-                    break;
-                }
+                    switch (enemy_position[j][4])
+                    {
+                    case 0:
+                        mvprintw(10,80,"You beat deamon, health: %d", enemy_position[j][3]);
+                        break;
+                    case 1:
+                        mvprintw(10,80,"You beat Fire breathing Monster, health: %d", enemy_position[j][3]);
+                        break;
+                    case 2:
+                        mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        break;
+                    case 3:
+                        mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        break;
+                    case 4:
+                        mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        break;
+                    }
                     refresh();
                     sleep(1.5);
                     move(10,79); clrtoeol();
@@ -4293,7 +4320,7 @@ void new_game(const char*filename ,const char *name){
         }
         key[0]=key[1]=key[2]=key[3]=0;
         num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_gol=num_tal=num_lost=0;
-        if(health==0){
+        if(health<=0){
             clear();
             attron(COLOR_PAIR(2));
             mvprintw(15,60,"You are Lost.");
@@ -4480,7 +4507,7 @@ void load_game(const char*filename , const char*game_name , const char* name){
             break;
         }
     }
-    if(health==0){
+    if(health<=0){
         clear();
         attron(COLOR_PAIR(2));
         mvprintw(15,60,"You are Lost.");
@@ -4667,7 +4694,7 @@ void load_game(const char*filename , const char*game_name , const char* name){
             }
             key[0]=key[1]=key[2]=key[3]=0;
             num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_tal=num_gol=num_lost=0;
-            if(health==0){
+            if(health<=0){
                 clear();
                 attron(COLOR_PAIR(2));
                 mvprintw(20,80,"You are Lost.");
