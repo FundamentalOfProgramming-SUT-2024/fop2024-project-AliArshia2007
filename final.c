@@ -28,6 +28,7 @@ int password[1][2];
 int lost_weapon[50][4], num_lost = 0;
 int key[4];
 int num_key=0;
+int m=0,m1=0,stop=0;
 int fl,color=3,dif=1,num_game=0,dif2,numroom=0;
 typedef struct {
     int x;
@@ -1198,7 +1199,7 @@ void draw_page(){
     }
     attroff(COLOR_PAIR(2));
     attron(COLOR_PAIR(6));
-    mvprintw(35,78,"talisman %d:" , tel);
+    mvprintw(35,78,"talisman: %d" , tel);
     attroff(COLOR_PAIR(6));
     move(2,0);
     clrtoeol();
@@ -1620,6 +1621,8 @@ void check_enemy(int x , int y){
                         break;
                     case 3:
                         mvprintw(10,80,"You beat Snake,health: %d",enemy_position[i][3]);
+                        if(current_weapon[0]==15)
+                            stop=1;
                         break;
                     case 4:
                         mvprintw(10,80,"You beat Undeed health: %d",enemy_position[i][3]);
@@ -1691,12 +1694,18 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                         break;
                     case 2:
                         mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m=5;
                         break;
                     case 3:
                         mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            stop=1;
                         break;
                     case 4:
                         mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m1=5;
                         break;
                     }
                     refresh();
@@ -1814,12 +1823,18 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                         break;
                     case 2:
                         mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m=5;
                         break;
                     case 3:
                         mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            stop=1;
                         break;
                     case 4:
                         mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m1=5;
                         break;
                     }
                     refresh();
@@ -1937,12 +1952,18 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                         break;
                     case 2:
                         mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m=5;
                         break;
                     case 3:
                         mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            stop=1;
                         break;
                     case 4:
                         mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m1=5;
                         break;
                     }
                     refresh();
@@ -2060,12 +2081,18 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                         break;
                     case 2:
                         mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m=5;
                         break;
                     case 3:
                         mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            stop=1;
                         break;
                     case 4:
                         mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m1=5;
                         break;
                     }
                     refresh();
@@ -2183,12 +2210,18 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                         break;
                     case 2:
                         mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m=5;
                         break;
                     case 3:
                         mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            stop=1;
                         break;
                     case 4:
                         mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m1=5;
                         break;
                     }
                     refresh();
@@ -2300,12 +2333,18 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                         break;
                     case 2:
                         mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m=5;
                         break;
                     case 3:
                         mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            stop=1;
                         break;
                     case 4:
                         mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m1=5;
                         break;
                     }
                     refresh();
@@ -2423,12 +2462,20 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                         break;
                     case 2:
                         mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m=5;
                         break;
                     case 3:
                         mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            stop=1;
+                        if(current_weapon[0]==15)
+                            stop=1;
                         break;
                     case 4:
                         mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m1=5;
                         break;
                     }
                     refresh();
@@ -2546,12 +2593,18 @@ void check_enemy2(int x , int y , int distance ,Room room[6]){
                         break;
                     case 2:
                         mvprintw(10,80,"You beat one Giant, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m=5;
                         break;
                     case 3:
                         mvprintw(10,80,"You beat Snake, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            stop=1;
                         break;
                     case 4:
                         mvprintw(10,80,"You beat Undead, health: %d", enemy_position[j][3]);
+                        if(current_weapon[0]==15)
+                            m1=5;
                         break;
                     }
                     refresh();
@@ -2881,6 +2934,92 @@ void checking(int x ,int y){
         attroff(COLOR_PAIR(2));
     }
 }
+void enemy_move(Room room[6] ,int x , int y){
+    if(numroom==3 && enemy_position[2][3]>0){
+        int newx=enemy_position[2][0],newy=enemy_position[2][1];
+        if(m<5){
+            attron(COLOR_PAIR(3));
+            mvprintw(enemy_position[2][1],enemy_position[2][0],".");
+            attroff(COLOR_PAIR(3));
+            if(enemy_position[2][0]<(x-1)){
+                newx++;
+            }
+            else if(enemy_position[2][0]>(x+1)){
+                newx--;
+            }
+            if(enemy_position[2][1]<(y-1)){
+                newy++;
+            }
+            else if(enemy_position[2][0]>(y+1)){
+                newy--;
+            }
+            if(newx>room[3].x && newx<(room[3].x+room[3].width) && newy>room[3].y && newy<(room[3].y+room[3].height)){
+                enemy_position[2][1]=newy;
+                enemy_position[2][0]=newx;
+            }
+            attron(COLOR_PAIR(2));
+            mvprintw(enemy_position[2][1],enemy_position[2][0],"G");
+            attroff(COLOR_PAIR(2));
+            m++;
+        }
+    }
+    if(numroom==5 && enemy_position[4][3]>0){
+        int newx=enemy_position[4][0],newy=enemy_position[4][1];
+        if(m1<5){
+            attron(COLOR_PAIR(3));
+            mvprintw(enemy_position[4][1],enemy_position[4][0],".");
+            attroff(COLOR_PAIR(3));
+            if(enemy_position[4][0]<(x-1)){
+                newx++;
+            }
+            else if(enemy_position[4][0]>(x+1)){
+                newx--;
+            }
+            if(enemy_position[4][1]<(y-1)){
+                newy++;
+            }
+            else if(enemy_position[4][0]>(y+1)){
+                newy--;
+            }
+            if(newx>room[5].x && newx<(room[5].x+room[5].width) && newy>room[5].y && newy<(room[5].y+room[5].height)){
+                enemy_position[4][1]=newy;
+                enemy_position[4][0]=newx;
+            }
+            attron(COLOR_PAIR(2));
+            mvprintw(enemy_position[4][1],enemy_position[4][0],"U");
+            attroff(COLOR_PAIR(2));
+            m1++;
+        }
+    }
+    if(numroom==4 && enemy_position[3][3]>0){
+        if(stop>0){
+            return;
+        }
+        int newx=enemy_position[3][0],newy=enemy_position[3][1];
+        attron(COLOR_PAIR(3));
+        mvprintw(enemy_position[3][1],enemy_position[3][0],".");
+        attroff(COLOR_PAIR(3));
+        if(enemy_position[3][0]<(x-1)){
+            newx++;
+        }
+        else if(enemy_position[3][0]>(x+1)){
+            newx--;
+        }
+        if(enemy_position[3][1]<(y-1)){
+            newy++;
+        }
+        else if(enemy_position[3][0]>(y+1)){
+            newy--;
+        }
+        if(newx>room[4].x && newx<(room[4].x+room[4].width) && newy>room[4].y && newy<(room[4].y+room[4].height)){
+            enemy_position[3][1]=newy;
+            enemy_position[3][0]=newx;
+        }
+        attron(COLOR_PAIR(2));
+        mvprintw(enemy_position[3][1],enemy_position[3][0],"S");
+        attroff(COLOR_PAIR(2));
+    }
+}
 int move_character(Room room[6], int *x, int *y) {
     int newx = *x;
     int newy = *y;
@@ -3112,8 +3251,9 @@ int move_character(Room room[6], int *x, int *y) {
                 while (1)
                 {
                     move(31,105);
+                    echo();
                     scanw("%d",&d);
-                    mvprintw(31,105,"%d",d);
+                    noecho();
                     if((d>0 && d<=nf) || d==10){
                         break;
                     }
@@ -3510,6 +3650,7 @@ int move_character(Room room[6], int *x, int *y) {
             fprintf(file,"%d %d %d\n",health_tel,speed_tel,strangh_tel);
             fprintf(file,"%d %d\n",current_weapon[0],current_weapon[1]);
             fprintf(file,"%d %d\n",password[0][0],password[0][1]);
+            fprintf(file,"%d %d %d\n",m,m1,stop);
             fclose(file);
             getchar();
             return 0;
@@ -3542,7 +3683,7 @@ int move_character(Room room[6], int *x, int *y) {
         }
         for(int i=0 ; i<num_dar ; i++){
             if(dar_positions[i][0]==*x && dar_positions[i][1]==*y){
-                if(i%2==1 && numroom<=4){
+                if(i%2==1 && numroom<5 && room[(i+1)/2].hide==0){
                     numroom ++;
                 }
                 if(dar_positions[i][2]==4){
@@ -3881,6 +4022,7 @@ int move_character(Room room[6], int *x, int *y) {
                 *x = newx;
                 *y = newy;
             }
+            enemy_move(room ,newx , newy);
         }
         for(int i=0 ; i<num_path ; i++){
             if(path_position[i][0]==*x && path_position[i][1]==*y && path_position[i][2]==1){
@@ -3896,6 +4038,7 @@ int move_character(Room room[6], int *x, int *y) {
         attroff(COLOR_PAIR(3));
         *x = newx;
         *y = newy;
+        
     }
     switch (color)
             {
@@ -4319,11 +4462,11 @@ void new_game(const char*filename ,const char *name){
             lost_weapon[j][0]=lost_weapon[j][1]=lost_weapon[j][2]=lost_weapon[j][3]=0;
         }
         key[0]=key[1]=key[2]=key[3]=0;
-        num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_gol=num_tal=num_lost=0;
+        num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_gol=num_tal=num_lost=m=m1=stop=0;
         if(health<=0){
             clear();
             attron(COLOR_PAIR(2));
-            mvprintw(15,60,"You are Lost.");
+            mvprintw(20,20,"You are Lost.");
             refresh();
             attroff(COLOR_PAIR(2));
             qu++;
@@ -4368,7 +4511,7 @@ void new_game(const char*filename ,const char *name){
             lost_weapon[j][0]=lost_weapon[j][1]=lost_weapon[j][2]=lost_weapon[j][3]=0;
         }
         key[0]=key[1]=key[2]=key[3]=0;
-        num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_weapon=num_gol=num_tal=num_lost=0;
+        num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_weapon=num_gol=num_tal=num_lost=m=stop=m1=0;
         current_weapon[0]=4;
         current_weapon[1]=1;
         attron(COLOR_PAIR(6));
@@ -4454,6 +4597,7 @@ void load_game(const char*filename , const char*game_name , const char* name){
     fscanf(file,"%d %d %d",&health_tel,&speed_tel,&strangh_tel);
     fscanf(file,"%d %d",&current_weapon[0],&current_weapon[1]);
     fscanf(file,"%d %d",&password[0][0],&password[0][1]);
+    fscanf(file,"%d %d %d",&m , &m1, &stop);
     fclose(file);
     rooms[0].hide=1;
     for(int i=0 ; i<6 ; i++){
@@ -4510,7 +4654,7 @@ void load_game(const char*filename , const char*game_name , const char* name){
     if(health<=0){
         clear();
         attron(COLOR_PAIR(2));
-        mvprintw(15,60,"You are Lost.");
+        mvprintw(20,20,"You are Lost.");
         refresh();
         attroff(COLOR_PAIR(2));
         qu++;
@@ -4558,7 +4702,7 @@ void load_game(const char*filename , const char*game_name , const char* name){
         lost_weapon[i][0]=lost_weapon[i][1]=lost_weapon[i][2]=lost_weapon[i][3]=0;
     }
     key[0]=key[1]=key[2]=key[3]=0;
-    num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_tal=num_gol=num_lost=0;
+    num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_tal=num_gol=num_lost=m=stop=m1=0;
     if(qu==0){
         for(fl ; fl<4 ; fl++){
             if(qu!=0){
@@ -4693,11 +4837,11 @@ void load_game(const char*filename , const char*game_name , const char* name){
                 lost_weapon[i][0]=lost_weapon[i][1]=lost_weapon[i][2]=lost_weapon[i][3]=0;
             }
             key[0]=key[1]=key[2]=key[3]=0;
-            num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_tal=num_gol=num_lost=0;
+            num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_tal=num_gol=num_lost=m=stop=m1=0;
             if(health<=0){
                 clear();
                 attron(COLOR_PAIR(2));
-                mvprintw(20,80,"You are Lost.");
+                mvprintw(20,20,"You are Lost.");
                 refresh();
                 attroff(COLOR_PAIR(2));
                 qu++;
@@ -4743,7 +4887,7 @@ void load_game(const char*filename , const char*game_name , const char* name){
                 lost_weapon[i][0]=lost_weapon[i][1]=lost_weapon[i][2]=lost_weapon[i][3]=0;
             }
             key[0]=key[1]=key[2]=key[3]=0;
-            num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_weapon=num_tal=num_gol=num_lost=0;
+            num_dar=num_path=num_key=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_weapon=num_tal=num_gol=num_lost=m=stop=m1=0;
             current_weapon[0]=4;
             current_weapon[1]=1;
             attron(COLOR_PAIR(6));
