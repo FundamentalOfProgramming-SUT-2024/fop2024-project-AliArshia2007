@@ -110,6 +110,48 @@ void weapon(Room room , int num){
     }
     num_weapon++;
 }
+int enemy_position[5][5],num_enemy=0;
+void enemy(Room room , int num){
+    int x1 , y1;
+    x1 = (rand() % (room.width-2));
+    y1 = (rand() % (room.height-2));
+    if (x1 <= 0)
+        x1=1;
+    if (y1 <= 0)
+        y1=1;
+    x1 = room.x + x1+1; 
+    y1 = room.y + y1+1;
+    if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
+            x1 += 2;
+        }
+        enemy_position[num_enemy][0] = x1;
+        enemy_position[num_enemy][1] = y1;
+        enemy_position[num_enemy][2]=0;
+        switch (num)
+        {
+        case 1:
+            enemy_position[num_enemy][3]=5;
+            enemy_position[num_enemy][4]=0;
+            break;
+        case 2:
+            enemy_position[num_enemy][3]=10;
+            enemy_position[num_enemy][4]=1;
+            break;
+        case 3:
+            enemy_position[num_enemy][3]=15;
+            enemy_position[num_enemy][4]=2;
+            break;
+        case 4:
+            enemy_position[num_enemy][3]=20;
+            enemy_position[num_enemy][4]=3;
+            break;    
+        case 5:
+            enemy_position[num_enemy][3]=30;
+            enemy_position[num_enemy][4]=4;
+            break;
+        }
+        num_enemy++;
+}
 int soton_position[12][3];
 int num_soton=0;
 void soton(Room room) {
@@ -124,6 +166,16 @@ void soton(Room room) {
     y1 = room.y + y1+1;
     if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
         x1 += 2;
+    }
+    for(int i=0 ; i<num_enemy ; i++){
+        if(x1==enemy_position[i][0] && y1==enemy_position[i][1]){
+            if(x1 < (room.x+room.width-2)){
+                    x1 ++;
+            }
+            else{
+                x1--;
+            }
+        }
     }
     soton_position[num_soton][0] = x1;
     soton_position[num_soton][1] = y1;
@@ -189,6 +241,16 @@ void gold(Room room){
         if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
             x1 += 2;
         }
+        for(int i=0 ; i<num_enemy ; i++){
+            if(x1==enemy_position[i][0] && y1==enemy_position[i][1]){
+                if(x1 < (room.x+room.width-2)){
+                        x1 ++;
+                }
+                else{
+                    x1--;
+                }
+            }
+        }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
                 if(x1 < (room.x+room.width-2)){
@@ -247,6 +309,16 @@ void tale(Room room){
         if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
             x1 += 2;
         }
+        for(int i=0 ; i<num_enemy ; i++){
+            if(x1==enemy_position[i][0] && y1==enemy_position[i][1]){
+                if(x1 < (room.x+room.width-2)){
+                        x1 ++;
+                }
+                else{
+                    x1--;
+                }
+            }
+        }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
                 if(x1 < (room.x+room.width-2)){
@@ -287,6 +359,16 @@ void food(Room room){
         y1 = room.y + y1+1;
         if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
             x1 += 2;
+        }
+        for(int i=0 ; i<num_enemy ; i++){
+            if(x1==enemy_position[i][0] && y1==enemy_position[i][1]){
+                if(x1 < (room.x+room.width-2)){
+                        x1 ++;
+                }
+                else{
+                    x1--;
+                }
+            }
         }
         for(int i=0 ; i<num_soton ; i++){
             if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
@@ -382,88 +464,6 @@ void telesm(Room room , int num){
         telesm_position[num_tel][2]=num;
         telesm_position[num_tel][3]=0;
         num_tel++;
-}
-int enemy_position[5][5],num_enemy=0;
-void enemy(Room room , int num){
-    int x1 , y1;
-    x1 = (rand() % (room.width-2));
-    y1 = (rand() % (room.height-2));
-    if (x1 <= 0)
-        x1=1;
-    if (y1 <= 0)
-        y1=1;
-    x1 = room.x + x1+1; 
-    y1 = room.y + y1+1;
-    if((x1==(room.x+1)|| (x1)==room.x+2) && y1==(room.y+room.height-1)){
-            x1 += 2;
-        }
-        for(int i=0 ; i<num_soton ; i++){
-            if(soton_position[i][0]==x1 && soton_position[i][1]==y1){
-                if(x1 < (room.x+room.width-2)){
-                    x1 ++;
-                }
-                else{
-                    x1--;
-                }
-            }
-        }  
-        for(int i=0 ; i<num_gold ; i++){
-            if(gold_position[i][0]==x1 && gold_position[i][1]==y1){
-                if(x1 < (room.x+room.width-2)){
-                    x1 ++;
-                }
-                else{
-                    x1--;
-                }
-            }
-        }
-        for(int i=0 ; i<num_tale ; i++){
-            if(tale_position[i][0]==x1 && tale_position[i][1]==y1){
-                if(x1 < (room.x+room.width-2)){
-                    x1 ++;
-                }
-                else{
-                    x1--;
-                }
-            }
-        }
-        for(int i=0 ; i<num_food ; i++){
-            if(food_position[i][0]==x1 && food_position[i][1]==y1){
-                if(x1 < (room.x+room.width-2)){
-                    x1 ++;
-                }
-                else{
-                    x1--;
-                }
-            }
-        }
-        enemy_position[num_enemy][0] = x1;
-        enemy_position[num_enemy][1] = y1;
-        enemy_position[num_enemy][2]=0;
-        switch (num)
-        {
-        case 1:
-            enemy_position[num_enemy][3]=5;
-            enemy_position[num_enemy][4]=0;
-            break;
-        case 2:
-            enemy_position[num_enemy][3]=10;
-            enemy_position[num_enemy][4]=1;
-            break;
-        case 3:
-            enemy_position[num_enemy][3]=15;
-            enemy_position[num_enemy][4]=2;
-            break;
-        case 4:
-            enemy_position[num_enemy][3]=20;
-            enemy_position[num_enemy][4]=3;
-            break;    
-        case 5:
-            enemy_position[num_enemy][3]=30;
-            enemy_position[num_enemy][4]=4;
-            break;
-        }
-        num_enemy++;
 }
 int tal[5][3],num_tal;
 int gol[8][4],num_gol;
@@ -1187,6 +1187,11 @@ int check_move(int x, int y, Room room[6]) {
     for (int i = 0; i <num_gold; i++) {
         if (x == gold_position[i][0] && y == gold_position[i][1]) {
             return 1;
+        }
+    }
+    for(int i=0 ; i<num_enemy ; i++){
+        if(x==enemy_position[i][0] && y==enemy_position[i][1] && enemy_position[i][3]!=0){
+            return 0;
         }
     }
     if(x==password[0][0] && y==password[0][1]){
@@ -3463,7 +3468,7 @@ int move_character(Room room[6], int *x, int *y) {
             }
             fprintf(file,"%d\n",num_enemy);
             for(int i=0 ; i<num_enemy ; i++){
-                fprintf(file,"%d %d %d %d\n",enemy_position[i][0],enemy_position[i][1],enemy_position[i][2],enemy_position[i][3]);
+                fprintf(file,"%d %d %d %d %d\n",enemy_position[i][0],enemy_position[i][1],enemy_position[i][2],enemy_position[i][3],enemy_position[i][4]);
             }
             fprintf(file,"%d\n",num_weapon);
             for(int i=0 ; i<num_weapon ; i++){
@@ -3477,6 +3482,7 @@ int move_character(Room room[6], int *x, int *y) {
             fprintf(file,"%d %d %d %d %d %d %d %d %d\n",num_key ,g,nf,health,tel,wea,*x,*y,numroom);
             fprintf(file,"%d %d %d\n",health_tel,speed_tel,strangh_tel);
             fprintf(file,"%d %d\n",current_weapon[0],current_weapon[1]);
+            fprintf(file,"%d %d\n",password[0][0],password[0][1]);
             fclose(file);
             getchar();
             return 0;
@@ -4174,6 +4180,10 @@ void new_game(const char*filename ,const char *name){
         x1 = rand()%5;
         y1 = rand()%5;
         create_random_rooms(rooms,5,20+y1,10+x1);
+        for(int j=1 ; j<6 ; j++){
+            if(fl!=3 || j!=5)
+                enemy(rooms[j] , j);
+        }
         for(int j=0 ; j<6 ; j++){
             if(fl==3 && j==5){
                 draw_dar(rooms[j],j);
@@ -4193,9 +4203,6 @@ void new_game(const char*filename ,const char *name){
                     telesm(rooms[j],j);
                 }
             }
-        }
-        for(int j=1 ; j<6 ; j++){
-            enemy(rooms[j] , j);
         }
         int q=rand()%3;
         key[0]=rooms[q].x+rand()%(rooms[q].width-2)+1;
@@ -4287,11 +4294,13 @@ void new_game(const char*filename ,const char *name){
         key[0]=key[1]=key[2]=key[3]=0;
         num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_gol=num_tal=num_lost=0;
         if(health==0){
+            clear();
             attron(COLOR_PAIR(2));
-            mvprintw(20,140,"You are Lost.");
+            mvprintw(15,60,"You are Lost.");
             refresh();
             attroff(COLOR_PAIR(2));
-            getchar();
+            qu++;
+            sleep(2);
             break;
         }
         }
@@ -4341,14 +4350,14 @@ void new_game(const char*filename ,const char *name){
             mvprintw(10,50,"You won.");
             mvprintw(11,45,"Gold: %d score: %d",g,g*3);
             num_game=1;
+            update(filename,name);
+            g=0;
+            num_game=0;
         }
         qu=0;
         refresh();
         attroff(COLOR_PAIR(6));
         getchar();
-        update(filename,name);
-        g=0;
-        num_game=0;
     clear();
     menu(name);
 }
@@ -4403,7 +4412,7 @@ void load_game(const char*filename , const char*game_name , const char* name){
     }
     fscanf(file,"%d",&num_enemy);
     for(int i=0 ; i<num_enemy ; i++){
-        fscanf(file,"%d %d %d %d",&enemy_position[i][0],&enemy_position[i][1],&enemy_position[i][2],&enemy_position[i][3]);
+        fscanf(file,"%d %d %d %d %d",&enemy_position[i][0],&enemy_position[i][1],&enemy_position[i][2],&enemy_position[i][3],&enemy_position[i][4]);
     }
     fscanf(file,"%d",&num_weapon);
     for(int i=0 ; i<num_weapon ; i++){
@@ -4417,6 +4426,7 @@ void load_game(const char*filename , const char*game_name , const char* name){
     fscanf(file," %d %d %d %d %d %d %d %d %d",&num_key ,&g,&nf,&health,&tel,&wea,&x,&y,&numroom);
     fscanf(file,"%d %d %d",&health_tel,&speed_tel,&strangh_tel);
     fscanf(file,"%d %d",&current_weapon[0],&current_weapon[1]);
+    fscanf(file,"%d %d",&password[0][0],&password[0][1]);
     fclose(file);
     rooms[0].hide=1;
     for(int i=0 ; i<6 ; i++){
@@ -4469,6 +4479,15 @@ void load_game(const char*filename , const char*game_name , const char* name){
             fl++;
             break;
         }
+    }
+    if(health==0){
+        clear();
+        attron(COLOR_PAIR(2));
+        mvprintw(15,60,"You are Lost.");
+        refresh();
+        attroff(COLOR_PAIR(2));
+        qu++;
+        sleep(2);
     }
     if(qu!=0){
         for(int i=0 ; i<num_weapon ; i++){
@@ -4540,6 +4559,10 @@ void load_game(const char*filename , const char*game_name , const char* name){
             x1 = rand()%5;
             y1 = rand()%5;
             create_random_rooms(rooms,5,20+y1,10+x1);
+            for(int j=1 ; j<6 ; j++){
+                if(fl!=3 || j!=5)
+                    enemy(rooms[j] , j);
+            }
             for(int j=0 ; j<6 ; j++){
                 if(fl==3 && j==5){
                     draw_dar(rooms[j],j);
@@ -4559,9 +4582,6 @@ void load_game(const char*filename , const char*game_name , const char* name){
                         telesm(rooms[j],j);
                     }
                 }
-            }
-            for(int j=1 ; j<6 ; j++){
-                enemy(rooms[j] , j);
             }
             int q=rand()%3;
             key[0]=rooms[q].x+rand()%(rooms[q].width-2)+1;
@@ -4648,11 +4668,13 @@ void load_game(const char*filename , const char*game_name , const char* name){
             key[0]=key[1]=key[2]=key[3]=0;
             num_dar=num_path=num_key=num_rooms=num_tale=num_soton=num_gold=num_food=numroom=num_tel=num_enemy=num_tal=num_gol=num_lost=0;
             if(health==0){
+                clear();
                 attron(COLOR_PAIR(2));
-                mvprintw(20,140,"You are Lost.");
+                mvprintw(20,80,"You are Lost.");
                 refresh();
                 attroff(COLOR_PAIR(2));
-                getchar();
+                qu++;
+                sleep(2);
                 break;
             }
             sleep(2);
@@ -4910,6 +4932,33 @@ void set_hero_color(const char* name) {
     getch();
     settings_menu(name);
 }
+void profile(const char* filename , const char *name){
+    int count=0;
+    User users[100];
+    FILE *file=fopen(filename,"r");
+    while (fscanf(file, "%s %s %s %d %d %d %ld", users[count].name, users[count].password, 
+                users[count].email, &users[count].score ,&users[count].gold,&users[count].number_of_games,&users[count].first_Game_Time) != EOF)
+    {
+        if(strcmp(users[count].name,name)==0){
+            clear();
+            attron(COLOR_PAIR(6));
+            mvprintw(10,10,"Name : %s",users[count].name);
+            mvprintw(12,10,"password : %s",users[count].password);
+            mvprintw(14,10,"Email : %s",users[count].email);
+            mvprintw(16,10,"gold : %d",users[count].gold);
+            mvprintw(18,10,"score : %d",users[count].score);
+            mvprintw(20,10,"number of games : %d",users[count].number_of_games);
+            refresh();
+            attroff(COLOR_PAIR(6));
+            break;
+        }
+        count++;
+    }
+    fclose(file);
+    getchar();
+    clear();
+    menu(name);
+}
 int menu(const char*name){
     echo();
     clear();
@@ -4925,14 +4974,15 @@ int menu(const char*name){
     mvprintw(7, 10, "2- Load Game");
     mvprintw(9, 10, "3- Table");
     mvprintw(11,10, "4- Settings_menu");
-    mvprintw(13, 10, "5- Exit");
+    mvprintw(13, 10, "5- profile");
+    mvprintw(15, 10, "6- Exit");
     attroff(COLOR_PAIR(6));
-    mvprintw(15, 10, "Enter your choice: ");
+    mvprintw(17, 10, "Enter your choice: ");
     refresh();
     while (TRUE) {
-        move(15,30);
+        move(17,30);
         clrtoeol();
-        move(15,30);
+        move(17,30);
         scanw("%d", &choice);
         printw("%d",choice);
         refresh();
@@ -4958,6 +5008,9 @@ int menu(const char*name){
                 settings_menu(name);
                 return 4;
             case 5:
+                profile("users.txt",name);
+                return 5;
+            case 6:
                 move(18,62);
                 clear();
                 attron(COLOR_PAIR(2));
