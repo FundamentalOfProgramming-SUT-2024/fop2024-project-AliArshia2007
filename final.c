@@ -4022,7 +4022,6 @@ int move_character(Room room[6], int *x, int *y) {
                 *x = newx;
                 *y = newy;
             }
-            enemy_move(room ,newx , newy);
         }
         for(int i=0 ; i<num_path ; i++){
             if(path_position[i][0]==*x && path_position[i][1]==*y && path_position[i][2]==1){
@@ -4067,6 +4066,7 @@ int move_character(Room room[6], int *x, int *y) {
                 attroff(COLOR_PAIR(6));
                 break;
             }
+            enemy_move(room ,newx , newy);
             draw_page();
             refresh();
             return 1;
@@ -5190,6 +5190,7 @@ int menu(const char*name){
                 attroff(COLOR_PAIR(2));
                 getch();
                 endwin();
+                stop_music();  
                 exit(0);
             default:
                 attron(COLOR_PAIR(2));
